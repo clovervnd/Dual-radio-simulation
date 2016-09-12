@@ -343,6 +343,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
 
     /* Ongoing transmission */
     /* hwijoon */
+    logger.warn("########## Are we printing something???  ###############");
     if(isLongRangeMode() == (this instanceof LongRangeInterface)){
       logger.warn("LongRangeMode = " + isLongRangeMode() + ", R=" + this);
       if (isTransmitting && now >= transmissionEndTime) {
