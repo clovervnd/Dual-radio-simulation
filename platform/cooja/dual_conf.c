@@ -17,14 +17,14 @@ int dual_radio_switch(int radio)
 	{
 		long_range_radio = 1;
 		LongRangeTransmit = 1;
-		RADIO("LongRangeTransmit = %d\n",LongRangeTransmit);
+		// RADIO("LongRangeTransmit = %d\n",LongRangeTransmit);
 		RADIO("$$$$$$$$$$$$$$$$$$  Using long-range radio\n");
 	}
 	else if (radio == SHORT_RADIO)
 	{
 		long_range_radio = 0;
 		LongRangeTransmit = 0; 
-		RADIO("LongRangeTransmit = %d\n",LongRangeTransmit);
+		// RADIO("LongRangeTransmit = %d\n",LongRangeTransmit);
 		RADIO("$$$$$$$$$$$$$$$$$$  Using short-range radio\n");
 	}
 	return 1;

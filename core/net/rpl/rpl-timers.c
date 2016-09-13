@@ -96,15 +96,17 @@ handle_periodic_timer(void *ptr)
 		PRINTF("handle_periodic_timer\n");
 /*JOONKI*/
 #if DUAL_RADIO
+		// dual_radio_switch(SHORT_RADIO);
 		dual_radio_switch(SHORT_RADIO);
 		dis_output(NULL);
 		// etimer_set(&et, 128);
 		// PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 		while(count<1000)	{
-			cooja_mt_yield(); 
+		 	cooja_mt_yield(); 
 			count++;
-		}
-		dual_radio_switch(LONG_RADIO);
+		} 
+		//dual_radio_switch(LONG_RADIO);
+		dual_radio_switch(LONG_RADIO); 
 #endif
     dis_output(NULL);
 

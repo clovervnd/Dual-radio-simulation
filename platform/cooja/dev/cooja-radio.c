@@ -54,8 +54,6 @@
 #define WITH_TURNAROUND 1
 #define WITH_SEND_CCA 1
 
-const struct simInterface radio_interface;
-
 /* COOJA */
 char simReceiving = 0;
 char simReceivingLR = 0;
@@ -131,6 +129,7 @@ radio_off(void)
 static void
 doInterfaceActionsBeforeTick(void)
 {
+	// LongRangeTransmit = 0;
   if(!simRadioHWOn) {
     simInSize = 0;
     return;
@@ -140,7 +139,7 @@ doInterfaceActionsBeforeTick(void)
     return;
   }
 
-  if(simInSize > 0) {
+  if(simInSize > 0 || simInSizeLR > 0) {
     process_poll(&cooja_radio_process);
   }
 }
@@ -212,26 +211,30 @@ radio_send(const void *payload, unsigned short payload_len)
   if(payload_len == 0) {
     return RADIO_TX_ERR;
   }
-
-
-
+	printf("qwheoqiwheoqihoqwheqoiw\n");
+/* IN CASE OF LONG RADIO */
 	if (sending_in_LR() == LONG_RADIO){
 	  if(simOutSizeLR > 0) {
 	    return RADIO_TX_ERR;
 	  }
-
+		printf("$$$$$$$$$$$$$$$ Sending in LR ------------------------>\n");
+		printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
   	/* Transmit on CCA */
 #if WITH_SEND_CCA
 	  if(!channel_clear()) {
   	  return RADIO_TX_COLLISION;
 	  }	
 #endif /* WITH_SEND_CCA */
-
 	  /* Copy packet data to temporary storage */
 	  memcpy(simOutDataBufferLR, payload, payload_len);
-	  simOutSizeLR = payload_len;
-		}	else {
-
+		simOutSizeLR = payload_len;
+		}	
+	
+/* IN CASE OF SHORT RADIO */
+	else {	
+		printf("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
+		printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
+	// 	LongRangeTransmit = 0;
 	  if(simOutSize > 0) {
 	    return RADIO_TX_ERR;
 	  }
@@ -242,13 +245,10 @@ radio_send(const void *payload, unsigned short payload_len)
 	    return RADIO_TX_COLLISION;
 	  }
 #endif /* WITH_SEND_CCA */
-
 	  /* Copy packet data to temporary storage */
  	 memcpy(simOutDataBuffer, payload, payload_len);
  	 simOutSize = payload_len;
 	}
-
-
 
 
   /* Transmit */

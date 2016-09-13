@@ -63,7 +63,7 @@ public abstract class RadioMedium {
       ((UDGM)this).setForLongRange_UDGM(forLongRange);
       Visualizer.registerVisualizerSkin(UDGMLongRangeVisualizerSkin.class);
     }
-}
+  }
 
   protected boolean isForLongRange = false;
 
