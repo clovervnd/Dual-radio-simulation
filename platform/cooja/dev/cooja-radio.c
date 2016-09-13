@@ -76,6 +76,7 @@ int simRadioChannelLR = 26;
 int simLQI = 105;
 
 int LongRangeTransmit = 0;
+int LongRangeReceiving = 0;
 static const void *pending_data;
 
 PROCESS(cooja_radio_process, "cooja radio process");
@@ -162,7 +163,7 @@ radio_read(void *buf, unsigned short bufsize)
     RIMESTATS_ADD(toolong);
     return 0;
   }
-	if(simInSizeLR > 0) { //	if(radio_received_is_longrange() == LONG_RADIO)	{
+	if(LongRangeReceiving > 0) { //	if(radio_received_is_longrange() == LONG_RADIO)	{
 		memcpy(buf, simInDataBufferLR, simInSizeLR);
 		tmp = simInSizeLR;
 		simInSizeLR = 0;
@@ -300,9 +301,9 @@ PROCESS_THREAD(cooja_radio_process, ev, data)
 
 #if DUAL_RADIO
 			/*JOONKI*/
-			if (simReceivingLR == 1)	{
+			if (LongRangeReceiving > 0)	{
 				dual_radio_received(LONG_RADIO);
-			}	else if (simReceiving == 1) {
+			}	else {
 				dual_radio_received(SHORT_RADIO);
 			}
 #endif 

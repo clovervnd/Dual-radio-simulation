@@ -39,7 +39,8 @@
 
 #include "contiki.h"
 #include "net/rime/rime.h"
-
+#include <string.h>
+#include <stdlib.h>
 #include "dev/button-sensor.h"
 
 #include "dev/leds.h"
@@ -51,15 +52,15 @@ PROCESS(example_unicast_process, "Example unicast");
 AUTOSTART_PROCESSES(&example_unicast_process);
 /*---------------------------------------------------------------------------*/
 extern int LongRangeTransmit;
-extern char simReceivingLR;
+extern int LongRangeReceiving;
 
 static void
 recv_uc(struct unicast_conn *c, const linkaddr_t *from)
 {
   char *ls_ind = NULL;
-  if(simReceivingLR){
+  if(LongRangeReceiving > 0){
     ls_ind = "LONG";
-  } else {
+  } else{
     ls_ind = "SHORT";
   }
   printf("[%s]unicast message received from %d.%d: '%s' \n",
@@ -76,18 +77,23 @@ PROCESS_THREAD(example_unicast_process, ev, data)
   PROCESS_BEGIN();
 
   unicast_open(&uc, 146, &unicast_callbacks);
-
+	static char str[15];
+	static int count=0;
+ 
   while(1) {
     static struct etimer et;
     linkaddr_t addr;
-    
+   	count ++;
+		
     etimer_set(&et, CLOCK_SECOND/4);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
     if(LongRangeTransmit){
-      packetbuf_copyfrom("Short", 5);
+			sprintf(str, "Short %d", count);
+      packetbuf_copyfrom(str, strlen(str));
 			dual_radio_switch(SHORT_RADIO);
     } else {
-      packetbuf_copyfrom("Long", 4);
+			sprintf(str, "Long %d", count);
+      packetbuf_copyfrom(str, strlen(str));
 			dual_radio_switch(LONG_RADIO);
     }
    addr.u8[0] = 1;

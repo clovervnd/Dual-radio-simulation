@@ -140,6 +140,13 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
     radioOn = myMoteMemory.getByteValueOf(("simRadioHWOn")) == 1;
   }
 
+  public void setLongRangeReceivingMode(boolean val){
+      if(val)
+          myMoteMemory.setIntValueOf("LongRangeReceiving", 1);
+      else
+          myMoteMemory.setIntValueOf("LongRangeReceiving", 0);
+  }
+
 
   /* hwijoon */
   private String getSymbolNameLR(String symbol_pre){
@@ -176,8 +183,8 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
   }
 
   public boolean isReceiving() {
-    /* hwijoon */
-    return myMoteMemory.getByteValueOf(getSymbolNameLR("simReceiving")) == 1;
+      return myMoteMemory.getByteValueOf(getSymbolNameLR("simReceiving")) == 1;
+              // && (this instanceof LongRangeInterface) == (myMoteMemory.getIntValueOf("LongRangeReceiving") == 1);
   }
 
   public boolean isInterfered() {
@@ -196,7 +203,8 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
 
 
   public void signalReceptionStart() {
-    /* hwijoon */
+      /* hwijoon */
+    setLongRangeReceivingMode(this instanceof LongRangeInterface);
 
     packetToMote = null;
     if (isInterfered() || isReceiving() || isTransmitting()) {
@@ -216,7 +224,6 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
   }
 
   public void signalReceptionEnd() {
-
     if (isInterfered || packetToMote == null) {
       isInterfered = false;
       packetToMote = null;
@@ -343,9 +350,9 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
 
     /* Ongoing transmission */
     /* hwijoon */
-    logger.warn("########## Are we printing something???  ###############");
+    // logger.warn("########## Is it in Longrange mode? " + isLongRangeMode()+ "// This instance of Longrange" + (this instanceof LongRangeInterface) + "  ###############");
     if(isLongRangeMode() == (this instanceof LongRangeInterface)){
-      logger.warn("LongRangeMode = " + isLongRangeMode() + ", R=" + this);
+      // logger.warn("LongRangeMode = " + isLongRangeMode() + ", R=" + this);
       if (isTransmitting && now >= transmissionEndTime) {
         myMoteMemory.setIntValueOf(getSymbolNameLR("simOutSize"), 0);
         isTransmitting = false;
@@ -366,6 +373,10 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
         //logger.warn("Transmission Initiated, Mote = " + this.mote + "LR = " + isLongRangeMode());
           packetFromMote = new COOJARadioPacket(myMoteMemory.getByteArray(getSymbolNameLR("simOutDataBuffer"), size));
 
+          /* JOONKI */
+          logger.warn("Transmitting packet is " + new String(myMoteMemory.getByteArray(getSymbolNameLR("simOutDataBuffer"),size)));
+          logger.warn("LongRangeMode = " + isLongRangeMode() + ", R=" + this);
+          logger.warn("This instanceof Longrange = " +(this instanceof LongRangeInterface));
           if (packetFromMote.getPacketData() == null || packetFromMote.getPacketData().length == 0) {
             logger.warn("Skipping zero sized Contiki packet (no buffer)");
             myMoteMemory.setIntValueOf(getSymbolNameLR("simOutSize"), 0);
