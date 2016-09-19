@@ -2,14 +2,18 @@
 #define DEBUG_DUAL	1
 #if DEBUG_DUAL
 #include <stdio.h>
+#include "net/rpl/rpl-icmp6.h"
+#include "contiki.h"
 
 #define RADIO(...) printf(__VA_ARGS__)
 #else
 #define RADIO(...) 
 #endif
+PROCESS(dual_dio_broadcast, "process_stop");
+PROCESS(dual_dis_broadcast, "dis_broadcast");
 
-long_range_radio = 0;
-radio_received = SHORT_RADIO;
+int long_range_radio = 0;
+int radio_received = SHORT_RADIO;
 
 int dual_radio_switch(int radio)
 {
@@ -46,6 +50,7 @@ int sending_in_LR(void)
 	}	else if (long_range_radio == 1){
 		return LONG_RADIO;
 	}
+	return 0;
 }
 
 int dual_radio_received(int radio)
@@ -54,12 +59,15 @@ int dual_radio_received(int radio)
 	{
 		radio_received = LONG_RADIO;
 		RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! long-range radio\n");
+		return 1;
 	}
 	else if(radio == SHORT_RADIO)
 	{
 		radio_received = SHORT_RADIO;	
 		RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! short-range radio\n");
+		return 1;
 	}
+	return 0;
 }
 
 int radio_received_is_longrange(void)
@@ -74,4 +82,42 @@ int radio_received_is_longrange(void)
 		RADIO("$$$$$$$$$$$$$$$$$$  SHORT_RADIO_RECEIVED\n");
 		return SHORT_RADIO;
 	}
+}
+
+PROCESS_THREAD(dual_dio_broadcast, ev, data)
+{
+	static struct etimer et;
+	PROCESS_BEGIN();
+	etimer_set(&et, 128);
+	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+	RADIO("# Process stopped for a while\n");
+	PROCESS_END();
+}
+
+PROCESS_THREAD(dual_dis_broadcast, ev, data)
+{
+	static struct etimer et;
+	PROCESS_BEGIN();
+	dual_radio_switch(SHORT_RADIO);
+	dis_output(NULL);
+	etimer_set(&et, 128);
+	
+	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+	RADIO("# DIS_BROADCAST: Process stopped for a while\n");
+	dual_radio_switch(LONG_RADIO);
+	dis_output(NULL);
+	
+	PROCESS_END();
+}
+	
+int dio_broadcast(void)
+{
+	process_start(&dual_dio_broadcast, NULL);
+	return 1;
+}
+
+int dis_broadcast(void)
+{
+	process_start(&dual_dis_broadcast, NULL);
+	return 1;
 }

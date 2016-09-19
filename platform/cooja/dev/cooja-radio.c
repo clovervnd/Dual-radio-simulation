@@ -211,7 +211,7 @@ radio_send(const void *payload, unsigned short payload_len)
   if(payload_len == 0) {
     return RADIO_TX_ERR;
   }
-	printf("qwheoqiwheoqihoqwheqoiw\n");
+	printf("COOJA RADIO: Sending packet in cooja driver\n");
 /* IN CASE OF LONG RADIO */
 	if (sending_in_LR() == LONG_RADIO){
 	  if(simOutSizeLR > 0) {

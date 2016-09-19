@@ -46,14 +46,15 @@
  */
 
 #include "net/ip/tcpip.h"
-#include "net/ip/uip.h"
+// #include "net/ip/uip.h"
 #include "net/ipv6/uip-ds6.h"
 #include "net/ipv6/uip-nd6.h"
 #include "net/ipv6/uip-icmp6.h"
-#include "net/rpl/rpl-private.h"
+// #include "net/rpl/rpl-private.h"
 #include "net/packetbuf.h"
 #include "net/ipv6/multicast/uip-mcast6.h"
 #include "random.h"
+#include "net/rpl/rpl-icmp6.h"
 
 #include <limits.h>
 #include <string.h>

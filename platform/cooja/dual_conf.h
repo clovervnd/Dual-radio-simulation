@@ -17,6 +17,10 @@ int dual_radio_received(int radio);
 int radio_received_is_longrange(void);
 int sending_in_LR(void);
 
+/* Process */
+int dio_broadcast(void);
+int dis_broadcast(void);
+
 /* Global variable for Dual RPL */
 int long_range_radio;
 int radio_received;
