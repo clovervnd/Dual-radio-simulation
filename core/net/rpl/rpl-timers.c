@@ -181,11 +181,13 @@ handle_dio_timer(void *ptr)
 #endif /* RPL_CONF_STATS */
 			/*JOONKI*/
 #if DUAL_RADIO
-			dual_radio_switch(SHORT_RADIO);
+			// dual_radio_switch(SHORT_RADIO);
+			// dio_output(instance, NULL);
+			// dual_radio_switch(LONG_RADIO);
+			dio_broadcast(instance, NULL);
+#else
 			dio_output(instance, NULL);
-			dual_radio_switch(LONG_RADIO);
 #endif
-			dio_output(instance, NULL);
     } else {
       PRINTF("RPL: Suppressing DIO transmission (%d >= %d)\n",
              instance->dio_counter, instance->dio_redundancy);

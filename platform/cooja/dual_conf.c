@@ -14,6 +14,7 @@ PROCESS(dual_dis_broadcast, "dis_broadcast");
 
 int long_range_radio = 0;
 int radio_received = SHORT_RADIO;
+static rpl_instance_t *temp_instance;
 
 int dual_radio_switch(int radio)
 {
@@ -88,9 +89,14 @@ PROCESS_THREAD(dual_dio_broadcast, ev, data)
 {
 	static struct etimer et;
 	PROCESS_BEGIN();
+	dual_radio_switch(SHORT_RADIO);
+	dio_output(temp_instance, NULL);
 	etimer_set(&et, 128);
+
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-	RADIO("# Process stopped for a while\n");
+	RADIO("# DIO_BROADCAST: Process stopped for a while\n");
+	dual_radio_switch(LONG_RADIO);
+	dio_output(temp_instance, NULL);
 	PROCESS_END();
 }
 
@@ -110,8 +116,9 @@ PROCESS_THREAD(dual_dis_broadcast, ev, data)
 	PROCESS_END();
 }
 	
-int dio_broadcast(void)
+int dio_broadcast(rpl_instance_t * instance)
 {
+	temp_instance = instance;
 	process_start(&dual_dio_broadcast, NULL);
 	return 1;
 }

@@ -1,4 +1,5 @@
 #include "dev/cooja-radio.h"
+#include "net/rpl/rpl-private.h" 
 
 #ifndef SHORT_RADIO
 #define SHORT_RADIO 2
@@ -18,7 +19,7 @@ int radio_received_is_longrange(void);
 int sending_in_LR(void);
 
 /* Process */
-int dio_broadcast(void);
+int dio_broadcast(rpl_instance);
 int dis_broadcast(void);
 
 /* Global variable for Dual RPL */

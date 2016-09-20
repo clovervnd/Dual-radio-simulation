@@ -16,12 +16,11 @@ obj_cooja/dual_conf.o: ../../../platform/cooja/./dual_conf.c \
  ../../../core/./sys/procinit.h ../../../core/./sys/loader.h \
  ../../../core/./sys/clock.h ../../../core/./sys/energest.h \
  ../../../core/./sys/rtimer.h ../../../core/./dev/radio.h \
- ../../../core/./net/rpl/rpl-icmp6.h ../../../core/./net/ip/uip.h \
- ../../../core/./net/ip/uipopt.h ../../../core/./net/ip/tcpip.h \
  ../../../core/./net/rpl/rpl-private.h ../../../core/./net/rpl/rpl.h \
  ../../../core/./net/rpl/rpl-conf.h ../../../core/./lib/list.h \
- ../../../core/./net/ipv6/uip-ds6.h ../../../core/./sys/stimer.h \
- ../../../core/./net/ipv6/uip-nd6.h \
+ ../../../core/./net/ip/uip.h ../../../core/./net/ip/uipopt.h \
+ ../../../core/./net/ip/tcpip.h ../../../core/./net/ipv6/uip-ds6.h \
+ ../../../core/./sys/stimer.h ../../../core/./net/ipv6/uip-nd6.h \
  ../../../core/./net/ipv6/uip-ds6-route.h ../../../core/./net/nbr-table.h \
  ../../../core/./net/linkaddr.h ../../../core/./net/netstack.h \
  ../../../core/./net/llsec/llsec.h ../../../core/./net/mac/mac.h \
@@ -34,7 +33,8 @@ obj_cooja/dual_conf.o: ../../../platform/cooja/./dual_conf.c \
  ../../../core/./net/ipv6/multicast/uip-mcast6-route.h \
  ../../../core/./net/ipv6/multicast/smrf.h \
  ../../../core/./net/ipv6/multicast/roll-tm.h \
- ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h
+ ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h \
+ ../../../core/./net/rpl/rpl-icmp6.h
 ../../../platform/cooja/./dual_conf.c :
  ../../../platform/cooja/./dual_conf.h :
  ../../../platform/cooja/./dev/cooja-radio.h ../../../core/./contiki.h :
@@ -53,12 +53,11 @@ obj_cooja/dual_conf.o: ../../../platform/cooja/./dual_conf.c \
  ../../../core/./sys/procinit.h ../../../core/./sys/loader.h :
  ../../../core/./sys/clock.h ../../../core/./sys/energest.h :
  ../../../core/./sys/rtimer.h ../../../core/./dev/radio.h :
- ../../../core/./net/rpl/rpl-icmp6.h ../../../core/./net/ip/uip.h :
- ../../../core/./net/ip/uipopt.h ../../../core/./net/ip/tcpip.h :
  ../../../core/./net/rpl/rpl-private.h ../../../core/./net/rpl/rpl.h :
  ../../../core/./net/rpl/rpl-conf.h ../../../core/./lib/list.h :
- ../../../core/./net/ipv6/uip-ds6.h ../../../core/./sys/stimer.h :
- ../../../core/./net/ipv6/uip-nd6.h :
+ ../../../core/./net/ip/uip.h ../../../core/./net/ip/uipopt.h :
+ ../../../core/./net/ip/tcpip.h ../../../core/./net/ipv6/uip-ds6.h :
+ ../../../core/./sys/stimer.h ../../../core/./net/ipv6/uip-nd6.h :
  ../../../core/./net/ipv6/uip-ds6-route.h ../../../core/./net/nbr-table.h :
  ../../../core/./net/linkaddr.h ../../../core/./net/netstack.h :
  ../../../core/./net/llsec/llsec.h ../../../core/./net/mac/mac.h :
@@ -72,3 +71,4 @@ obj_cooja/dual_conf.o: ../../../platform/cooja/./dual_conf.c \
  ../../../core/./net/ipv6/multicast/smrf.h :
  ../../../core/./net/ipv6/multicast/roll-tm.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h :
+ ../../../core/./net/rpl/rpl-icmp6.h :

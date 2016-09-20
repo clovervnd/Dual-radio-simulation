@@ -337,7 +337,7 @@ dio_input(void)
 	/*JOONKI*/
 	radio_mode = radio_received_is_longrange();
 	if (radio_mode == LONG_RADIO)	{
-		from.u8[3] = 0xFF;
+		from.u8[3] = 0xAB;
 	}
 #endif
 	
@@ -654,7 +654,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 
 /*JOONKI*/
 #if DUAL_RADIO
-		if (uc_addr->u8[3] == 0xFF)	{
+		if (uc_addr->u8[3] == 0xAB)	{
 			uc_addr->u8[3] = 0;
 			dual_radio_switch(LONG_RADIO);
 		}	else	{
@@ -713,7 +713,7 @@ dao_input(void)
 	/*JOONKI*/
 	radio_mode = radio_received_is_longrange();
 	if (radio_mode == LONG_RADIO)	{
-		dao_sender_addr.u8[3] = 0xFF;
+		dao_sender_addr.u8[3] = 0xAB;
 	}
 #endif
   
@@ -856,7 +856,7 @@ dao_input(void)
 
 /*JOONKI*/
 #if DUAL_RADIO
-				if (tmp_addr.u8[3] == 0xFF)	{
+				if (tmp_addr.u8[3] == 0xAB)	{
 					tmp_addr.u8[3] = 0;
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
@@ -954,7 +954,7 @@ fwd_dao:
   			uip_ipaddr_copy(&tmp_addr_2, rpl_get_parent_ipaddr(dag->preferred_parent));
 /*JOONKI*/
 #if DUAL_RADIO
-				if (tmp_addr_2.u8[3] == 0xFF)	{
+				if (tmp_addr_2.u8[3] == 0xAB)	{
 					tmp_addr_2.u8[3] = 0;
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
@@ -1169,7 +1169,7 @@ dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
   uip_ipaddr_copy(&dst, rpl_get_parent_ipaddr(parent));
 /*JOONKI*/
 #if DUAL_RADIO
-	if (dst.u8[3] == 0xFF)	{
+	if (dst.u8[3] == 0xAB)	{
 		dst.u8[3] = 0;
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
@@ -1219,7 +1219,7 @@ dao_ack_input(void)
 	/*JOONKI*/
 	radio_mode = radio_received_is_longrange();
 	if (radio_mode == LONG_RADIO)	{
-		from.u8[3] = 0xFF;
+		from.u8[3] = 0xAB;
 	}
 #endif
   
@@ -1276,7 +1276,7 @@ dao_ack_input(void)
 
 /*JOONKI*/
 #if DUAL_RADIO
-			if (nexthop->u8[3] == 0xFF)	{
+			if (nexthop->u8[3] == 0xAB)	{
 				nexthop->u8[3] = 0;
 				dual_radio_switch(LONG_RADIO);
 			}	else	{
@@ -1314,7 +1314,7 @@ dao_ack_output(rpl_instance_t *instance, uip_ipaddr_t *dest, uint8_t sequence,
 
 /*JOONKI*/
 #if DUAL_RADIO
-	if (dest->u8[3] == 0xFF)	{
+	if (dest->u8[3] == 0xAB)	{
 		dest->u8[3] = 0;
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
