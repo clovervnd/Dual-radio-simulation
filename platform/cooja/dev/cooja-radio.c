@@ -129,7 +129,6 @@ radio_off(void)
 static void
 doInterfaceActionsBeforeTick(void)
 {
-	// LongRangeTransmit = 0;
   if(!simRadioHWOn) {
     simInSize = 0;
     return;
@@ -212,6 +211,8 @@ radio_send(const void *payload, unsigned short payload_len)
     return RADIO_TX_ERR;
   }
 	printf("COOJA RADIO: Sending packet in cooja driver\n");
+
+#if DUAL_RADIO
 /* IN CASE OF LONG RADIO */
 	if (sending_in_LR() == LONG_RADIO){
 	  if(simOutSizeLR > 0) {
@@ -229,12 +230,11 @@ radio_send(const void *payload, unsigned short payload_len)
 	  memcpy(simOutDataBufferLR, payload, payload_len);
 		simOutSizeLR = payload_len;
 		}	
-	
 /* IN CASE OF SHORT RADIO */
 	else {	
+#else	/* DUAL_RADIO */
 		printf("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
 		printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
-	// 	LongRangeTransmit = 0;
 	  if(simOutSize > 0) {
 	    return RADIO_TX_ERR;
 	  }
@@ -248,8 +248,11 @@ radio_send(const void *payload, unsigned short payload_len)
 	  /* Copy packet data to temporary storage */
  	 memcpy(simOutDataBuffer, payload, payload_len);
  	 simOutSize = payload_len;
-	}
+#endif /* DUAL_RADIO */
 
+#if DUAL_RADIO
+	}
+#endif
 
   /* Transmit */
   while(simOutSize > 0 || simOutSizeLR > 0) {

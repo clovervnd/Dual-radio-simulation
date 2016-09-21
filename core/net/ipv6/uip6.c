@@ -79,6 +79,15 @@
 #include "net/ipv6/uip-ds6.h"
 #include "net/ipv6/multicast/uip-mcast6.h"
 
+#if DUAL_RADIO
+#ifdef ZOLERTIA_Z1
+#include	"../platform/z1/dual_radio.h"
+#else /* DUAL_RADIO*/
+#include "../platform/cooja/dual_conf.h"
+#endif
+#endif
+
+
 #include <string.h>
 
 /*---------------------------------------------------------------------------*/
@@ -948,6 +957,11 @@ ext_hdr_options_process(void)
 void
 uip_process(uint8_t flag)
 {
+	uip_ipaddr_t udp_send_addr;
+	uip_ipaddr_t tcp_send_addr;
+	uip_ipaddr_t udp_input_addr;
+	uip_ipaddr_t tcp_input_addr;
+
 #if UIP_TCP
   register struct uip_conn *uip_connr = uip_conn;
 #endif /* UIP_TCP */
@@ -1521,12 +1535,23 @@ uip_process(uint8_t flag)
        connection is bound to a remote port. Finally, if the
        connection is bound to a remote IP address, the source IP
        address of the packet is checked. */
+
+		uip_ipaddr_copy(&udp_input_addr,&uip_udp_conn->ripaddr);
+		/* JOONKI */
+#if DUAL_RADIO
+		if (radio_received_is_longrange() == LONG_RADIO){
+			udp_input_addr.u8[3] = 0xAB;
+		}
+#endif
+
     if(uip_udp_conn->lport != 0 &&
        UIP_UDP_BUF->destport == uip_udp_conn->lport &&
        (uip_udp_conn->rport == 0 ||
         UIP_UDP_BUF->srcport == uip_udp_conn->rport) &&
-       (uip_is_addr_unspecified(&uip_udp_conn->ripaddr) ||
-        uip_ipaddr_cmp(&UIP_IP_BUF->srcipaddr, &uip_udp_conn->ripaddr))) {
+       (uip_is_addr_unspecified(&udp_input_addr) ||
+        uip_ipaddr_cmp(&UIP_IP_BUF->srcipaddr, &udp_input_addr))) {
+//       (uip_is_addr_unspecified(&uip_udp_conn->ripaddr) ||
+//        uip_ipaddr_cmp(&UIP_IP_BUF->srcipaddr, &uip_udp_conn->ripaddr))) {
       goto udp_found;
     }
   }
@@ -1570,7 +1595,19 @@ uip_process(uint8_t flag)
   UIP_UDP_BUF->srcport  = uip_udp_conn->lport;
   UIP_UDP_BUF->destport = uip_udp_conn->rport;
 
-  uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &uip_udp_conn->ripaddr);
+	/* JOONKI */
+	uip_ipaddr_copy(&udp_send_addr, &uip_udp_conn->ripaddr);
+#if DUAL_RADIO
+	if(udp_send_addr.u8[3] == 0xAB){
+		udp_send_addr.u8[3] = 0;
+		dual_radio_switch(LONG_RADIO);
+	}	else	{
+		dual_radio_switch(SHORT_RADIO);
+	}
+#endif
+
+  // uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &uip_udp_conn->ripaddr);
+  uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &udp_send_addr);
   uip_ds6_select_src(&UIP_IP_BUF->srcipaddr, &UIP_IP_BUF->destipaddr);
 
   uip_appdata = &uip_buf[UIP_LLH_LEN + UIP_IPTCPH_LEN];
@@ -1617,6 +1654,15 @@ uip_process(uint8_t flag)
     goto drop;
   }
 
+
+	uip_ipaddr_copy(&tcp_input_addr,&uip_udp_conn->ripaddr);
+		/* JOONKI */
+#if DUAL_RADIO
+	if (radio_received_is_longrange() == LONG_RADIO){
+		tcp_input_addr.u8[3] = 0xAB;
+	}
+#endif
+
   /* Demultiplex this segment. */
   /* First check any active connections. */
   for(uip_connr = &uip_conns[0]; uip_connr <= &uip_conns[UIP_CONNS - 1];
@@ -1624,7 +1670,8 @@ uip_process(uint8_t flag)
     if(uip_connr->tcpstateflags != UIP_CLOSED &&
        UIP_TCP_BUF->destport == uip_connr->lport &&
        UIP_TCP_BUF->srcport == uip_connr->rport &&
-       uip_ipaddr_cmp(&UIP_IP_BUF->srcipaddr, &uip_connr->ripaddr)) {
+       // uip_ipaddr_cmp(&UIP_IP_BUF->srcipaddr, &uip_connr->ripaddr)) {
+       uip_ipaddr_cmp(&UIP_IP_BUF->srcipaddr, &tcp_input_addr)) {
       goto found;
     }
   }
@@ -2267,7 +2314,22 @@ uip_process(uint8_t flag)
   UIP_TCP_BUF->srcport  = uip_connr->lport;
   UIP_TCP_BUF->destport = uip_connr->rport;
 
-  uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &uip_connr->ripaddr);
+
+
+/* JOONKI */
+	uip_ipaddr_copy(&tcp_send_addr, &uip_udp_conn->ripaddr);
+#if DUAL_RADIO
+	if(tcp_send_addr.u8[3] == 0xAB){
+		tcp_send_addr.u8[3] = 0;
+		dual_radio_switch(LONG_RADIO);
+	}	else	{
+		dual_radio_switch(SHORT_RADIO);
+	}
+#endif
+
+
+  // uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &uip_connr->ripaddr);
+  uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &tcp_send_addr);
   uip_ds6_select_src(&UIP_IP_BUF->srcipaddr, &UIP_IP_BUF->destipaddr);
   PRINTF("Sending TCP packet to ");
   PRINT6ADDR(&UIP_IP_BUF->destipaddr);

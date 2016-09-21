@@ -59,6 +59,7 @@ uip_udp_packet_send(struct uip_udp_conn *c, const void *data, int len)
             UIP_BUFSIZE - UIP_LLH_LEN - UIP_IPUDPH_LEN: len);
     uip_process(UIP_UDP_SEND_CONN);
 
+		/*JOONKI: 'Usually multicast engine is off'*/
 #if UIP_CONF_IPV6_MULTICAST
   /* Let the multicast engine process the datagram before we send it */
   if(uip_is_addr_mcast_routable(&uip_udp_conn->ripaddr)) {

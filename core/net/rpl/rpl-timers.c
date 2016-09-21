@@ -184,7 +184,7 @@ handle_dio_timer(void *ptr)
 			// dual_radio_switch(SHORT_RADIO);
 			// dio_output(instance, NULL);
 			// dual_radio_switch(LONG_RADIO);
-			dio_broadcast(instance, NULL);
+			dio_broadcast(instance);
 #else
 			dio_output(instance, NULL);
 #endif

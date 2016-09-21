@@ -19,7 +19,7 @@ int radio_received_is_longrange(void);
 int sending_in_LR(void);
 
 /* Process */
-int dio_broadcast(rpl_instance);
+int dio_broadcast(rpl_instance_t* instance);
 int dis_broadcast(void);
 
 /* Global variable for Dual RPL */

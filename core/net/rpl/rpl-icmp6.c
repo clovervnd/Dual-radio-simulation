@@ -230,7 +230,7 @@ dis_input(void)
 	
 /* JOONKI
  * Need to add dual rpl sequence when we get unicast DIS message
- * I skipped now
+ * Unicast DIS is not used in this version
  */
 
   /* DAG Information Solicitation */
@@ -289,7 +289,7 @@ dis_output(uip_ipaddr_t *addr)
 
 /* JOONKI
  * It's better to add some dual rpl unicast for later use
- * I skipped this now
+ * Unicast DIS is not used in this version
  */
 
   if(addr == NULL) {
@@ -951,8 +951,8 @@ fwd_dao:
         out_seq = prepare_for_dao_fwd(sequence, rep);
       }
 
-  			uip_ipaddr_copy(&tmp_addr_2, rpl_get_parent_ipaddr(dag->preferred_parent));
 /*JOONKI*/
+  			uip_ipaddr_copy(&tmp_addr_2, rpl_get_parent_ipaddr(dag->preferred_parent));
 #if DUAL_RADIO
 				if (tmp_addr_2.u8[3] == 0xAB)	{
 					tmp_addr_2.u8[3] = 0;
