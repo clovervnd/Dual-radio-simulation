@@ -232,7 +232,7 @@ radio_send(const void *payload, unsigned short payload_len)
 		}	
 /* IN CASE OF SHORT RADIO */
 	else {	
-#else	/* DUAL_RADIO */
+#endif /* DUAL_RADIO */
 		printf("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
 		printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
 	  if(simOutSize > 0) {
@@ -248,7 +248,6 @@ radio_send(const void *payload, unsigned short payload_len)
 	  /* Copy packet data to temporary storage */
  	 memcpy(simOutDataBuffer, payload, payload_len);
  	 simOutSize = payload_len;
-#endif /* DUAL_RADIO */
 
 #if DUAL_RADIO
 	}

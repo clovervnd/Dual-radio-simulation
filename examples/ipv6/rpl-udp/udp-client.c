@@ -107,9 +107,9 @@ send_packet(void *ptr)
 #endif /* SERVER_REPLY */
 
   seq_id++;
-  PRINTF("DATA send to %d 'Hello %d'\n",
+  PRINTF("DATA send to %d 'Hi/Hello %d'\n",
          server_ipaddr.u8[sizeof(server_ipaddr.u8) - 1], seq_id);
-  sprintf(buf, "Hello %d from the client", seq_id);
+  sprintf(buf, "Hi/Hello %d from the client", seq_id);
   uip_udp_packet_sendto(client_conn, buf, strlen(buf),
                         &server_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
 }

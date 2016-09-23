@@ -51,7 +51,7 @@
 #include "sys/cooja_mt.h"
 #endif /* CONTIKI_TARGET_COOJA */
 
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -108,6 +108,14 @@
 #endif /* NULLRDC_SEND_802154_ACK */
 
 #define ACK_LEN 3
+
+#if DUAL_RADIO
+#ifdef ZOLERTIA_Z1
+#include "../platform/z1/dual_radio.h"
+#else
+#include "../platform/cooja/dual_conf.h"
+#endif
+#endif
 
 /*---------------------------------------------------------------------------*/
 static int
@@ -306,6 +314,9 @@ packet_input(void)
  
 #if NULLRDC_SEND_802154_ACK
     {
+			/* JOONKI
+			 * Is the retransmission comming from this part?? */
+			PRINTF("802154 Framer ack\n");
       frame802154_t info154;
       frame802154_parse(original_dataptr, original_datalen, &info154);
       if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
@@ -317,6 +328,14 @@ packet_input(void)
         ackdata[0] = FRAME802154_ACKFRAME;
         ackdata[1] = 0;
         ackdata[2] = info154.seq;
+				/* JOONKI */
+#if DUAL_RADIO
+				if (radio_received_is_longrange()==LONG_RADIO){
+					dual_radio_switch(LONG_RADIO);
+				}	else if (radio_received_is_longrange() == SHORT_RADIO){
+					dual_radio_switch(SHORT_RADIO);
+				}
+#endif
         NETSTACK_RADIO.send(ackdata, ACK_LEN);
       }
     }

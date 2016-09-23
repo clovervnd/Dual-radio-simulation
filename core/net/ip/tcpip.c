@@ -122,6 +122,10 @@ uint8_t
 tcpip_output(const uip_lladdr_t *a)
 {
   int ret;
+	
+	PRINTF("TCPIP send:");
+	PRINT6ADDR(a);
+	PRINTF("\n");
   if(outputfunc != NULL) {
     ret = outputfunc(a);
     return ret;
