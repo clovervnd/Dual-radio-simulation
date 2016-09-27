@@ -47,6 +47,15 @@
 #include "net/ipv6/uip-ds6.h"
 #endif
 
+#if DUAL_RADIO
+#ifdef ZOLERTIA_Z1
+#include "../platform/z1/dual_radio.h"
+#else /* DUAL_RADIO */
+#include "../platform/cooja/dual_conf.h"
+#endif
+#endif
+
+
 #include <string.h>
 
 #include "ip_debug.h"
@@ -124,9 +133,11 @@ tcpip_output(const uip_lladdr_t *a)
   int ret;
 	
 	PRINTF("TCPIP send:");
-	PRINT6ADDR(a);
+	PRINT6ADDR((uip_ipaddr_t*)a);
 	PRINTF("\n");
   if(outputfunc != NULL) {
+		/* JOONKI */
+
     ret = outputfunc(a);
     return ret;
   }
@@ -537,6 +548,7 @@ tcpip_ipv6_output(void)
 {
   uip_ds6_nbr_t *nbr = NULL;
   uip_ipaddr_t *nexthop;
+	uip_ipaddr_t foraddr;
 
   if(uip_len == 0) {
     return;
@@ -554,14 +566,17 @@ tcpip_ipv6_output(void)
     return;
   }
 
+
   if(!uip_is_addr_mcast(&UIP_IP_BUF->destipaddr)) {
-    /* Next hop determination */
+    		
+		/* Next hop determination */
     nbr = NULL;
 
     /* We first check if the destination address is on our immediate
        link. If so, we simply use the destination address as our
        nexthop address. */
     if(uip_ds6_is_addr_onlink(&UIP_IP_BUF->destipaddr)){
+			PRINTF("aaaaaaaaaaaaaaaaaaaaaaa  NEAR NEXTHOP\n");
       nexthop = &UIP_IP_BUF->destipaddr;
     } else {
       uip_ds6_route_t *route;
@@ -645,18 +660,31 @@ tcpip_ipv6_output(void)
     }
 
     /* End of next hop determination */
-
 #if UIP_CONF_IPV6_RPL
     if(rpl_update_header_final(nexthop)) {
       uip_clear_buf();
-      return;
+			return;
     }
 #endif /* UIP_CONF_IPV6_RPL */
-    nbr = uip_ds6_nbr_lookup(nexthop);
+
+		/* JOONKI */
+		uip_ipaddr_copy(&foraddr, nexthop);
+#if DUAL_RADIO
+		if (foraddr.u8[2] == 0xAB){
+			foraddr.u8[2] = 0;
+			dual_radio_switch(LONG_RADIO);
+		}	else if(foraddr.u8[2] != 0)	{
+			dual_radio_switch(LONG_RADIO);
+		}	else {
+			dual_radio_switch(SHORT_RADIO);
+		}
+#endif
+
+    nbr = uip_ds6_nbr_lookup(&foraddr);
     if(nbr == NULL) {
 #if UIP_ND6_SEND_NA
-      if((nbr = uip_ds6_nbr_add(nexthop, NULL, 0, NBR_INCOMPLETE, NBR_TABLE_REASON_IPV6_ND, NULL)) == NULL) {
-        uip_clear_buf();
+      if((nbr = uip_ds6_nbr_add(nexthop, NULL, 0, NBR_INCOMPLETE, NBR_TABLE_REASON_IPV6_ND, NULL)) == NULL) {  
+				uip_clear_buf();
         return;
       } else {
 #if UIP_CONF_IPV6_QUEUE_PKT
@@ -710,7 +738,7 @@ tcpip_ipv6_output(void)
         PRINTF("tcpip_ipv6_output: nbr cache entry stale moving to delay\n");
       }
 #endif /* UIP_ND6_SEND_NA */
-
+		
       tcpip_output(uip_ds6_nbr_get_ll(nbr));
 
 #if UIP_CONF_IPV6_QUEUE_PKT
@@ -724,13 +752,13 @@ tcpip_ipv6_output(void)
         uip_len = uip_packetqueue_buflen(&nbr->packethandle);
         memcpy(UIP_IP_BUF, uip_packetqueue_buf(&nbr->packethandle), uip_len);
         uip_packetqueue_free(&nbr->packethandle);
-        tcpip_output(uip_ds6_nbr_get_ll(nbr));
+				tcpip_output(uip_ds6_nbr_get_ll(nbr));
       }
 #endif /*UIP_CONF_IPV6_QUEUE_PKT*/
 
       uip_clear_buf();
       return;
-    }
+		}
   }
   /* Multicast IP destination address. */
   tcpip_output(NULL);

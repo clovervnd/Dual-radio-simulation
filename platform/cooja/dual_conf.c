@@ -1,5 +1,5 @@
 #include "dual_conf.h"
-#define DEBUG_DUAL	0
+#define DEBUG_DUAL	1
 #if DEBUG_DUAL
 #include <stdio.h>
 #include "net/rpl/rpl-icmp6.h"

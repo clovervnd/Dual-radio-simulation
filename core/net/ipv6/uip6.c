@@ -1536,13 +1536,15 @@ uip_process(uint8_t flag)
        connection is bound to a remote IP address, the source IP
        address of the packet is checked. */
 
-		uip_ipaddr_copy(&udp_input_addr,&uip_udp_conn->ripaddr);
 		/* JOONKI */
+		uip_ipaddr_copy(&udp_input_addr,&uip_udp_conn->ripaddr);
+/*
 #if DUAL_RADIO
 		if (radio_received_is_longrange() == LONG_RADIO){
-			udp_input_addr.u8[3] = 0xAB;
+			udp_input_addr.u8[2] = 0xAB;
 		}
 #endif
+*/
 
     if(uip_udp_conn->lport != 0 &&
        UIP_UDP_BUF->destport == uip_udp_conn->lport &&
@@ -1597,15 +1599,16 @@ uip_process(uint8_t flag)
 
 	/* JOONKI */
 	uip_ipaddr_copy(&udp_send_addr, &uip_udp_conn->ripaddr);
+/*
 #if DUAL_RADIO
-	if(udp_send_addr.u8[3] == 0xAB){
-		udp_send_addr.u8[3] = 0;
+	if(udp_send_addr.u8[2] == 0xAB){
+		udp_send_addr.u8[2] = 0;
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
 		dual_radio_switch(SHORT_RADIO);
 	}
 #endif
-
+*/
   // uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &uip_udp_conn->ripaddr);
   uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &udp_send_addr);
   uip_ds6_select_src(&UIP_IP_BUF->srcipaddr, &UIP_IP_BUF->destipaddr);
@@ -1655,13 +1658,14 @@ uip_process(uint8_t flag)
   }
 
 
+	/* JOONKI */
 	uip_ipaddr_copy(&tcp_input_addr,&uip_udp_conn->ripaddr);
-		/* JOONKI */
-#if DUAL_RADIO
+/* #if DUAL_RADIO
 	if (radio_received_is_longrange() == LONG_RADIO){
-		tcp_input_addr.u8[3] = 0xAB;
+		tcp_input_addr.u8[2] = 0xAB;
 	}
 #endif
+*/
 
   /* Demultiplex this segment. */
   /* First check any active connections. */
@@ -2318,15 +2322,15 @@ uip_process(uint8_t flag)
 
 /* JOONKI */
 	uip_ipaddr_copy(&tcp_send_addr, &uip_udp_conn->ripaddr);
-#if DUAL_RADIO
-	if(tcp_send_addr.u8[3] == 0xAB){
-		tcp_send_addr.u8[3] = 0;
+/* #if DUAL_RADIO
+	if(tcp_send_addr.u8[2] == 0xAB){
+		tcp_send_addr.u8[2] = 0;
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
 		dual_radio_switch(SHORT_RADIO);
 	}
 #endif
-
+*/
 
   // uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &uip_connr->ripaddr);
   uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &tcp_send_addr);

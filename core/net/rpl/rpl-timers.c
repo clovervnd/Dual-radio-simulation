@@ -85,8 +85,6 @@ handle_periodic_timer(void *ptr)
   rpl_purge_dags();
   rpl_purge_routes();
   rpl_recalculate_ranks();
-	// static struct etimer et;
-	int count=0;
 
   /* handle DIS */
 #if RPL_DIS_SEND

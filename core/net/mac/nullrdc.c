@@ -316,14 +316,15 @@ packet_input(void)
     {
 			/* JOONKI
 			 * Is the retransmission comming from this part?? */
-			PRINTF("802154 Framer ack\n");
       frame802154_t info154;
       frame802154_parse(original_dataptr, original_datalen, &info154);
       if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
          info154.fcf.ack_required != 0 &&
          linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
                       &linkaddr_node_addr)) {
-        uint8_t ackdata[ACK_LEN] = {0, 0, 0};
+        
+				PRINTF("802154 Framer ack\n");
+				uint8_t ackdata[ACK_LEN] = {0, 0, 0};
 
         ackdata[0] = FRAME802154_ACKFRAME;
         ackdata[1] = 0;
