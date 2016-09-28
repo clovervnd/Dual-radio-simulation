@@ -198,15 +198,27 @@ uip_ds6_nbr_t *
 rpl_icmp6_update_nbr_table(uip_ipaddr_t *from, nbr_table_reason_t reason, void *data)
 {
   uip_ds6_nbr_t *nbr;
+	linkaddr_t temp_lladdr;
 
   if((nbr = uip_ds6_nbr_lookup(from)) == NULL) {
+		/* JOONKI */
+		temp_lladdr = *packetbuf_addr(PACKETBUF_ADDR_SENDER);
+#if DUAL_RADIO
+		if (radio_received_is_longrange() == LONG_RADIO){
+			temp_lladdr.u8[0] = 0xAB;
+		}	else {
+			temp_lladdr.u8[0] = 0;
+		}
+#endif
     if((nbr = uip_ds6_nbr_add(from, (uip_lladdr_t *)
-                              packetbuf_addr(PACKETBUF_ADDR_SENDER),
+															// packetbuf_addr(PACKETBUF_ADDR_SENDER),
+                              & temp_lladdr,
                               0, NBR_REACHABLE, reason, data)) != NULL) {
       PRINTF("RPL: Neighbor added to neighbor cache ");
       PRINT6ADDR(from);
       PRINTF(", ");
-      PRINTLLADDR((uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER));
+      // PRINTLLADDR((uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER));
+      PRINTLLADDR((uip_lladdr_t *)&temp_lladdr);
       PRINTF("\n");
     }
   }

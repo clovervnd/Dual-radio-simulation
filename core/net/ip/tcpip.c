@@ -132,7 +132,7 @@ tcpip_output(const uip_lladdr_t *a)
 {
   int ret;
 	
-	PRINTF("TCPIP send:");
+	PRINTF("TCPIP send to link local address:");
 	PRINT6ADDR((uip_ipaddr_t*)a);
 	PRINTF("\n");
   if(outputfunc != NULL) {
@@ -671,16 +671,21 @@ tcpip_ipv6_output(void)
 		uip_ipaddr_copy(&foraddr, nexthop);
 #if DUAL_RADIO
 		if (foraddr.u8[2] == 0xAB){
-			foraddr.u8[2] = 0;
 			dual_radio_switch(LONG_RADIO);
-		}	else if(foraddr.u8[2] != 0)	{
+			PRINTF("1\n");
+/*		}	else if(foraddr.u8[4] != 0)	{
 			dual_radio_switch(LONG_RADIO);
+			PRINTF("2\n");*/
 		}	else {
 			dual_radio_switch(SHORT_RADIO);
+			PRINTF("3\n");
 		}
 #endif
+		PRINTF("route nexthop addr send:");
+		PRINT6ADDR(&foraddr);
+		PRINTF("\n");
 
-    nbr = uip_ds6_nbr_lookup(&foraddr);
+    nbr = uip_ds6_nbr_lookup(nexthop);
     if(nbr == NULL) {
 #if UIP_ND6_SEND_NA
       if((nbr = uip_ds6_nbr_add(nexthop, NULL, 0, NBR_INCOMPLETE, NBR_TABLE_REASON_IPV6_ND, NULL)) == NULL) {  
@@ -711,7 +716,8 @@ tcpip_ipv6_output(void)
         /* Send the first NS try from here (multicast destination IP address). */
       }
 #else /* UIP_ND6_SEND_NA */
-      uip_len = 0;
+			PRINTF("here??\n");
+			uip_len = 0;
       return;  
 #endif /* UIP_ND6_SEND_NA */
     } else {
