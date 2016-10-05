@@ -133,11 +133,9 @@ tcpip_output(const uip_lladdr_t *a)
   int ret;
 	
 	PRINTF("TCPIP send to link local address:");
-	PRINT6ADDR((uip_ipaddr_t*)a);
+	PRINTLLADDR(a);
 	PRINTF("\n");
   if(outputfunc != NULL) {
-		/* JOONKI */
-
     ret = outputfunc(a);
     return ret;
   }
@@ -576,7 +574,7 @@ tcpip_ipv6_output(void)
        link. If so, we simply use the destination address as our
        nexthop address. */
     if(uip_ds6_is_addr_onlink(&UIP_IP_BUF->destipaddr)){
-			PRINTF("aaaaaaaaaaaaaaaaaaaaaaa  NEAR NEXTHOP\n");
+			PRINTF("Destination node is in my neighbor!!!\n");
       nexthop = &UIP_IP_BUF->destipaddr;
     } else {
       uip_ds6_route_t *route;
@@ -672,13 +670,8 @@ tcpip_ipv6_output(void)
 #if DUAL_RADIO
 		if (foraddr.u8[2] == 0xAB){
 			dual_radio_switch(LONG_RADIO);
-			PRINTF("1\n");
-/*		}	else if(foraddr.u8[4] != 0)	{
-			dual_radio_switch(LONG_RADIO);
-			PRINTF("2\n");*/
 		}	else {
 			dual_radio_switch(SHORT_RADIO);
-			PRINTF("3\n");
 		}
 #endif
 		PRINTF("route nexthop addr send:");

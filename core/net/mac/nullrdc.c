@@ -276,24 +276,46 @@ packet_input(void)
 #if NULLRDC_SEND_802154_ACK
   int original_datalen;
   uint8_t *original_dataptr;
+	int parse;
 
   original_datalen = packetbuf_datalen();
   original_dataptr = packetbuf_dataptr();
 #endif
 
+
+	
 #if NULLRDC_802154_AUTOACK
   if(packetbuf_datalen() == ACK_LEN) {
     /* Ignore ack packets */
     PRINTF("nullrdc: ignored ack\n"); 
   } else
 #endif /* NULLRDC_802154_AUTOACK */
-  if(NETSTACK_FRAMER.parse() < 0) {
+	parse = NETSTACK_FRAMER.parse();
+
+#if DUAL_RADIO
+	linkaddr_t temp_lladdr;
+	temp_lladdr = *packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
+	temp_lladdr.u8[0] = 0;
+/*		PRINTF("%x:%x:%x:%x\n",packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[0],packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[1],packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[2],packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[3]);
+		PRINTF("%x:%x:%x:%x",temp_lladdr.u8[0],temp_lladdr.u8[1],temp_lladdr.u8[2],temp_lladdr.u8[3]);
+		PRINTF(":%x:%x:%x:%x\n",temp_lladdr.u8[4],temp_lladdr.u8[5],temp_lladdr.u8[6],temp_lladdr.u8[7]); */
+#endif   
+
+	if(parse < 0) {
     PRINTF("nullrdc: failed to parse %u\n", packetbuf_datalen());
 #if NULLRDC_ADDRESS_FILTER
-  } else if(!linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+#if DUAL_RADIO
+} else if(!(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+                                         &linkaddr_node_addr)|| linkaddr_cmp(&temp_lladdr,&linkaddr_node_addr))&&
+            !packetbuf_holds_broadcast()) {
+    PRINTF("nullrdc: not for us\n");
+
+#else
+	} else if(!linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
                                          &linkaddr_node_addr) &&
             !packetbuf_holds_broadcast()) {
     PRINTF("nullrdc: not for us\n");
+#endif	/* DUAL_RADIO */
 #endif /* NULLRDC_ADDRESS_FILTER */
   } else {
     int duplicate = 0;
