@@ -1519,6 +1519,7 @@ input(void)
   uint8_t first_fragment = 0, last_fragment = 0;
 #endif /*SICSLOWPAN_CONF_FRAG*/
 
+	PRINTF("Sicslowpan Input\n");
   /* init */
   uncomp_hdr_len = 0;
   packetbuf_hdr_len = 0;
@@ -1720,6 +1721,7 @@ input(void)
 
     /* if callback is set then set attributes and call */
     if(callback) {
+			PRINTF("SICSLOWPAN CALLBACK IS CALLED\n");
       set_packet_attrs();
       callback->input_callback();
     }

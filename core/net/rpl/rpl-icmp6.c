@@ -204,11 +204,13 @@ rpl_icmp6_update_nbr_table(uip_ipaddr_t *from, nbr_table_reason_t reason, void *
 		/* JOONKI */
 		temp_lladdr = *packetbuf_addr(PACKETBUF_ADDR_SENDER);
 #if DUAL_RADIO
+		/*
 		if (radio_received_is_longrange() == LONG_RADIO){
 			temp_lladdr.u8[0] = 0xAB;
 		}	else {
 			temp_lladdr.u8[0] = 0;
 		}
+		*/
 #endif
     if((nbr = uip_ds6_nbr_add(from, (uip_lladdr_t *)
 															// packetbuf_addr(PACKETBUF_ADDR_SENDER),
@@ -348,10 +350,12 @@ dio_input(void)
 
 #if DUAL_RADIO
 	/*JOONKI*/
+	/*
 	radio_mode = radio_received_is_longrange();
 	if (radio_mode == LONG_RADIO)	{
 		from.u8[2] = 0xAB;
 	}
+	*/
 #endif
 	
   /* DAG Information Object */
@@ -666,16 +670,15 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   } else {
 
 /*JOONKI*/
-/*
+
 #if DUAL_RADIO
 		if (uc_addr->u8[2] == 0xAB)	{
-			uc_addr->u8[2] = 0;
 			dual_radio_switch(LONG_RADIO);
 		}	else	{
 			dual_radio_switch(SHORT_RADIO);
 		}
 #endif
-*/
+
 
     PRINTF("RPL: Sending unicast-DIO with rank %u to ",
         (unsigned)instance->current_dag->rank);
@@ -726,10 +729,12 @@ dao_input(void)
 
 #if DUAL_RADIO
 	/*JOONKI*/
+	/*
 	radio_mode = radio_received_is_longrange();
 	if (radio_mode == LONG_RADIO)	{
 		dao_sender_addr.u8[2] = 0xAB;
 	}
+	*/
 #endif
   
 	/* DAG Information Object */
@@ -867,19 +872,15 @@ dao_input(void)
         uint8_t out_seq;
         out_seq = prepare_for_dao_fwd(sequence, rep);
 
-  			uip_ipaddr_copy(&tmp_addr, rpl_get_parent_ipaddr(dag->preferred_parent));
-
 /*JOONKI*/
-				/*
+  			uip_ipaddr_copy(&tmp_addr, rpl_get_parent_ipaddr(dag->preferred_parent));
 #if DUAL_RADIO
 				if (tmp_addr.u8[2] == 0xAB)	{
-					tmp_addr.u8[2] = 0;
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
 				}
 #endif
-				*/
         PRINTF("RPL: Forwarding No-path DAO to parent - out_seq:%d",
 	       out_seq);
         PRINT6ADDR(&tmp_addr);
@@ -970,16 +971,13 @@ fwd_dao:
 
 /*JOONKI*/
   			uip_ipaddr_copy(&tmp_addr_2, rpl_get_parent_ipaddr(dag->preferred_parent));
-				/*
 #if DUAL_RADIO
 				if (tmp_addr_2.u8[2] == 0xAB)	{
-					tmp_addr_2.u8[2] = 0;
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
 				}
 #endif
- 				*/
 
       PRINTF("RPL: Forwarding DAO to parent ");
       PRINT6ADDR(&tmp_addr_2);
@@ -1184,18 +1182,15 @@ dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
   buffer[pos++] = 0; /* path seq - ignored */
   buffer[pos++] = lifetime;
 
-  uip_ipaddr_copy(&dst, rpl_get_parent_ipaddr(parent));
 /*JOONKI*/
-	/*
+  uip_ipaddr_copy(&dst, rpl_get_parent_ipaddr(parent));
 #if DUAL_RADIO
 	if (dst.u8[2] == 0xAB)	{
-		dst.u8[2] = 0;
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
 		dual_radio_switch(SHORT_RADIO);
 	}
 #endif
-	*/
 
   PRINTF("RPL: Sending a %sDAO with sequence number %u, lifetime %u, prefix ",
       lifetime == RPL_ZERO_LIFETIME ? "No-Path " : "", seq_no, lifetime);
@@ -1237,10 +1232,12 @@ dao_ack_input(void)
   uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
 #if DUAL_RADIO
 	/*JOONKI*/
+	/* 
 	radio_mode = radio_received_is_longrange();
 	if (radio_mode == LONG_RADIO)	{
 		from.u8[2] = 0xAB;
 	}
+	*/
 #endif
   
 	/* DAG Information Object */
@@ -1295,16 +1292,13 @@ dao_ack_input(void)
       nexthop = uip_ds6_route_nexthop(re);
 
 /*JOONKI*/
-			/*
 #if DUAL_RADIO
 			if (nexthop->u8[2] == 0xAB)	{
-				nexthop->u8[2] = 0;
 				dual_radio_switch(LONG_RADIO);
 			}	else	{
 				dual_radio_switch(SHORT_RADIO);
 			}
 #endif
-			*/
 
       if(nexthop == NULL) {
         PRINTF("RPL: No next hop to fwd DAO ACK to\n");
@@ -1338,7 +1332,6 @@ dao_ack_output(rpl_instance_t *instance, uip_ipaddr_t *dest, uint8_t sequence,
 /*JOONKI*/
 #if DUAL_RADIO
 	if (dest->u8[2] == 0xAB)	{
-		dest->u8[2] = 0;
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
 		dual_radio_switch(SHORT_RADIO);

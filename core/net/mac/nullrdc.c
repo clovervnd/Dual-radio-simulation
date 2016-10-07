@@ -123,8 +123,20 @@ send_one_packet(mac_callback_t sent, void *ptr)
 {
   int ret;
   int last_sent_ok = 0;
+	linkaddr_t temp_node_lladdr;
 
-  packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
+	temp_node_lladdr = linkaddr_node_addr;
+#if DUAL_RADIO
+	if(sending_in_LR() == LONG_RADIO){
+		temp_node_lladdr.u8[0] = 0xAB;
+	}
+#endif
+  // packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
+  packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &temp_node_lladdr);
+	// PRINTF("nullrdc, packetbuf test : ");
+	PRINTF("%x\n",(*packetbuf_addr(PACKETBUF_ADDR_SENDER)).u8[0]);
+	// PRINTF("%x:%x:%x:%x",temp_node_lladdr.u8[0],temp_node_lladdr.u8[1],temp_node_lladdr.u8[2],temp_node_lladdr.u8[3]);
+
 #if NULLRDC_802154_AUTOACK || NULLRDC_802154_AUTOACK_HW
   packetbuf_set_attr(PACKETBUF_ATTR_MAC_ACK, 1);
 #endif /* NULLRDC_802154_AUTOACK || NULLRDC_802154_AUTOACK_HW */
@@ -281,8 +293,6 @@ packet_input(void)
   original_datalen = packetbuf_datalen();
   original_dataptr = packetbuf_dataptr();
 #endif
-
-
 	
 #if NULLRDC_802154_AUTOACK
   if(packetbuf_datalen() == ACK_LEN) {
@@ -294,16 +304,26 @@ packet_input(void)
 
 #if DUAL_RADIO
 	linkaddr_t temp_lladdr;
+	linkaddr_t temp_node_lladdr;
+	temp_node_lladdr = linkaddr_node_addr;
 	temp_lladdr = *packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
+	temp_node_lladdr.u8[0] = 0xAB;
 	temp_lladdr.u8[0] = 0;
+
 /*		PRINTF("%x:%x:%x:%x\n",packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[0],packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[1],packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[2],packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[3]);
 		PRINTF("%x:%x:%x:%x",temp_lladdr.u8[0],temp_lladdr.u8[1],temp_lladdr.u8[2],temp_lladdr.u8[3]);
 		PRINTF(":%x:%x:%x:%x\n",temp_lladdr.u8[4],temp_lladdr.u8[5],temp_lladdr.u8[6],temp_lladdr.u8[7]); */
+
+	// PRINTF("nullrdc, packet input, packetbuf test : ");
+	PRINTF("%x\n",(*packetbuf_addr(PACKETBUF_ADDR_SENDER)).u8[0]);
+
 #endif   
 
 	if(parse < 0) {
     PRINTF("nullrdc: failed to parse %u\n", packetbuf_datalen());
 #if NULLRDC_ADDRESS_FILTER
+
+/* JOONKI */
 #if DUAL_RADIO
 } else if(!(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
                                          &linkaddr_node_addr)|| linkaddr_cmp(&temp_lladdr,&linkaddr_node_addr))&&
@@ -340,11 +360,20 @@ packet_input(void)
 			 * Is the retransmission comming from this part?? */
       frame802154_t info154;
       frame802154_parse(original_dataptr, original_datalen, &info154);
+
+			/* JOONKI */
+#if DUAL_RADIO
       if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
          info154.fcf.ack_required != 0 &&
-         linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+				 (linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+                      &linkaddr_node_addr))||linkaddr_cmp((linkaddr_t*)&info154.dest_addr,&temp_node_lladdr)) {
+#else
+			if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
+        	info154.fcf.ack_required != 0 &&
+					linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
                       &linkaddr_node_addr)) {
-        
+#endif   
+
 				PRINTF("802154 Framer ack\n");
 				uint8_t ackdata[ACK_LEN] = {0, 0, 0};
 

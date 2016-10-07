@@ -61,6 +61,15 @@
 #define ANA(...)
 #endif
 
+#if DUAL_RADIO
+#ifdef ZOLERTIA_Z1
+#include "../platform/z1/dual_radio.h"
+#else
+#include "../platform/cooja/dual_conf.h"
+#endif
+#endif
+
+
 struct etimer uip_ds6_timer_periodic;                           /**< Timer for maintenance of data structures */
 
 #if UIP_CONF_ROUTER
@@ -514,6 +523,10 @@ uip_ds6_select_src(uip_ipaddr_t *src, uip_ipaddr_t *dst)
   uint8_t best = 0;             /* number of bit in common with best match */
   uint8_t n = 0;
   uip_ds6_addr_t *matchaddr = NULL;
+#if DUAL_RADIO
+	uip_ipaddr_t temp_src;
+#endif
+
 
   if(!uip_is_addr_linklocal(dst) && !uip_is_addr_mcast(dst)) {
     /* find longest match */
@@ -541,7 +554,18 @@ uip_ds6_select_src(uip_ipaddr_t *src, uip_ipaddr_t *dst)
   if(matchaddr == NULL) {
     uip_create_unspecified(src);
   } else {
-    uip_ipaddr_copy(src, &matchaddr->ipaddr);
+		uip_ipaddr_copy(&temp_src, &matchaddr->ipaddr);
+#if DUAL_RADIO
+		if(sending_in_LR() == LONG_RADIO)
+		{
+			temp_src.u8[2] = 0xAB;
+		}
+#endif
+    //uip_ipaddr_copy(src, &matchaddr->ipaddr);
+		PRINTF("Sending a message with the source ipaddr:");
+		PRINT6ADDR(&temp_src);
+		PRINTF("\n");
+    uip_ipaddr_copy(src, &temp_src);
   }
 }
 

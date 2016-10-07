@@ -319,6 +319,12 @@ uip_icmp6_send(const uip_ipaddr_t *dest, int type, int code, int payload_len)
   memcpy(&UIP_IP_BUF->destipaddr, dest, sizeof(*dest));
   uip_ds6_select_src(&UIP_IP_BUF->srcipaddr, &UIP_IP_BUF->destipaddr);
 
+
+	PRINTF("At uip_icmp6_send: ");
+	PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
+	PRINTF("\n");
+
+
   UIP_ICMP_BUF->type = type;
   UIP_ICMP_BUF->icode = code;
 

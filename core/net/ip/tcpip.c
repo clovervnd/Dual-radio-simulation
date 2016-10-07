@@ -219,6 +219,7 @@ packet_input(void)
     check_for_tcp_syn();
     uip_input();
     if(uip_len > 0) {
+			PRINTF("uip_len > 0 \n");
 #if UIP_CONF_TCP_SPLIT
       uip_split_output();
 #else /* UIP_CONF_TCP_SPLIT */

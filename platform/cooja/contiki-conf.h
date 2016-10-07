@@ -80,7 +80,9 @@
 
 /* Network setup for IPv6 */
 #define NETSTACK_CONF_NETWORK       sicslowpan_driver
-#define NETSTACK_CONF_MAC           csma_driver
+/* JOONKI */ 
+// #define NETSTACK_CONF_MAC           csma_driver
+#define NETSTACK_CONF_MAC           nullmac_driver
 #define NETSTACK_CONF_RDC           nullrdc_driver
 #define NETSTACK_CONF_RADIO         cooja_radio_driver
 #define NETSTACK_CONF_FRAMER        framer_802154
@@ -165,7 +167,8 @@
 #define UIP_CONF_NETIF_MAX_ADDRESSES    3
 #define UIP_CONF_IP_FORWARD             0
 
-#define SICSLOWPAN_CONF_COMPRESSION             SICSLOWPAN_COMPRESSION_HC06
+//#define SICSLOWPAN_CONF_COMPRESSION             SICSLOWPAN_COMPRESSION_HC06
+#define SICSLOWPAN_CONF_COMPRESSION             SICSLOWPAN_COMPRESSION_IPV6
 #ifndef SICSLOWPAN_CONF_FRAG
 #define SICSLOWPAN_CONF_FRAG                    1
 #define SICSLOWPAN_CONF_MAXAGE                  8
