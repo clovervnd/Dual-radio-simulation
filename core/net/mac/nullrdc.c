@@ -134,7 +134,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
   // packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
   packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &temp_node_lladdr);
 	// PRINTF("nullrdc, packetbuf test : ");
-	PRINTF("%x\n",(*packetbuf_addr(PACKETBUF_ADDR_SENDER)).u8[0]);
+	// PRINTF("%x\n",(*packetbuf_addr(PACKETBUF_ADDR_SENDER)).u8[0]);
 	// PRINTF("%x:%x:%x:%x",temp_node_lladdr.u8[0],temp_node_lladdr.u8[1],temp_node_lladdr.u8[2],temp_node_lladdr.u8[3]);
 
 #if NULLRDC_802154_AUTOACK || NULLRDC_802154_AUTOACK_HW
@@ -315,7 +315,7 @@ packet_input(void)
 		PRINTF(":%x:%x:%x:%x\n",temp_lladdr.u8[4],temp_lladdr.u8[5],temp_lladdr.u8[6],temp_lladdr.u8[7]); */
 
 	// PRINTF("nullrdc, packet input, packetbuf test : ");
-	PRINTF("%x\n",(*packetbuf_addr(PACKETBUF_ADDR_SENDER)).u8[0]);
+	// PRINTF("%x\n",(*packetbuf_addr(PACKETBUF_ADDR_SENDER)).u8[0]);
 
 #endif   
 

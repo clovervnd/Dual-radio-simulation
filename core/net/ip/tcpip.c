@@ -602,6 +602,7 @@ tcpip_ipv6_output(void)
            * to send a new packet to the peer */
           if(UIP_FALLBACK_INTERFACE.output() < 0) {
             PRINTF("FALLBACK: output error. Reporting DST UNREACH\n");
+						PRINTF("tcpip line number 605 \n");
             uip_icmp6_error_output(ICMP6_DST_UNREACH, ICMP6_DST_UNREACH_ADDR, 0);
             uip_flags = 0;
             tcpip_ipv6_output();
