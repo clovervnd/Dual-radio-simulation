@@ -243,6 +243,8 @@ rpl_add_route(rpl_dag_t *dag, uip_ipaddr_t *prefix, int prefix_len,
   RPL_ROUTE_CLEAR_NOPATH_RECEIVED(rep);
 
   PRINTF("RPL: Added a route to ");
+  /*printf("RPL: Added a route to ");
+	fflush(stdout);*/
   PRINT6ADDR(prefix);
   PRINTF("/%d via ", prefix_len);
   PRINT6ADDR(next_hop);

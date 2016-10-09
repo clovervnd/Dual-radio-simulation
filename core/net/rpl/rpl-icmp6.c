@@ -918,7 +918,6 @@ dao_input(void)
     }
     goto discard;
   }
-
   rep = rpl_add_route(dag, &prefix, prefixlen, &dao_sender_addr);
   if(rep == NULL) {
     RPL_STAT(rpl_stats.mem_overflows++);
@@ -956,7 +955,7 @@ fwd_dao:
         should_ack = 1;
       }
     }
-
+		
     if(dag->preferred_parent != NULL &&
        rpl_get_parent_ipaddr(dag->preferred_parent) != NULL) {
       uint8_t out_seq = 0;
@@ -988,8 +987,8 @@ fwd_dao:
       uip_icmp6_send(&tmp_addr,
                      ICMP6_RPL, RPL_CODE_DAO, buffer_length);
     }
-
     if(should_ack) {
+
       PRINTF("RPL: Sending DAO ACK\n");
       dao_ack_output(instance, &dao_sender_addr, sequence,
                      RPL_DAO_ACK_UNCONDITIONAL_ACCEPT);

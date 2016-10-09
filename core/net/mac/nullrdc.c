@@ -288,12 +288,13 @@ packet_input(void)
 #if NULLRDC_SEND_802154_ACK
   int original_datalen;
   uint8_t *original_dataptr;
-	int parse;
 
   original_datalen = packetbuf_datalen();
   original_dataptr = packetbuf_dataptr();
 #endif
-	
+
+	/* JOONKI */
+	int parse;
 #if NULLRDC_802154_AUTOACK
   if(packetbuf_datalen() == ACK_LEN) {
     /* Ignore ack packets */
@@ -344,6 +345,9 @@ packet_input(void)
 #if RDC_WITH_DUPLICATE_DETECTION
     /* Check for duplicate packet. */
     duplicate = mac_sequence_is_duplicate();
+		PRINTF("nullrdc: input packet mac sequence number is  %u\n",
+             packetbuf_attr(PACKETBUF_ATTR_MAC_SEQNO));
+
     if(duplicate) {
       /* Drop the packet. */
       PRINTF("nullrdc: drop duplicate link layer packet %u\n",
