@@ -150,7 +150,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
     int is_broadcast;
     uint8_t dsn;
     dsn = ((uint8_t *)packetbuf_hdrptr())[2] & 0xff;
-
+    PRINTF("nullrdc debug(send) dsn %d\n",dsn);
     NETSTACK_RADIO.prepare(packetbuf_hdrptr(), packetbuf_totlen());
 
     is_broadcast = packetbuf_holds_broadcast();
@@ -173,7 +173,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
           ret = MAC_TX_OK;
         } else {
           rtimer_clock_t wt;
-
           /* Check for ack */
           wt = RTIMER_NOW();
           watchdog_periodic();
@@ -185,6 +184,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
           }
 
           ret = MAC_TX_NOACK;
+          PRINTF("ACK here %d %d %d\n",NETSTACK_RADIO.receiving_packet(),NETSTACK_RADIO.pending_packet(),NETSTACK_RADIO.channel_clear());
           if(NETSTACK_RADIO.receiving_packet() ||
              NETSTACK_RADIO.pending_packet() ||
              NETSTACK_RADIO.channel_clear() == 0) {

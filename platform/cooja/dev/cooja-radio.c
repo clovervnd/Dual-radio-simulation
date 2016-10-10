@@ -288,7 +288,7 @@ receiving_packet(void)
 static int
 pending_packet(void)
 {
-  return !simReceiving && simInSize > 0;
+  return (!simReceiving && simInSize > 0)|(!simReceivingLR && simInSizeLR > 0);
 }
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(cooja_radio_process, ev, data)
