@@ -46,6 +46,11 @@
 #include <string.h>
 
 linkaddr_t linkaddr_node_addr;
+
+#if DUAL_RADIO
+linkaddr_t long_linkaddr_node_addr;
+#endif
+
 #if LINKADDR_SIZE == 2
 const linkaddr_t linkaddr_null = { { 0, 0 } };
 #else /*LINKADDR_SIZE == 2*/
@@ -72,6 +77,15 @@ void
 linkaddr_set_node_addr(linkaddr_t *t)
 {
   linkaddr_copy(&linkaddr_node_addr, t);
+
+	/* JOONKI */
+#if DUAL_RADIO
+	linkaddr_t lr_linkaddr;
+	lr_linkaddr = *t;
+	lr_linkaddr.u8[0] = 0xAB;
+
+	linkaddr_copy(&long_linkaddr_node_addr, &lr_linkaddr);
+#endif
 }
 /*---------------------------------------------------------------------------*/
 /** @} */
