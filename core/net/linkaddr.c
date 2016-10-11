@@ -76,13 +76,14 @@ linkaddr_cmp(const linkaddr_t *addr1, const linkaddr_t *addr2)
 void
 linkaddr_set_node_addr(linkaddr_t *t)
 {
-  linkaddr_copy(&linkaddr_node_addr, t);
-
+	linkaddr_t lr_linkaddr;
+  
+	linkaddr_copy(&linkaddr_node_addr, t);
 	/* JOONKI */
 #if DUAL_RADIO
-	linkaddr_t lr_linkaddr;
 	lr_linkaddr = *t;
-	lr_linkaddr.u8[0] = 0xAB;
+	// linkaddr_copy(&lr_linkaddr, t);
+	lr_linkaddr.u8[0] = 0x8;
 
 	linkaddr_copy(&long_linkaddr_node_addr, &lr_linkaddr);
 #endif

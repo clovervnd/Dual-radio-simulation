@@ -123,19 +123,21 @@ send_one_packet(mac_callback_t sent, void *ptr)
 {
   int ret;
   int last_sent_ok = 0;
-	linkaddr_t temp_node_lladdr;
 
-	temp_node_lladdr = linkaddr_node_addr;
+	/* JOONKI */
+
 #if DUAL_RADIO
 	if(sending_in_LR() == LONG_RADIO){
-		temp_node_lladdr.u8[0] = 0xAB;
+  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
+	}	else	{
+  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 	}
 #endif
   // packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
-  packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &temp_node_lladdr);
+  // packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &temp_node_lladdr);
 	// PRINTF("nullrdc, packetbuf test : ");
 	// PRINTF("%x\n",(*packetbuf_addr(PACKETBUF_ADDR_SENDER)).u8[0]);
-	// PRINTF("%x:%x:%x:%x",temp_node_lladdr.u8[0],temp_node_lladdr.u8[1],temp_node_lladdr.u8[2],temp_node_lladdr.u8[3]);
+	// PRINTF("%x:%x:%x:%x",temp_node_lladdr.u9[0],temp_node_lladdr.u8[1],temp_node_lladdr.u8[2],temp_node_lladdr.u8[3]);
 
 #if NULLRDC_802154_AUTOACK || NULLRDC_802154_AUTOACK_HW
   packetbuf_set_attr(PACKETBUF_ATTR_MAC_ACK, 1);
@@ -150,7 +152,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
     int is_broadcast;
     uint8_t dsn;
     dsn = ((uint8_t *)packetbuf_hdrptr())[2] & 0xff;
-
     NETSTACK_RADIO.prepare(packetbuf_hdrptr(), packetbuf_totlen());
 
     is_broadcast = packetbuf_holds_broadcast();
@@ -173,7 +174,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
           ret = MAC_TX_OK;
         } else {
           rtimer_clock_t wt;
-
           /* Check for ack */
           wt = RTIMER_NOW();
           watchdog_periodic();
@@ -303,31 +303,14 @@ packet_input(void)
 #endif /* NULLRDC_802154_AUTOACK */
 	parse = NETSTACK_FRAMER.parse();
 
-#if DUAL_RADIO
-	linkaddr_t temp_lladdr;
-	linkaddr_t temp_node_lladdr;
-	temp_node_lladdr = linkaddr_node_addr;
-	temp_lladdr = *packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
-	temp_node_lladdr.u8[0] = 0xAB;
-	temp_lladdr.u8[0] = 0;
-
-/*		PRINTF("%x:%x:%x:%x\n",packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[0],packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[1],packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[2],packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[3]);
-		PRINTF("%x:%x:%x:%x",temp_lladdr.u8[0],temp_lladdr.u8[1],temp_lladdr.u8[2],temp_lladdr.u8[3]);
-		PRINTF(":%x:%x:%x:%x\n",temp_lladdr.u8[4],temp_lladdr.u8[5],temp_lladdr.u8[6],temp_lladdr.u8[7]); */
-
-	// PRINTF("nullrdc, packet input, packetbuf test : ");
-	// PRINTF("%x\n",(*packetbuf_addr(PACKETBUF_ADDR_SENDER)).u8[0]);
-
-#endif   
-
 	if(parse < 0) {
-    PRINTF("nullrdc: failed to parse %u\n", packetbuf_datalen());
+	  PRINTF("nullrdc: failed to parse %u\n", packetbuf_datalen());
 #if NULLRDC_ADDRESS_FILTER
 
 /* JOONKI */
 #if DUAL_RADIO
-} else if(!(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-                                         &linkaddr_node_addr)|| linkaddr_cmp(&temp_lladdr,&linkaddr_node_addr))&&
+	} else if(!(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+                                         &linkaddr_node_addr)|| linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&long_linkaddr_node_addr))&&
             !packetbuf_holds_broadcast()) {
     PRINTF("nullrdc: not for us\n");
 
@@ -370,7 +353,7 @@ packet_input(void)
       if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
          info154.fcf.ack_required != 0 &&
 				 (linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
-                      &linkaddr_node_addr))||linkaddr_cmp((linkaddr_t*)&info154.dest_addr,&temp_node_lladdr)) {
+                      &linkaddr_node_addr))||linkaddr_cmp((linkaddr_t*)&info154.dest_addr,&long_linkaddr_node_addr)) {
 #else
 			if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
         	info154.fcf.ack_required != 0 &&

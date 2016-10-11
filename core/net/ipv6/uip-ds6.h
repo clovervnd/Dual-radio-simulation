@@ -266,6 +266,11 @@ typedef struct uip_ds6_element {
 
 /*---------------------------------------------------------------------------*/
 extern uip_ds6_netif_t uip_ds6_if;
+#if DUAL_RADIO
+extern uip_ds6_netif_t long_uip_ds6_if;
+#endif
+
+
 extern struct etimer uip_ds6_timer_periodic;
 
 #if UIP_CONF_ROUTER

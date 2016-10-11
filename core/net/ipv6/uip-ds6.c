@@ -86,6 +86,9 @@ static uint8_t rscount;                                         /**< number of r
 /** \name "DS6" Data structures */
 /** @{ */
 uip_ds6_netif_t uip_ds6_if;                                     /**< The single interface */
+#if DUAL_RADIO
+uip_ds6_netif_t long_uip_ds6_if;
+#endif
 uip_ds6_prefix_t uip_ds6_prefix_list[UIP_DS6_PREFIX_NB];        /**< Prefix list */
 
 /* Used by Cooja to enable extraction of addresses from memory.*/
@@ -555,6 +558,8 @@ uip_ds6_select_src(uip_ipaddr_t *src, uip_ipaddr_t *dst)
     uip_create_unspecified(src);
   } else {
 		uip_ipaddr_copy(&temp_src, &matchaddr->ipaddr);
+
+		/* JOONKI */
 #if DUAL_RADIO
 		if(sending_in_LR() == LONG_RADIO)
 		{
