@@ -94,7 +94,7 @@ PROCESS_THREAD(dual_dio_broadcast, ev, data)
 	etimer_set(&et, 128);
 
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-	RADIO("# DIO_BROADCAST: Process stopped for a while\n");
+	RADIO("#-----------------------------DIO_BROADCAST: Process stopped for a while\n");
 	dual_radio_switch(LONG_RADIO);
 	dio_output(temp_instance, NULL);
 	PROCESS_END();
@@ -109,7 +109,7 @@ PROCESS_THREAD(dual_dis_broadcast, ev, data)
 	etimer_set(&et, 128);
 	
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-	RADIO("# DIS_BROADCAST: Process stopped for a while\n");
+	RADIO("#-----------------------------DIS_BROADCAST: Process stopped for a while\n");
 	dual_radio_switch(LONG_RADIO);
 	dis_output(NULL);
 	

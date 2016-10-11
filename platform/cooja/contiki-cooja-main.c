@@ -319,6 +319,14 @@ contiki_init()
       uip_ip6addr(&ipaddr, UIP_DS6_DEFAULT_PREFIX, 0, 0, 0, 0, 0, 0, 0);
       uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
       uip_ds6_addr_add(&ipaddr, 0, ADDR_TENTATIVE);
+
+#if DUAL_RADIO
+			uip_ipaddr_t long_ipaddr;
+			uip_ip6addr(&long_ipaddr, UIP_DS6_DEFAULT_PREFIX, 0, 0, 0, 0, 0, 0, 0);
+      uip_ds6_set_addr_iid(&long_ipaddr, &long_uip_lladdr);
+      uip_ds6_long_addr_add(&long_ipaddr, 0, ADDR_TENTATIVE);
+#endif /* DUAL_RADIO */
+
       printf("Tentative global IPv6 address ");
       for(i = 0; i < 7; ++i) {
         printf("%02x%02x:",
