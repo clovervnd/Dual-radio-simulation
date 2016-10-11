@@ -188,7 +188,6 @@ uip_ds6_init(void)
   uip_create_linklocal_allrouters_mcast(&loc_fipaddr);
   uip_ds6_maddr_add(&loc_fipaddr);
 
-
 #if UIP_ND6_SEND_RA
   stimer_set(&uip_ds6_timer_ra, 2);     /* wait to have a link local IP address */
 #endif /* UIP_ND6_SEND_RA */

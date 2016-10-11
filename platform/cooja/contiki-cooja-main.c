@@ -323,7 +323,7 @@ contiki_init()
 #if DUAL_RADIO
 			uip_ipaddr_t long_ipaddr;
 			uip_ip6addr(&long_ipaddr, UIP_DS6_DEFAULT_PREFIX, 0, 0, 0, 0, 0, 0, 0);
-      uip_ds6_set_addr_iid(&long_ipaddr, &long_uip_lladdr);
+      uip_ds6_set_addr_iid(&long_ipaddr, &uip_long_lladdr);
       uip_ds6_long_addr_add(&long_ipaddr, 0, ADDR_TENTATIVE);
 #endif /* DUAL_RADIO */
 

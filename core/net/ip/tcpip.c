@@ -676,7 +676,7 @@ tcpip_ipv6_output(void)
 			dual_radio_switch(SHORT_RADIO);
 		}
 #endif
-
+		uip_ds6_select_src(&UIP_IP_BUF->srcipaddr, &UIP_IP_BUF->destipaddr);
 
 		PRINTF("route nexthop addr send:");
 		PRINT6ADDR(&foraddr);
