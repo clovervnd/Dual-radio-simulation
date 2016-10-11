@@ -151,6 +151,8 @@ get_global_addr(uip_ipaddr_t *addr)
 {
   int i;
   int state;
+	/* JOONKI 
+	 * In this part we don't have to mension long range interface */
 
   for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
     state = uip_ds6_if.addr_list[i].state;
@@ -348,16 +350,6 @@ dio_input(void)
 
   uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
 
-#if DUAL_RADIO
-	/*JOONKI*/
-	/*
-	radio_mode = radio_received_is_longrange();
-	if (radio_mode == LONG_RADIO)	{
-		from.u8[2] = 0xAB;
-	}
-	*/
-#endif
-	
   /* DAG Information Object */
   PRINTF("RPL: Received a DIO from ");
   PRINT6ADDR(&from);
@@ -672,7 +664,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 /*JOONKI*/
 
 #if DUAL_RADIO
-		if (uc_addr->u8[2] == 0xAB)	{
+		if (uc_addr->u8[8] == 0x82)	{
 			dual_radio_switch(LONG_RADIO);
 		}	else	{
 			dual_radio_switch(SHORT_RADIO);
@@ -726,16 +718,6 @@ dao_input(void)
   parent = NULL;
 
   uip_ipaddr_copy(&dao_sender_addr, &UIP_IP_BUF->srcipaddr);
-
-#if DUAL_RADIO
-	/*JOONKI*/
-	/*
-	radio_mode = radio_received_is_longrange();
-	if (radio_mode == LONG_RADIO)	{
-		dao_sender_addr.u8[2] = 0xAB;
-	}
-	*/
-#endif
   
 	/* DAG Information Object */
   PRINTF("RPL: Received a DAO from ");
@@ -875,7 +857,7 @@ dao_input(void)
 /*JOONKI*/
   			uip_ipaddr_copy(&tmp_addr, rpl_get_parent_ipaddr(dag->preferred_parent));
 #if DUAL_RADIO
-				if (tmp_addr.u8[2] == 0xAB)	{
+				if (tmp_addr.u8[8] == 0x82)	{
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
@@ -971,7 +953,7 @@ fwd_dao:
 /*JOONKI*/
   			uip_ipaddr_copy(&tmp_addr_2, rpl_get_parent_ipaddr(dag->preferred_parent));
 #if DUAL_RADIO
-				if (tmp_addr_2.u8[2] == 0xAB)	{
+				if (tmp_addr_2.u8[8] == 0x82)	{
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
@@ -1184,7 +1166,7 @@ dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
 /*JOONKI*/
   uip_ipaddr_copy(&dst, rpl_get_parent_ipaddr(parent));
 #if DUAL_RADIO
-	if (dst.u8[2] == 0xAB)	{
+	if (dst.u8[8] == 0x82)	{
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
 		dual_radio_switch(SHORT_RADIO);
@@ -1229,16 +1211,7 @@ dao_ack_input(void)
   }
 
   uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
-#if DUAL_RADIO
-	/*JOONKI*/
-	/* 
-	radio_mode = radio_received_is_longrange();
-	if (radio_mode == LONG_RADIO)	{
-		from.u8[2] = 0xAB;
-	}
-	*/
-#endif
-  
+
 	/* DAG Information Object */
   PRINTF("RPL: Received a DAO_ACK from ");
   PRINT6ADDR(&from);
@@ -1292,7 +1265,7 @@ dao_ack_input(void)
 
 /*JOONKI*/
 #if DUAL_RADIO
-			if (nexthop->u8[2] == 0xAB)	{
+			if (nexthop->u8[8] == 0x82)	{
 				dual_radio_switch(LONG_RADIO);
 			}	else	{
 				dual_radio_switch(SHORT_RADIO);
@@ -1330,7 +1303,7 @@ dao_ack_output(rpl_instance_t *instance, uip_ipaddr_t *dest, uint8_t sequence,
 
 /*JOONKI*/
 #if DUAL_RADIO
-	if (dest->u8[2] == 0xAB)	{
+	if (dest->u8[8] == 0x82)	{
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
 		dual_radio_switch(SHORT_RADIO);

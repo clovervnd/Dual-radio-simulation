@@ -1939,8 +1939,11 @@ CCIF extern const uip_ipaddr_t uip_all_zeroes_addr;
 
 #if UIP_FIXEDETHADDR
 CCIF extern const uip_lladdr_t uip_lladdr;
+CCIF extern const uip_lladdr_t uip_long_lladdr;
+
 #else
 CCIF extern uip_lladdr_t uip_lladdr;
+CCIF extern uip_lladdr_t uip_long_lladdr;
 #endif
 
 

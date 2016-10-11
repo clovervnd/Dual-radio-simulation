@@ -499,6 +499,9 @@ mdns_write_announce_records(unsigned char *queryptr, uint8_t *count)
   uint8_t i;
 
   for(i = 0; i < UIP_DS6_ADDR_NB; ++i) {
+		/* JOONKI 
+		 * CHECK */
+
     if(uip_ds6_if.addr_list[i].isused
 #if !RESOLV_CONF_MDNS_INCLUDE_GLOBAL_V6_ADDRS
        && uip_is_addr_linklocal(&uip_ds6_if.addr_list[i].ipaddr)

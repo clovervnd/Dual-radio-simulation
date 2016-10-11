@@ -670,12 +670,14 @@ tcpip_ipv6_output(void)
 		/* JOONKI */
 		uip_ipaddr_copy(&foraddr, nexthop);
 #if DUAL_RADIO
-		if (foraddr.u8[2] == 0xAB){
+		if (foraddr.u8[8] == 0x82){
 			dual_radio_switch(LONG_RADIO);
 		}	else {
 			dual_radio_switch(SHORT_RADIO);
 		}
 #endif
+
+
 		PRINTF("route nexthop addr send:");
 		PRINT6ADDR(&foraddr);
 		PRINTF("\n");

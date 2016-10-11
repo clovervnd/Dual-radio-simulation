@@ -179,9 +179,6 @@ handle_dio_timer(void *ptr)
 #endif /* RPL_CONF_STATS */
 			/*JOONKI*/
 #if DUAL_RADIO
-			// dual_radio_switch(SHORT_RADIO);
-			// dio_output(instance, NULL);
-			// dual_radio_switch(LONG_RADIO);
 			dio_broadcast(instance);
 #else
 			dio_output(instance, NULL);
@@ -289,7 +286,10 @@ handle_dao_timer(void *ptr)
       for(i = 0; i < UIP_DS6_MADDR_NB; i++) {
         if(uip_ds6_if.maddr_list[i].isused
             && uip_is_addr_mcast_global(&uip_ds6_if.maddr_list[i].ipaddr)) {
-          dao_output_target(instance->current_dag->preferred_parent,
+          
+					/* JOONKI 
+					 * CHECK */
+					dao_output_target(instance->current_dag->preferred_parent,
               &uip_ds6_if.maddr_list[i].ipaddr, RPL_MCAST_LIFETIME);
         }
       }

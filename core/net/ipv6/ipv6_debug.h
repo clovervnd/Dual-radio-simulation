@@ -3,7 +3,7 @@
 
 #define DEBUG_SICSLOWPAN	0
 #define DEBUG_UIP6	1
-#define DEBUG_UIP_DS6	0
+#define DEBUG_UIP_DS6	1
 #define DEBUG_UIP_DS6_NR	0
 #define DEBUG_UIP_DS6_ROUTE	1
 #define DEBUG_UIP_ICMP6	1

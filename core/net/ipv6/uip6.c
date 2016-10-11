@@ -131,6 +131,9 @@ struct uip_stats uip_stat;
 /** Host L2 address */
 #if UIP_CONF_LL_802154
 uip_lladdr_t uip_lladdr;
+#if DUAL_RADIO
+uip_lladdr_t uip_long_lladdr;
+#endif	/* DUAL_RADIO */
 #else /*UIP_CONF_LL_802154*/
 uip_lladdr_t uip_lladdr = {{0x00,0x06,0x98,0x00,0x02,0x32}};
 #endif /*UIP_CONF_LL_802154*/
@@ -1232,7 +1235,9 @@ uip_process(uint8_t flag)
  /* TBD Some Parameter problem messages */
   if(!uip_ds6_is_my_addr(&UIP_IP_BUF->destipaddr) &&
      !uip_ds6_is_my_maddr(&UIP_IP_BUF->destipaddr)&&
-		 !uip_ds6_is_my_addr(&temp_destipaddr))	{
+		 !uip_ds6_long_is_my_addr(&UIP_IP_BUF->destipaddr)&&
+		 !uip_ds6_long_is_my_maddr(&UIP_IP_BUF->destipaddr))
+	{
 #else
   /* TBD Some Parameter problem messages */
   if(!uip_ds6_is_my_addr(&UIP_IP_BUF->destipaddr) &&
@@ -1549,15 +1554,8 @@ uip_process(uint8_t flag)
 
 		/* JOONKI */
 		uip_ipaddr_copy(&udp_input_addr,&uip_udp_conn->ripaddr);
-/*
-#if DUAL_RADIO
-		if (radio_received_is_longrange() == LONG_RADIO){
-			udp_input_addr.u8[2] = 0xAB;
-		}
-#endif
-*/
 
-    if(uip_udp_conn->lport != 0 &&
+		if(uip_udp_conn->lport != 0 &&
        UIP_UDP_BUF->destport == uip_udp_conn->lport &&
        (uip_udp_conn->rport == 0 ||
         UIP_UDP_BUF->srcport == uip_udp_conn->rport) &&
@@ -1610,16 +1608,7 @@ uip_process(uint8_t flag)
 
 	/* JOONKI */
 	uip_ipaddr_copy(&udp_send_addr, &uip_udp_conn->ripaddr);
-/*
-#if DUAL_RADIO
-	if(udp_send_addr.u8[2] == 0xAB){
-		udp_send_addr.u8[2] = 0;
-		dual_radio_switch(LONG_RADIO);
-	}	else	{
-		dual_radio_switch(SHORT_RADIO);
-	}
-#endif
-*/
+
   // uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &uip_udp_conn->ripaddr);
   uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &udp_send_addr);
   uip_ds6_select_src(&UIP_IP_BUF->srcipaddr, &UIP_IP_BUF->destipaddr);
@@ -1671,12 +1660,7 @@ uip_process(uint8_t flag)
 
 	/* JOONKI */
 	uip_ipaddr_copy(&tcp_input_addr,&uip_udp_conn->ripaddr);
-/* #if DUAL_RADIO
-	if (radio_received_is_longrange() == LONG_RADIO){
-		tcp_input_addr.u8[2] = 0xAB;
-	}
-#endif
-*/
+
 
   /* Demultiplex this segment. */
   /* First check any active connections. */
@@ -2333,15 +2317,6 @@ uip_process(uint8_t flag)
 
 /* JOONKI */
 	uip_ipaddr_copy(&tcp_send_addr, &uip_udp_conn->ripaddr);
-/* #if DUAL_RADIO
-	if(tcp_send_addr.u8[2] == 0xAB){
-		tcp_send_addr.u8[2] = 0;
-		dual_radio_switch(LONG_RADIO);
-	}	else	{
-		dual_radio_switch(SHORT_RADIO);
-	}
-#endif
-*/
 
   // uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &uip_connr->ripaddr);
   uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &tcp_send_addr);

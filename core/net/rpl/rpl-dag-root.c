@@ -77,6 +77,9 @@ get_global_address(void)
   uip_ipaddr_t *ipaddr = NULL;
 
   for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
+		/* JOONKI 
+		 * In this part we don't have to mension long range interface */
+
     state = uip_ds6_if.addr_list[i].state;
     if(uip_ds6_if.addr_list[i].isused &&
        state == ADDR_PREFERRED &&
@@ -158,6 +161,8 @@ set_global_address(void)
   uip_ip6addr(&ipaddr, UIP_DS6_DEFAULT_PREFIX, 0, 0, 0, 0, 0, 0, 0);
   uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
   uip_ds6_addr_add(&ipaddr, 0, ADDR_AUTOCONF);
+	/* JOONKI 
+	 * In this part we don't have to mension long range interface */
 
   printf("IPv6 addresses: ");
   for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
@@ -194,7 +199,11 @@ rpl_dag_root_init_dag_immediately(void)
   uip_ipaddr_t *ipaddr = NULL;
 
   rpl_dag_root_init();
-
+	
+	/* JOONKI
+	 * CHECK 
+	 * Creating dagid with ipv6 address */
+	
   for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
     state = uip_ds6_if.addr_list[i].state;
     if(uip_ds6_if.addr_list[i].isused &&

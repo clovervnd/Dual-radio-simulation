@@ -83,7 +83,7 @@ linkaddr_set_node_addr(linkaddr_t *t)
 #if DUAL_RADIO
 	lr_linkaddr = *t;
 	// linkaddr_copy(&lr_linkaddr, t);
-	lr_linkaddr.u8[0] = 0x8;
+	lr_linkaddr.u8[0] = 0x80;
 
 	linkaddr_copy(&long_linkaddr_node_addr, &lr_linkaddr);
 #endif

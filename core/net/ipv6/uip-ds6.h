@@ -385,4 +385,44 @@ uint32_t uip_ds6_compute_reachable_time(void); /** \brief compute random reachab
 /** @} */
 /** @} */
 
+/* ----------------------------------------------------------------------------------------*/
+
+/* JOONKI
+ * Function declaration for long range interface */
+#if DUAL_RADIO
+
+/** @{ */
+/** \brief Add a unicast address to the interface */
+uip_ds6_addr_t *uip_ds6_long_addr_add(uip_ipaddr_t *ipaddr,
+                                 unsigned long vlifetime, uint8_t type);
+uip_ds6_addr_t *uip_ds6_long_addr_lookup(uip_ipaddr_t *ipaddr);
+uip_ds6_addr_t *uip_ds6_long_get_link_local(int8_t state);
+uip_ds6_addr_t *uip_ds6_long_get_global(int8_t state);
+
+/** @} */
+
+/** \name Multicast address list basic routines */
+/** @{ */
+uip_ds6_maddr_t *uip_ds6_long_maddr_add(const uip_ipaddr_t *ipaddr);
+
+uip_ds6_maddr_t *uip_ds6_long_maddr_lookup(const uip_ipaddr_t *ipaddr);
+
+/** @} */
+
+/** \name Anycast address list basic routines */
+/** @{ */
+uip_ds6_aaddr_t *uip_ds6_long_aaddr_add(uip_ipaddr_t *ipaddr);
+uip_ds6_aaddr_t *uip_ds6_long_aaddr_lookup(uip_ipaddr_t *ipaddr);
+
+/** @} */
+
+/** \name Macros to check if an IP address (unicast, multicast or anycast) is mine */
+/** @{ */
+#define uip_ds6_long_is_my_addr(addr)  (uip_ds6_long_addr_lookup(addr) != NULL)
+#define uip_ds6_long_is_my_maddr(addr) (uip_ds6_long_maddr_lookup(addr) != NULL)
+#define uip_ds6_long_is_my_aaddr(addr) (uip_ds6_long_aaddr_lookup(addr) != NULL)
+
+
+#endif
+
 #endif /* UIP_DS6_H_ */

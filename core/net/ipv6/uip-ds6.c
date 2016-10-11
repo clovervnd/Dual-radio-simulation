@@ -87,7 +87,7 @@ static uint8_t rscount;                                         /**< number of r
 /** @{ */
 uip_ds6_netif_t uip_ds6_if;                                     /**< The single interface */
 #if DUAL_RADIO
-uip_ds6_netif_t long_uip_ds6_if;
+uip_ds6_netif_t long_uip_ds6_if;																/** The second interface */
 #endif
 uip_ds6_prefix_t uip_ds6_prefix_list[UIP_DS6_PREFIX_NB];        /**< Prefix list */
 
@@ -99,6 +99,7 @@ uint8_t uip_ds6_netif_addr_list_offset;
 
 /* "full" (as opposed to pointer) ip address used in this file,  */
 static uip_ipaddr_t loc_fipaddr;
+static uip_ipaddr_t loc_long_fipaddr;
 
 /* Pointers used in this file */
 static uip_ds6_addr_t *locaddr;
@@ -122,6 +123,8 @@ uip_ds6_init(void)
      UIP_DS6_ADDR_NB, UIP_DS6_MADDR_NB, UIP_DS6_AADDR_NB);
   memset(uip_ds6_prefix_list, 0, sizeof(uip_ds6_prefix_list));
   memset(&uip_ds6_if, 0, sizeof(uip_ds6_if));
+	/* JOONKI */
+  memset(&long_uip_ds6_if, 0, sizeof(long_uip_ds6_if));
   uip_ds6_addr_size = sizeof(struct uip_ds6_addr);
   uip_ds6_netif_addr_list_offset = offsetof(struct uip_ds6_netif, addr_list);
 
@@ -132,6 +135,42 @@ uip_ds6_init(void)
   uip_ds6_if.reachable_time = uip_ds6_compute_reachable_time();
   uip_ds6_if.retrans_timer = UIP_ND6_RETRANS_TIMER;
   uip_ds6_if.maxdadns = UIP_ND6_DEF_MAXDADNS;
+
+	/* JOONKI */
+#if DUAL_RADIO
+	/* Set the second interface parameters */
+  long_uip_ds6_if.link_mtu = UIP_LINK_MTU;
+  long_uip_ds6_if.cur_hop_limit = UIP_TTL;
+  long_uip_ds6_if.base_reachable_time = UIP_ND6_REACHABLE_TIME;
+  long_uip_ds6_if.reachable_time = uip_ds6_compute_reachable_time();
+  long_uip_ds6_if.retrans_timer = UIP_ND6_RETRANS_TIMER;
+  long_uip_ds6_if.maxdadns = UIP_ND6_DEF_MAXDADNS;
+#endif
+	/* PRINTF("---------------------------------------------------\n");
+	PRINTF("%x %x %x %x %x\n",uip_long_lladdr.addr[0],uip_long_lladdr.addr[1],uip_long_lladdr.addr[2],uip_long_lladdr.addr[3],uip_long_lladdr.addr[4]); */
+
+	/* JOONKI 
+	 * --------------------------------------------------------------------------- */
+#if DUAL_RADIO
+ /* Create link local address, prefix, multicast addresses, anycast addresses */
+  uip_create_linklocal_prefix(&loc_long_fipaddr);
+#if UIP_CONF_ROUTER
+  uip_ds6_prefix_add(&loc_long_fipaddr, UIP_DEFAULT_PREFIX_LEN, 0, 0, 0, 0);
+#else /* UIP_CONF_ROUTER */
+  uip_ds6_prefix_add(&loc_long_fipaddr, UIP_DEFAULT_PREFIX_LEN, 0);
+#endif /* UIP_CONF_ROUTER */
+  uip_ds6_set_addr_iid(&loc_long_fipaddr, &uip_long_lladdr);
+  uip_ds6_long_addr_add(&loc_long_fipaddr, 0, ADDR_AUTOCONF);
+
+  uip_create_linklocal_allnodes_mcast(&loc_long_fipaddr);
+  uip_ds6_long_maddr_add(&loc_long_fipaddr);
+#if UIP_CONF_ROUTER
+  uip_create_linklocal_allrouters_mcast(&loc_long_fipaddr);
+  uip_ds6_long_maddr_add(&loc_long_fipaddr);
+#endif	/* UIP_CONF_ROUTER */
+#endif /* DUAL_RADIO */
+	
+	/* --------------------------------------------------------------------------- */
 
   /* Create link local address, prefix, multicast addresses, anycast addresses */
   uip_create_linklocal_prefix(&loc_fipaddr);
@@ -148,6 +187,8 @@ uip_ds6_init(void)
 #if UIP_CONF_ROUTER
   uip_create_linklocal_allrouters_mcast(&loc_fipaddr);
   uip_ds6_maddr_add(&loc_fipaddr);
+
+
 #if UIP_ND6_SEND_RA
   stimer_set(&uip_ds6_timer_ra, 2);     /* wait to have a link local IP address */
 #endif /* UIP_ND6_SEND_RA */
@@ -183,6 +224,27 @@ uip_ds6_periodic(void)
       }
     }
   }
+
+	/* JOONKI */
+#if DUAL_RADIO
+	/* Periodic processing on unicast addresses */
+  for(locaddr = long_uip_ds6_if.addr_list;
+      locaddr < long_uip_ds6_if.addr_list + UIP_DS6_ADDR_NB; locaddr++) {
+    if(locaddr->isused) {
+      if((!locaddr->isinfinite) && (stimer_expired(&locaddr->vlifetime))) {
+        uip_ds6_addr_rm(locaddr);
+#if UIP_ND6_DEF_MAXDADNS > 0
+      } else if((locaddr->state == ADDR_TENTATIVE)
+                && (locaddr->dadnscount <= long_uip_ds6_if.maxdadns)
+                && (timer_expired(&locaddr->dadtimer))
+                && (uip_len == 0)) {
+        uip_ds6_dad(locaddr);
+#endif /* UIP_ND6_DEF_MAXDADNS > 0 */
+      }
+    }
+  }
+#endif /* DUAL_RADIO */
+
 
   /* Periodic processing on default routers */
   uip_ds6_defrt_periodic();
@@ -374,6 +436,42 @@ uip_ds6_addr_add(uip_ipaddr_t *ipaddr, unsigned long vlifetime, uint8_t type)
   return NULL;
 }
 
+/* JOONKI
+ * Funciton added for long range interface */
+
+#if DUAL_RADIO
+uip_ds6_addr_t *
+uip_ds6_long_addr_add(uip_ipaddr_t *ipaddr, unsigned long vlifetime, uint8_t type)
+{
+  if(uip_ds6_list_loop
+     ((uip_ds6_element_t *)long_uip_ds6_if.addr_list, UIP_DS6_ADDR_NB,
+      sizeof(uip_ds6_addr_t), ipaddr, 128,
+      (uip_ds6_element_t **)&locaddr) == FREESPACE) {
+    locaddr->isused = 1;
+    uip_ipaddr_copy(&locaddr->ipaddr, ipaddr);
+    locaddr->type = type;
+    if(vlifetime == 0) {
+      locaddr->isinfinite = 1;
+    } else {
+      locaddr->isinfinite = 0;
+      stimer_set(&(locaddr->vlifetime), vlifetime);
+    }
+#if UIP_ND6_DEF_MAXDADNS > 0
+    locaddr->state = ADDR_TENTATIVE;
+    timer_set(&locaddr->dadtimer,
+              random_rand() % (UIP_ND6_MAX_RTR_SOLICITATION_DELAY *
+                               CLOCK_SECOND));
+    locaddr->dadnscount = 0;
+#else /* UIP_ND6_DEF_MAXDADNS > 0 */
+    locaddr->state = ADDR_PREFERRED;
+#endif /* UIP_ND6_DEF_MAXDADNS > 0 */
+    uip_create_solicited_node(ipaddr, &loc_fipaddr);
+    uip_ds6_maddr_add(&loc_fipaddr);
+    return locaddr;
+  }
+  return NULL;
+}
+#endif	/* DUAL_RADIO */
 /*---------------------------------------------------------------------------*/
 void
 uip_ds6_addr_rm(uip_ds6_addr_t *addr)
@@ -401,6 +499,21 @@ uip_ds6_addr_lookup(uip_ipaddr_t *ipaddr)
   return NULL;
 }
 
+/* JOONKI
+ * Function for long range interface */
+#if DUAL_RADIO
+uip_ds6_addr_t *
+uip_ds6_long_addr_lookup(uip_ipaddr_t *ipaddr)
+{
+  if(uip_ds6_list_loop
+     ((uip_ds6_element_t *)long_uip_ds6_if.addr_list, UIP_DS6_ADDR_NB,
+      sizeof(uip_ds6_addr_t), ipaddr, 128,
+      (uip_ds6_element_t **)&locaddr) == FOUND) {
+    return locaddr;
+  }
+  return NULL;
+}
+#endif	/* DUAL_RADIO */
 /*---------------------------------------------------------------------------*/
 /*
  * get a link local address -
@@ -419,6 +532,24 @@ uip_ds6_get_link_local(int8_t state)
   }
   return NULL;
 }
+
+/* JOONKI
+ * Function for long range interface */
+
+#if DUAL_RADIO	
+uip_ds6_addr_t *
+uip_ds6_long_get_link_local(int8_t state)
+{
+  for(locaddr = long_uip_ds6_if.addr_list;
+      locaddr < long_uip_ds6_if.addr_list + UIP_DS6_ADDR_NB; locaddr++) {
+    if(locaddr->isused && (state == -1 || locaddr->state == state)
+       && (uip_is_addr_linklocal(&locaddr->ipaddr))) {
+      return locaddr;
+    }
+  }
+  return NULL;
+}
+#endif /* DUAL_RADIO */
 
 /*---------------------------------------------------------------------------*/
 /*
@@ -439,6 +570,23 @@ uip_ds6_get_global(int8_t state)
   return NULL;
 }
 
+/* JOONKI
+ * Funciton for long range interface */
+#if DUAL_RADIO	
+uip_ds6_addr_t *
+uip_ds6_long_get_global(int8_t state)
+{
+  for(locaddr = long_uip_ds6_if.addr_list;
+      locaddr < long_uip_ds6_if.addr_list + UIP_DS6_ADDR_NB; locaddr++) {
+    if(locaddr->isused && (state == -1 || locaddr->state == state)
+       && !(uip_is_addr_linklocal(&locaddr->ipaddr))) {
+      return locaddr;
+    }
+  }
+  return NULL;
+}
+#endif	/* DUAL_RADIO */
+
 /*---------------------------------------------------------------------------*/
 uip_ds6_maddr_t *
 uip_ds6_maddr_add(const uip_ipaddr_t *ipaddr)
@@ -453,6 +601,24 @@ uip_ds6_maddr_add(const uip_ipaddr_t *ipaddr)
   }
   return NULL;
 }
+
+/* JOONKI 
+ * Function for long range interface */
+#if DUAL_RADIO
+uip_ds6_maddr_t *
+uip_ds6_long_maddr_add(const uip_ipaddr_t *ipaddr)
+{
+  if(uip_ds6_list_loop
+     ((uip_ds6_element_t *)long_uip_ds6_if.maddr_list, UIP_DS6_MADDR_NB,
+      sizeof(uip_ds6_maddr_t), (void*)ipaddr, 128,
+      (uip_ds6_element_t **)&locmaddr) == FREESPACE) {
+    locmaddr->isused = 1;
+    uip_ipaddr_copy(&locmaddr->ipaddr, ipaddr);
+    return locmaddr;
+  }
+  return NULL;
+}
+#endif
 
 /*---------------------------------------------------------------------------*/
 void
@@ -477,6 +643,21 @@ uip_ds6_maddr_lookup(const uip_ipaddr_t *ipaddr)
   return NULL;
 }
 
+/* JOONKI 
+ * Function for long range interface */
+#if DUAL_RADIO
+uip_ds6_maddr_t *
+uip_ds6_long_maddr_lookup(const uip_ipaddr_t *ipaddr)
+{
+  if(uip_ds6_list_loop
+     ((uip_ds6_element_t *)long_uip_ds6_if.maddr_list, UIP_DS6_MADDR_NB,
+      sizeof(uip_ds6_maddr_t), (void*)ipaddr, 128,
+      (uip_ds6_element_t **)&locmaddr) == FOUND) {
+    return locmaddr;
+  }
+  return NULL;
+}
+#endif
 
 /*---------------------------------------------------------------------------*/
 uip_ds6_aaddr_t *
@@ -494,6 +675,26 @@ uip_ds6_aaddr_add(uip_ipaddr_t *ipaddr)
 #endif /* UIP_DS6_AADDR_NB */
   return NULL;
 }
+
+/* JOONKI
+ * Function for long range interface */
+#if DUAL_RADIO
+uip_ds6_aaddr_t *
+uip_ds6_long_aaddr_add(uip_ipaddr_t *ipaddr)
+{
+#if UIP_DS6_AADDR_NB
+  if(uip_ds6_list_loop
+     ((uip_ds6_element_t *)long_uip_ds6_if.aaddr_list, UIP_DS6_AADDR_NB,
+      sizeof(uip_ds6_aaddr_t), ipaddr, 128,
+      (uip_ds6_element_t **)&locaaddr) == FREESPACE) {
+    locaaddr->isused = 1;
+    uip_ipaddr_copy(&locaaddr->ipaddr, ipaddr);
+    return locaaddr;
+  }
+#endif /* UIP_DS6_AADDR_NB */
+  return NULL;
+}
+#endif
 
 /*---------------------------------------------------------------------------*/
 void
@@ -519,61 +720,103 @@ uip_ds6_aaddr_lookup(uip_ipaddr_t *ipaddr)
   return NULL;
 }
 
+/* JOONKI
+ * Function for long range radio */
+#if DUAL_RADIO
+uip_ds6_aaddr_t *
+uip_ds6_long_aaddr_lookup(uip_ipaddr_t *ipaddr)
+{
+#if UIP_DS6_AADDR_NB
+  if(uip_ds6_list_loop((uip_ds6_element_t *)long_uip_ds6_if.aaddr_list,
+                       UIP_DS6_AADDR_NB, sizeof(uip_ds6_aaddr_t), ipaddr, 128,
+                       (uip_ds6_element_t **)&locaaddr) == FOUND) {
+    return locaaddr;
+  }
+#endif /* UIP_DS6_AADDR_NB */
+  return NULL;
+}
+#endif	/* DUAL_RADIO */
 /*---------------------------------------------------------------------------*/
+
 void
 uip_ds6_select_src(uip_ipaddr_t *src, uip_ipaddr_t *dst)
 {
   uint8_t best = 0;             /* number of bit in common with best match */
   uint8_t n = 0;
   uip_ds6_addr_t *matchaddr = NULL;
+
+/* JOONKI */
 #if DUAL_RADIO
-	uip_ipaddr_t temp_src;
-#endif
-
-
-  if(!uip_is_addr_linklocal(dst) && !uip_is_addr_mcast(dst)) {
-    /* find longest match */
-    for(locaddr = uip_ds6_if.addr_list;
-        locaddr < uip_ds6_if.addr_list + UIP_DS6_ADDR_NB; locaddr++) {
-      /* Only preferred global (not link-local) addresses */
-      if(locaddr->isused && locaddr->state == ADDR_PREFERRED &&
-         !uip_is_addr_linklocal(&locaddr->ipaddr)) {
-        n = get_match_length(dst, &locaddr->ipaddr);
-        if(n >= best) {
-          best = n;
-          matchaddr = locaddr;
-        }
-      }
-    }
+	if(sending_in_LR() == LONG_RADIO)	{
+ 	 if(!uip_is_addr_linklocal(dst) && !uip_is_addr_mcast(dst)) {
+  	  /* find longest match */
+    	for(locaddr = long_uip_ds6_if.addr_list;
+      	  locaddr < long_uip_ds6_if.addr_list + UIP_DS6_ADDR_NB; locaddr++) {
+	      /* Only preferred global (not link-local) addresses */
+  	    if(locaddr->isused && locaddr->state == ADDR_PREFERRED &&
+    	     !uip_is_addr_linklocal(&locaddr->ipaddr)) {
+      	  n = get_match_length(dst, &locaddr->ipaddr);
+	        if(n >= best) {
+  	        best = n;
+    	      matchaddr = locaddr;
+      	  }
+	      }
+  	  }
 #if UIP_IPV6_MULTICAST
-  } else if(uip_is_addr_mcast_routable(dst)) {
-    matchaddr = uip_ds6_get_global(ADDR_PREFERRED);
+	  } else if(uip_is_addr_mcast_routable(dst)) {
+  	  matchaddr = uip_ds6_get_global(ADDR_PREFERRED);
 #endif
-  } else {
-    matchaddr = uip_ds6_get_link_local(ADDR_PREFERRED);
-  }
+	  } else {
+  	  matchaddr = uip_ds6_long_get_link_local(ADDR_PREFERRED);
+	  }
 
-  /* use the :: (unspecified address) as source if no match found */
-  if(matchaddr == NULL) {
-    uip_create_unspecified(src);
-  } else {
-		uip_ipaddr_copy(&temp_src, &matchaddr->ipaddr);
-
-		/* JOONKI */
-#if DUAL_RADIO
-		if(sending_in_LR() == LONG_RADIO)
-		{
-			temp_src.u8[2] = 0xAB;
-		}
-#endif
-    //uip_ipaddr_copy(src, &matchaddr->ipaddr);
+  	/* use the :: (unspecified address) as source if no match found */
+	  if(matchaddr == NULL) {
+  	  uip_create_unspecified(src);
+	  } else {
+  	  uip_ipaddr_copy(src, &matchaddr->ipaddr);
+ 	 	}
 		PRINTF("Sending a message with the source ipaddr:");
-		PRINT6ADDR(&temp_src);
+		PRINT6ADDR(src);
 		PRINTF("\n");
-    uip_ipaddr_copy(src, &temp_src);
-  }
-}
+/*------------------------------------------------------------------------------------*/
+	}	else {
+#endif	/* DUAL_RADIO */
+	 	 if(!uip_is_addr_linklocal(dst) && !uip_is_addr_mcast(dst)) {
+  	  /* find longest match */
+    	for(locaddr = uip_ds6_if.addr_list;
+      	  locaddr < uip_ds6_if.addr_list + UIP_DS6_ADDR_NB; locaddr++) {
+	      /* Only preferred global (not link-local) addresses */
+  	    if(locaddr->isused && locaddr->state == ADDR_PREFERRED &&
+    	     !uip_is_addr_linklocal(&locaddr->ipaddr)) {
+      	  n = get_match_length(dst, &locaddr->ipaddr);
+	        if(n >= best) {
+  	        best = n;
+    	      matchaddr = locaddr;
+      	  }
+	      }
+  	  }
+#if UIP_IPV6_MULTICAST
+	  } else if(uip_is_addr_mcast_routable(dst)) {
+  	  matchaddr = uip_ds6_get_global(ADDR_PREFERRED);
+#endif
+	  } else {
+  	  matchaddr = uip_ds6_get_link_local(ADDR_PREFERRED);
+	  }
 
+  	/* use the :: (unspecified address) as source if no match found */
+	  if(matchaddr == NULL) {
+  	  uip_create_unspecified(src);
+	  } else {
+  	  uip_ipaddr_copy(src, &matchaddr->ipaddr);
+ 	 }
+		PRINTF("Sending a message with the source ipaddr:");
+		PRINT6ADDR(src);
+		PRINTF("\n");
+	}
+#if DUAL_RADIO
+}
+#endif	/* DUAL_RADIO */
 /*---------------------------------------------------------------------------*/
 void
 uip_ds6_set_addr_iid(uip_ipaddr_t *ipaddr, uip_lladdr_t *lladdr)
