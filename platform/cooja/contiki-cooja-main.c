@@ -200,24 +200,20 @@ set_rime_addr(void)
     printf("%d.", addr.u8[i]);
   }
   printf("%d\n", addr.u8[i]);
-	
+
+	/* JOONKI
+	 * link local ipv6 address is automatically determined when we set the lladdr */
 #if DUAL_RADIO
 	linkaddr_t long_addr;
-
 	long_addr = addr;
-
 	long_addr.u8[0] = 0x80;
-
 	linkaddr_set_node_long_addr(&long_addr);
-
   printf("Rime for long range radio started with address ");
   for(i = 0; i < sizeof(long_addr.u8) - 1; i++) {
     printf("%d.", long_addr.u8[i]);
   }
   printf("%d\n", long_addr.u8[i]);
-	
-
-#endif
+#endif	
 
 }
 /*---------------------------------------------------------------------------*/
@@ -332,6 +328,22 @@ contiki_init()
              lladdr->ipaddr.u8[15]);
     }
 
+		/* JOONKI */
+#if DUAL_RADIO
+    printf("Tentative long range link-local IPv6 address ");
+    {
+      uip_ds6_addr_t *long_lladdr;
+      long_lladdr = uip_ds6_long_get_link_local(-1);
+      for(i = 0; i < 7; ++i) {
+        printf("%02x%02x:", long_lladdr->ipaddr.u8[i * 2],
+               long_lladdr->ipaddr.u8[i * 2 + 1]);
+      }
+      printf("%02x%02x\n", long_lladdr->ipaddr.u8[14],
+             long_lladdr->ipaddr.u8[15]);
+    }
+#endif
+
+
     if(1) {
       uip_ipaddr_t ipaddr;
       int i;
@@ -339,6 +351,7 @@ contiki_init()
       uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
       uip_ds6_addr_add(&ipaddr, 0, ADDR_TENTATIVE);
 
+			/* JOONKI */
 #if DUAL_RADIO
 			uip_ipaddr_t long_ipaddr;
 			uip_ip6addr(&long_ipaddr, UIP_DS6_DEFAULT_PREFIX, 0, 0, 0, 0, 0, 0, 0);
@@ -353,6 +366,16 @@ contiki_init()
       }
       printf("%02x%02x\n",
              ipaddr.u8[7 * 2], ipaddr.u8[7 * 2 + 1]);
+
+#if DUAL_RADIO
+			printf("Tentative long range global IPv6 address ");
+      for(i = 0; i < 7; ++i) {
+        printf("%02x%02x:",
+               long_ipaddr.u8[i * 2], long_ipaddr.u8[i * 2 + 1]);
+      }
+      printf("%02x%02x\n",
+             long_ipaddr.u8[7 * 2], long_ipaddr.u8[7 * 2 + 1]);
+#endif
     }
   }
 #endif /* NETSTACK_CONF_WITH_IPV6 */

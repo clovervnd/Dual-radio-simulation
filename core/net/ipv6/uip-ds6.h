@@ -224,6 +224,17 @@ typedef struct uip_ds6_maddr {
   uip_ipaddr_t ipaddr;
 } uip_ds6_maddr_t;
 
+/* JOONKI
+ * define link local ipv6 lookup table */
+/* 
+#if DUAL_RADIO
+typedef struct
+
+
+#endif
+*/
+
+
 /* only define the callback if RPL is active */
 #if UIP_CONF_IPV6_RPL
 #ifndef UIP_CONF_DS6_NEIGHBOR_STATE_CHANGED
