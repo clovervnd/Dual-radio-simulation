@@ -66,6 +66,22 @@
 
 NBR_TABLE_DECLARE(ds6_neighbors);
 
+/* JOONKI
+ * define link local ipv6 lookup table */ 
+#if DUAL_RADIO
+#if ADDR_MAP
+typedef struct uip_ds6_lr_addrmap{
+	uint8_t isused;
+	uint8_t lr;
+	linkaddr_t* lladdr;
+}	uip_ds6_lr_addrmap_t;
+
+
+uip_ds6_lr_addrmap_t	ds6_lr_addrmap[NBR_TABLE_MAX_NEIGHBORS];
+#endif	/* ADDR_MAP */
+#endif	/* DUAL_RADIO */
+
+
 /** \brief An entry in the nbr cache */
 typedef struct uip_ds6_nbr {
   uip_ipaddr_t ipaddr;

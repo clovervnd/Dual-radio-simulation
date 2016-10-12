@@ -40,6 +40,21 @@
 #include "lib/list.h"
 #include "net/nbr-table.h"
 
+
+/* JOONKI */
+#if ADDR_MAP
+#include "net/ipv6/uip-ds6.h"
+#endif /* ADDR_MAP */
+
+#if DUAL_RADIO
+#ifdef ZOLERTIA_Z1
+#include "../platform/z1/dual_radio.h"
+#else	/* ZOLERTIA_Z1 */
+#include "../platform/cooja/dual_conf.h"
+#endif	/* ZOLERTIA_Z1 */
+#endif	/* DUAL_RADIO */
+
+
 #define DEBUG 0
 #if DEBUG
 #include <stdio.h>
@@ -82,6 +97,32 @@ static unsigned num_tables;
 /* The neighbor address table */
 MEMB(neighbor_addr_mem, nbr_table_key_t, NBR_TABLE_MAX_NEIGHBORS);
 LIST(nbr_table_keys);
+
+
+/* JOONKI */
+#if DUAL_RADIO
+#if ADDR_MAP
+/*---------------------------------------------------------------------------*/
+int 
+lladdr_map_add_lladdr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr)
+{
+	int i;
+	for (i=0;i<NBR_TABLE_MAX_NEIGHBORS;i++){
+		if (map[i].isused == 1)	{
+			linkaddr_copy(map[i].lladdr, lladdr);
+			if (radio_received_is_longrange() == LONG_RADIO){
+				map[i].lr = 1;
+			}	else	{
+				map[i].lr = 0;
+			}
+			return 1;
+		}
+	}
+	return 0;
+
+}
+#endif
+#endif
 
 /*---------------------------------------------------------------------------*/
 /* Get a key from a neighbor index */
@@ -338,7 +379,7 @@ nbr_table_add_lladdr(nbr_table_t *table, const linkaddr_t *lladdr, nbr_table_rea
   }
 
   if((index = index_from_lladdr(lladdr)) == -1) {
-     /* Neighbor not yet in table, let's try to allocate one */
+    /* Neighbor not yet in table, let's try to allocate one */
     key = nbr_table_allocate(reason, data);
 
     /* No space available for new entry */

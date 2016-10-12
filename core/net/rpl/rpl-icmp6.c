@@ -324,9 +324,6 @@ dio_input(void)
   int len;
   uip_ipaddr_t from;
 
-#if DUAL_RADIO
-	int radio_mode;
-#endif
 
   memset(&dio, 0, sizeof(dio));
 
@@ -700,9 +697,6 @@ dao_input(void)
   rpl_parent_t *parent;
   uip_ds6_nbr_t *nbr;
   int is_root;
-#if DUAL_RADIO
-	int radio_mode;
-#endif
 	uip_ipaddr_t tmp_addr;
 	uip_ipaddr_t tmp_addr_2;
 
