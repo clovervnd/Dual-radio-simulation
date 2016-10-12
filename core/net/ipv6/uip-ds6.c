@@ -783,6 +783,7 @@ uip_ds6_select_src(uip_ipaddr_t *src, uip_ipaddr_t *dst)
 #endif	/* DUAL_RADIO */
 	 	 if(!uip_is_addr_linklocal(dst) && !uip_is_addr_mcast(dst)) {
   	  /* find longest match */
+
     	for(locaddr = uip_ds6_if.addr_list;
       	  locaddr < uip_ds6_if.addr_list + UIP_DS6_ADDR_NB; locaddr++) {
 	      /* Only preferred global (not link-local) addresses */

@@ -200,30 +200,29 @@ uip_ds6_nbr_t *
 rpl_icmp6_update_nbr_table(uip_ipaddr_t *from, nbr_table_reason_t reason, void *data)
 {
   uip_ds6_nbr_t *nbr;
-	linkaddr_t temp_lladdr;
+//	linkaddr_t temp_lladdr;
 
   if((nbr = uip_ds6_nbr_lookup(from)) == NULL) {
-		/* JOONKI */
-		temp_lladdr = *packetbuf_addr(PACKETBUF_ADDR_SENDER);
+	  /* JOONKI */
+	  //		temp_lladdr = *packetbuf_addr(PACKETBUF_ADDR_SENDER);
 #if DUAL_RADIO
-		/*
+	  /*
 		if (radio_received_is_longrange() == LONG_RADIO){
 			temp_lladdr.u8[0] = 0xAB;
 		}	else {
 			temp_lladdr.u8[0] = 0;
 		}
-		*/
+	   */
 #endif
-    if((nbr = uip_ds6_nbr_add(from, (uip_lladdr_t *)
-															// packetbuf_addr(PACKETBUF_ADDR_SENDER),
-                              & temp_lladdr,
-                              0, NBR_REACHABLE, reason, data)) != NULL) {
-      PRINTF("RPL: Neighbor added to neighbor cache ");
-      PRINT6ADDR(from);
-      PRINTF(", ");
-      // PRINTLLADDR((uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER));
-      PRINTLLADDR((uip_lladdr_t *)&temp_lladdr);
-      PRINTF("\n");
+	  if((nbr = uip_ds6_nbr_add(from, (uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER),
+			  //& temp_lladdr,
+			  0, NBR_REACHABLE, reason, data)) != NULL) {
+		  PRINTF("RPL: Neighbor added to neighbor cache ");
+		  PRINT6ADDR(from);
+		  PRINTF(", ");
+		  PRINTLLADDR((uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER));
+		  //      PRINTLLADDR((uip_lladdr_t *)&temp_lladdr);
+		  PRINTF("\n");
     }
   }
 
@@ -870,7 +869,7 @@ dao_input(void)
 
         buffer = UIP_ICMP_PAYLOAD;
         buffer[3] = out_seq; /* add an outgoing seq no before fwd */
-        uip_icmp6_send(&tmp_addr,
+        uip_icmp6_send(rpl_get_parent_ipaddr(dag->preferred_parent),
                        ICMP6_RPL, RPL_CODE_DAO, buffer_length);
       }
     } 
@@ -966,7 +965,7 @@ fwd_dao:
 
       buffer = UIP_ICMP_PAYLOAD;
       buffer[3] = out_seq; /* add an outgoing seq no before fwd */
-      uip_icmp6_send(&tmp_addr,
+      uip_icmp6_send(rpl_get_parent_ipaddr(dag->preferred_parent),
                      ICMP6_RPL, RPL_CODE_DAO, buffer_length);
     }
     if(should_ack) {

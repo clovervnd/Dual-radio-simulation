@@ -1,6 +1,6 @@
 /* This header is for debugging and analysis */
 
-#define DEBUG_TCPIP	0
+#define DEBUG_TCPIP	1
 
 #define ANA_TCPIP	1
 #define ANA_UIP_UDP_PACKET	0
