@@ -200,21 +200,21 @@ uip_ds6_nbr_t *
 rpl_icmp6_update_nbr_table(uip_ipaddr_t *from, nbr_table_reason_t reason, void *data)
 {
   uip_ds6_nbr_t *nbr;
-	linkaddr_t temp_lladdr;
+	// linkaddr_t temp_lladdr;
 
   if((nbr = uip_ds6_nbr_lookup(from)) == NULL) {
 		/* JOONKI */
-		temp_lladdr = *packetbuf_addr(PACKETBUF_ADDR_SENDER);
+		// temp_lladdr = *packetbuf_addr(PACKETBUF_ADDR_SENDER);
 
     if((nbr = uip_ds6_nbr_add(from, (uip_lladdr_t *)
-															// packetbuf_addr(PACKETBUF_ADDR_SENDER),
-                              & temp_lladdr,
+															packetbuf_addr(PACKETBUF_ADDR_SENDER),
+                              //& temp_lladdr,
                               0, NBR_REACHABLE, reason, data)) != NULL) {
       PRINTF("RPL: Neighbor added to neighbor cache ");
       PRINT6ADDR(from);
       PRINTF(", ");
-      // PRINTLLADDR((uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER));
-      PRINTLLADDR((uip_lladdr_t *)&temp_lladdr);
+      PRINTLLADDR((uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER));
+      // PRINTLLADDR((uip_lladdr_t *)&temp_lladdr);
       PRINTF("\n");
     }
   }
@@ -856,7 +856,7 @@ dao_input(void)
 
         buffer = UIP_ICMP_PAYLOAD;
         buffer[3] = out_seq; /* add an outgoing seq no before fwd */
-        uip_icmp6_send(&tmp_addr,
+        uip_icmp6_send(rpl_get_parent_ipaddr(dag->preferred_parent),
                        ICMP6_RPL, RPL_CODE_DAO, buffer_length);
       }
     } 
@@ -952,7 +952,7 @@ fwd_dao:
 
       buffer = UIP_ICMP_PAYLOAD;
       buffer[3] = out_seq; /* add an outgoing seq no before fwd */
-      uip_icmp6_send(&tmp_addr,
+      uip_icmp6_send(rpl_get_parent_ipaddr(dag->preferred_parent),
                      ICMP6_RPL, RPL_CODE_DAO, buffer_length);
     }
     if(should_ack) {
@@ -1149,15 +1149,35 @@ dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
   buffer[pos++] = 0; /* path seq - ignored */
   buffer[pos++] = lifetime;
 
-/*JOONKI*/
+/* JOONKI */
   uip_ipaddr_copy(&dst, rpl_get_parent_ipaddr(parent));
 #if DUAL_RADIO
+#if ADDR_MAP
+	int i;
+	nbr = uip_ds6_nbr_lookup(&dst);	
+	for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+		PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+		PRINTF("\n");
+		PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
+		PRINTF("\n");
+		if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+			if (ds6_lr_addrmap[i].lr == 1){
+					dual_radio_switch(LONG_RADIO);
+				}	else	{
+					dual_radio_switch(SHORT_RADIO);
+				}
+			break;
+		}
+	}
+	
+#else /* DDR_MAP */
 	if (dst.u8[8] == 0x82)	{
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
 		dual_radio_switch(SHORT_RADIO);
 	}
-#endif
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
 
   PRINTF("RPL: Sending a %sDAO with sequence number %u, lifetime %u, prefix ",
       lifetime == RPL_ZERO_LIFETIME ? "No-Path " : "", seq_no, lifetime);

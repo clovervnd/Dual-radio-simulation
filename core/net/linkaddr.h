@@ -118,6 +118,8 @@ void linkaddr_set_node_addr(linkaddr_t *addr);
  *             used.
  *
  */
+void linkaddr_set_node_long_addr(linkaddr_t * addr);
+
 extern linkaddr_t linkaddr_node_addr;
 
 extern linkaddr_t long_linkaddr_node_addr;

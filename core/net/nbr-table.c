@@ -41,11 +41,6 @@
 #include "net/nbr-table.h"
 
 
-/* JOONKI */
-#if ADDR_MAP
-#include "net/ipv6/uip-ds6.h"
-#endif /* ADDR_MAP */
-
 #if DUAL_RADIO
 #ifdef ZOLERTIA_Z1
 #include "../platform/z1/dual_radio.h"
@@ -104,17 +99,20 @@ LIST(nbr_table_keys);
 #if ADDR_MAP
 /*---------------------------------------------------------------------------*/
 int 
-lladdr_map_add_lladdr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr)
+lladdr_map_add_lr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr)
 {
 	int i;
 	for (i=0;i<NBR_TABLE_MAX_NEIGHBORS;i++){
-		if (map[i].isused == 1)	{
-			linkaddr_copy(map[i].lladdr, lladdr);
+		if (map[i].isused != 1)	{
+			linkaddr_copy(&(map[i].lladdr), lladdr);
+			PRINTF("lladdr_map_add_lr\n");
+			PRINTF("\n");
 			if (radio_received_is_longrange() == LONG_RADIO){
 				map[i].lr = 1;
 			}	else	{
 				map[i].lr = 0;
 			}
+			map[i].isused = 1;
 			return 1;
 		}
 	}

@@ -1229,15 +1229,11 @@ uip_process(uint8_t flag)
 
 /* JOONKI */
 #if DUAL_RADIO
-  uip_ip6addr_t temp_destipaddr;
-	temp_destipaddr = UIP_IP_BUF->destipaddr;
-	temp_destipaddr.u8[2] = 0;
  /* TBD Some Parameter problem messages */
   if(!uip_ds6_is_my_addr(&UIP_IP_BUF->destipaddr) &&
      !uip_ds6_is_my_maddr(&UIP_IP_BUF->destipaddr)&&
 		 !uip_ds6_long_is_my_addr(&UIP_IP_BUF->destipaddr)&&
-		 !uip_ds6_long_is_my_maddr(&UIP_IP_BUF->destipaddr))
-	{
+		 !uip_ds6_long_is_my_maddr(&UIP_IP_BUF->destipaddr))	{
 #else
   /* TBD Some Parameter problem messages */
   if(!uip_ds6_is_my_addr(&UIP_IP_BUF->destipaddr) &&
