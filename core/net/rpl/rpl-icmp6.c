@@ -216,6 +216,7 @@ rpl_icmp6_update_nbr_table(uip_ipaddr_t *from, nbr_table_reason_t reason, void *
       PRINTLLADDR((uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER));
       // PRINTLLADDR((uip_lladdr_t *)&temp_lladdr);
       PRINTF("\n");
+
     }
   }
 

@@ -1,12 +1,13 @@
 /* This header is for debugging and analysis */
 
 
-#define DEBUG_SICSLOWPAN	0
+#define DEBUG_SICSLOWPAN	1
 #define DEBUG_UIP6	0
 #define DEBUG_UIP_DS6	0
 #define DEBUG_UIP_DS6_NBR	1
+
 #define DEBUG_UIP_DS6_ROUTE	0
-#define DEBUG_UIP_ICMP6	0
+#define DEBUG_UIP_ICMP6	1
 #define DEBUG_UIP_ND6	0
 
 
