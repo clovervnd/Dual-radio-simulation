@@ -343,6 +343,17 @@ packet_input(void)
  
 #if NULLRDC_SEND_802154_ACK
     {
+    	// JJH successful receiving data trace
+    	uint8_t seq_id1=original_dataptr[original_datalen-4];
+    	uint8_t seq_id2=original_dataptr[original_datalen-3];
+    	uint8_t seq_id3=original_dataptr[original_datalen-2];
+    	uint8_t src_addr1=original_dataptr[original_datalen-11];
+    	uint8_t src_addr2=original_dataptr[original_datalen-10];
+    	uint8_t src_addr3=original_dataptr[original_datalen-9];
+    	if(original_dataptr[original_datalen-1]=='X')
+    		printf("DATA from:%c%c%c via:%d id:%c%c%c\n",
+    				src_addr1,src_addr2,src_addr3,linkaddr_node_addr.u8[1],seq_id1,seq_id2,seq_id3);
+
 			/* JOONKI
 			 * Is the retransmission comming from this part?? */
       frame802154_t info154;
@@ -352,8 +363,8 @@ packet_input(void)
 #if DUAL_RADIO
       if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
          info154.fcf.ack_required != 0 &&
-				 ((linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
-                      &linkaddr_node_addr))||linkaddr_cmp((linkaddr_t*)&info154.dest_addr,&long_linkaddr_node_addr))) {
+				 (linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+                      &linkaddr_node_addr))||linkaddr_cmp((linkaddr_t*)&info154.dest_addr,&long_linkaddr_node_addr)) {
 #else
 			if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
         	info154.fcf.ack_required != 0 &&
