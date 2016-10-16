@@ -71,6 +71,7 @@ AUTOSTART_PROCESSES(&udp_client_process);
 /*---------------------------------------------------------------------------*/
 static int seq_id;
 static int reply;
+static uint8_t myaddr;
 
 static void
 tcpip_handler(void)
@@ -107,9 +108,9 @@ send_packet(void *ptr)
 #endif /* SERVER_REPLY */
 
   seq_id++;
-  PRINTF("DATA send to %d 'Hi/Hello %d'\n",
-         server_ipaddr.u8[sizeof(server_ipaddr.u8) - 1], seq_id);
-  sprintf(buf, "Hi/Hello %d from the client", seq_id);
+  PRINTF("DATA id:%03d from:%03d\n",
+         seq_id,myaddr);
+  sprintf(buf,"DATA id:%03d from:%03dX",seq_id,myaddr);
   uip_udp_packet_sendto(client_conn, buf, strlen(buf),
                         &server_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
 }
@@ -125,6 +126,7 @@ print_local_addresses(void)
     state = uip_ds6_if.addr_list[i].state;
     if(uip_ds6_if.addr_list[i].isused &&
        (state == ADDR_TENTATIVE || state == ADDR_PREFERRED)) {
+    	myaddr=uip_ds6_if.addr_list[i].ipaddr.u8[15];
       PRINT6ADDR(&uip_ds6_if.addr_list[i].ipaddr);
       PRINTF("\n");
       /* hack to make address "final" */

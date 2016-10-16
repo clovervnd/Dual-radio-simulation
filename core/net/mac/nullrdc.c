@@ -344,13 +344,13 @@ packet_input(void)
 #if NULLRDC_SEND_802154_ACK
     {
     	// JJH successful receiving data trace
-    	uint8_t seq_id1=original_dataptr[original_datalen-4];
-    	uint8_t seq_id2=original_dataptr[original_datalen-3];
-    	uint8_t seq_id3=original_dataptr[original_datalen-2];
-    	uint8_t src_addr1=original_dataptr[original_datalen-11];
-    	uint8_t src_addr2=original_dataptr[original_datalen-10];
-    	uint8_t src_addr3=original_dataptr[original_datalen-9];
-    	if(original_dataptr[original_datalen-1]=='X')
+    	uint8_t seq_id1=original_dataptr[original_datalen-12];
+    	uint8_t seq_id2=original_dataptr[original_datalen-11];
+    	uint8_t seq_id3=original_dataptr[original_datalen-10];
+    	uint8_t src_addr1=original_dataptr[original_datalen-4];
+    	uint8_t src_addr2=original_dataptr[original_datalen-3];
+    	uint8_t src_addr3=original_dataptr[original_datalen-2];
+    	if(original_dataptr[original_datalen-1]=='X' && linkaddr_node_addr.u8[1]!=1)
     		printf("DATA from:%c%c%c via:%d id:%c%c%c\n",
     				src_addr1,src_addr2,src_addr3,linkaddr_node_addr.u8[1],seq_id1,seq_id2,seq_id3);
 
