@@ -55,6 +55,15 @@
 #endif
 #endif
 
+/* JOONKI */
+#if DUAL_RADIO
+#if ADDR_MAP
+
+extern uip_ds6_lr_addrmap_t ds6_lr_addrmap[NBR_TABLE_MAX_NEIGHBORS];
+
+#endif	/* ADDR_MAP */
+#endif	/* DUAL_RADIO */
+
 
 #include <string.h>
 
@@ -669,13 +678,36 @@ tcpip_ipv6_output(void)
 
 		/* JOONKI */
 		uip_ipaddr_copy(&foraddr, nexthop);
+
 #if DUAL_RADIO
+#if ADDR_MAP
+		int i;
+		PRINTF("At tcpip_ipv6_output :\n");
+		uip_ds6_nbr_t *nbr = NULL;
+		nbr = uip_ds6_nbr_lookup(&foraddr);	
+		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+			PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+			PRINTF("\n");
+			PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
+			PRINTF("\n");
+			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+				if (ds6_lr_addrmap[i].lr == 1){
+						dual_radio_switch(LONG_RADIO);
+					}	else	{
+						dual_radio_switch(SHORT_RADIO);
+					}
+				break;
+			}
+		}
+#else /* ADDR_MAP */
 		if (foraddr.u8[8] == 0x82){
 			dual_radio_switch(LONG_RADIO);
 		}	else {
 			dual_radio_switch(SHORT_RADIO);
 		}
-#endif
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
+
 		/* To adjust source address */
 		// uip_ds6_select_src(&UIP_IP_BUF->srcipaddr, &UIP_IP_BUF->destipaddr);
 

@@ -38,11 +38,6 @@
 #include "contiki.h"
 #include "net/linkaddr.h"
 #include "net/netstack.h"
-/* JOONKI */
-// #if ADDR_MAP
-// #include "net/ipv6/uip-ds6-nbr.h"
-// #endif /* ADDR_MAP */
-
 
 /* Neighbor table size */
 #ifdef NBR_TABLE_CONF_MAX_NEIGHBORS
@@ -137,9 +132,8 @@ typedef struct uip_ds6_lr_addrmap{
 /* JOONKI */
 #if DUAL_RADIO
 #if ADDR_MAP
-
 int lladdr_map_add_lr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr);
-
+int lladdr_map_rm_lr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr);
 #endif
 #endif
 

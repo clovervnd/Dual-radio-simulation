@@ -119,6 +119,22 @@ lladdr_map_add_lr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr)
 	return 0;
 
 }
+
+/* JOONKI */
+/*---------------------------------------------------------------------------*/
+int 
+lladdr_map_rm_lr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr)
+{
+	int i;
+	for (i=0;i<NBR_TABLE_MAX_NEIGHBORS;i++)	{
+		if (linkaddr_cmp(&map[i].lladdr, lladdr)) {
+			map[i].isused = 0;
+			return 1;
+		}
+	}
+	return 0;
+}
+
 #endif
 #endif
 

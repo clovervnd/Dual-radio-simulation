@@ -68,7 +68,6 @@
 #define TCPIP_H_
 
 #include "contiki.h"
-
 struct uip_conn;
 
 struct tcpip_uipstate {

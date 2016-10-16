@@ -148,6 +148,15 @@ uip_ds6_nbr_rm(uip_ds6_nbr_t *nbr)
 #if UIP_CONF_IPV6_QUEUE_PKT
     uip_packetqueue_free(&nbr->packethandle);
 #endif /* UIP_CONF_IPV6_QUEUE_PKT */
+
+		/* JOONKI */
+#if DUAL_RADIO
+#if ADDR_MAP
+		lladdr_map_rm_lr(ds6_lr_addrmap,(linkaddr_t *)uip_ds6_nbr_get_ll(nbr));
+
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
+
     NEIGHBOR_STATE_CHANGED(nbr);
     return nbr_table_remove(ds6_neighbors, nbr);
   }

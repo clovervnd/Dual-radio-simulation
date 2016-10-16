@@ -651,14 +651,34 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   } else {
 
 /*JOONKI*/
-
 #if DUAL_RADIO
+#if ADDR_MAP
+		int i;
+		uip_ds6_nbr_t *nbr = NULL;
+		nbr = uip_ds6_nbr_lookup(uc_addr);	
+		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+			PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+			PRINTF("\n");
+			PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
+			PRINTF("\n");
+			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+				if (ds6_lr_addrmap[i].lr == 1){
+						dual_radio_switch(LONG_RADIO);
+					}	else	{
+						dual_radio_switch(SHORT_RADIO);
+					}
+				break;
+			}
+		}
+#else /* ADDR_MAP */
+
 		if (uc_addr->u8[8] == 0x82)	{
 			dual_radio_switch(LONG_RADIO);
 		}	else	{
 			dual_radio_switch(SHORT_RADIO);
 		}
-#endif
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
 
 
     PRINTF("RPL: Sending unicast-DIO with rank %u to ",
@@ -842,13 +862,36 @@ dao_input(void)
 
 /*JOONKI*/
   			uip_ipaddr_copy(&tmp_addr, rpl_get_parent_ipaddr(dag->preferred_parent));
+
 #if DUAL_RADIO
+#if ADDR_MAP
+			int i;
+			uip_ds6_nbr_t *nbr = NULL;
+			nbr = uip_ds6_nbr_lookup(&tmp_addr);	
+			for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+				PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+				PRINTF("\n");
+				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
+				PRINTF("\n");
+				if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+					if (ds6_lr_addrmap[i].lr == 1){
+							dual_radio_switch(LONG_RADIO);
+						}	else	{
+							dual_radio_switch(SHORT_RADIO);
+						}
+					break;
+				}
+			}
+#else /* ADDR_MAP */
 				if (tmp_addr.u8[8] == 0x82)	{
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
 				}
-#endif
+
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
+
         PRINTF("RPL: Forwarding No-path DAO to parent - out_seq:%d",
 	       out_seq);
         PRINT6ADDR(&tmp_addr);
@@ -938,13 +981,35 @@ fwd_dao:
 
 /*JOONKI*/
   			uip_ipaddr_copy(&tmp_addr_2, rpl_get_parent_ipaddr(dag->preferred_parent));
+
 #if DUAL_RADIO
+#if ADDR_MAP
+			int i;
+			uip_ds6_nbr_t *nbr = NULL;
+			nbr = uip_ds6_nbr_lookup(&tmp_addr_2);	
+			for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+				PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+				PRINTF("\n");
+				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
+				PRINTF("\n");
+				if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+					if (ds6_lr_addrmap[i].lr == 1){
+							dual_radio_switch(LONG_RADIO);
+						}	else	{
+							dual_radio_switch(SHORT_RADIO);
+						}
+					break;
+				}
+			}
+#else /* ADDR_MAP */
 				if (tmp_addr_2.u8[8] == 0x82)	{
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
 				}
-#endif
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
+
 
       PRINTF("RPL: Forwarding DAO to parent ");
       PRINT6ADDR(&tmp_addr_2);
@@ -1154,6 +1219,8 @@ dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
 #if DUAL_RADIO
 #if ADDR_MAP
 	int i;
+	uip_ds6_nbr_t *nbr = NULL;
+
 	nbr = uip_ds6_nbr_lookup(&dst);	
 	for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
 		PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
@@ -1271,12 +1338,32 @@ dao_ack_input(void)
 
 /*JOONKI*/
 #if DUAL_RADIO
+#if ADDR_MAP
+			int i;
+			uip_ds6_nbr_t *nbr = NULL;
+			nbr = uip_ds6_nbr_lookup(nexthop);	
+			for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+				PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+				PRINTF("\n");
+				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
+				PRINTF("\n");
+				if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+					if (ds6_lr_addrmap[i].lr == 1){
+							dual_radio_switch(LONG_RADIO);
+						}	else	{
+							dual_radio_switch(SHORT_RADIO);
+						}
+					break;
+				}
+			}
+#else /* ADDR_MAP */
 			if (nexthop->u8[8] == 0x82)	{
 				dual_radio_switch(LONG_RADIO);
 			}	else	{
 				dual_radio_switch(SHORT_RADIO);
 			}
-#endif
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
 
       if(nexthop == NULL) {
         PRINTF("RPL: No next hop to fwd DAO ACK to\n");
@@ -1308,13 +1395,35 @@ dao_ack_output(rpl_instance_t *instance, uip_ipaddr_t *dest, uint8_t sequence,
   unsigned char *buffer;
 
 /*JOONKI*/
+
 #if DUAL_RADIO
+#if ADDR_MAP
+		int i;
+		uip_ds6_nbr_t *nbr = NULL;
+		nbr = uip_ds6_nbr_lookup(dest);	
+		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+			PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+			PRINTF("\n");
+			PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
+			PRINTF("\n");
+			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+				if (ds6_lr_addrmap[i].lr == 1){
+					dual_radio_switch(LONG_RADIO);
+				}	else	{
+					dual_radio_switch(SHORT_RADIO);
+				}
+				break;
+			}
+		}
+#else /* ADDR_MAP */
 	if (dest->u8[8] == 0x82)	{
 		dual_radio_switch(LONG_RADIO);
 	}	else	{
 		dual_radio_switch(SHORT_RADIO);
 	}
-#endif
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
+
 
   PRINTF("RPL: Sending a DAO %s with sequence number %d to ", status < 128 ? "ACK" : "NACK", sequence);
   PRINT6ADDR(dest);
