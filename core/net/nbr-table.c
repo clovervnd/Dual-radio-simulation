@@ -50,7 +50,7 @@
 #endif	/* DUAL_RADIO */
 
 
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #include "sys/ctimer.h"
@@ -106,7 +106,6 @@ lladdr_map_add_lr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr)
 		if (map[i].isused != 1)	{
 			linkaddr_copy(&(map[i].lladdr), lladdr);
 			PRINTF("lladdr_map_add_lr\n");
-			PRINTF("\n");
 			if (radio_received_is_longrange() == LONG_RADIO){
 				map[i].lr = 1;
 			}	else	{
