@@ -39,7 +39,7 @@
 
 
 #define DUAL_RADIO 1
-#define ADDR_MAP 0
+#define ADDR_MAP 1
 
 #define PROFILE_CONF_ON 0
 #define ENERGEST_CONF_ON 0

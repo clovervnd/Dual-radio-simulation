@@ -1,0 +1,77 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0xb28bc4c0, pid=4689, tid=2989443904
+#
+# JRE version: OpenJDK Runtime Environment (7.0_111-b01) (build 1.7.0_111-b01)
+# Java VM: OpenJDK Client VM (24.111-b01 mixed mode, sharing linux-x86 )
+# Derivative: IcedTea 2.6.7
+# Distribution: Ubuntu 14.04 LTS, package 7u111-2.6.7-0ubuntu0.14.04.3
+# Problematic frame:
+# C  [mtype687.cooja+0x124c0]  do_poll+0x1a
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please include
+# instructions on how to reproduce the bug and visit:
+#   http://icedtea.classpath.org/bugzilla
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x09d97000):  JavaThread "Thread-39" [_thread_in_native, id=5464, stack(0xb22a4000,0xb22f5000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0xffffffab
+
+Registers:
+EAX=0xffffff9c, EBX=0x00000000, ECX=0x00000000, EDX=0x00000000
+ESP=0xb28dc2dc, EBP=0xb28dc304, ESI=0x00000000, EDI=0x00000000
+EIP=0xb28bc4c0, EFLAGS=0x00010286, CR2=0xffffffab
+
+Top of Stack: (sp=0xb28dc2dc)
+0xb28dc2dc:   b28dc2fc b28dc2fc 00000000 00000000
+0xb28dc2ec:   00000000 00000000 00000000 ffffff9c
+0xb28dc2fc:   b28dc304 b28ba447 b28dc314 b28bc65a
+0xb28dc30c:   00000000 00000000 b28dc324 b28ba029
+0xb28dc31c:   00000000 00000000 00000000 00000000
+0xb28dc32c:   00000000 00000000 b28db320 b28db32c
+0xb28dc33c:   00000000 00000000 00000000 00000001
+0xb28dc34c:   00000000 00000000 00000000 00000000 
+
+Instructions: (pc=0xb28bc4c0)
+0xb28bc4a0:   c4 d7 8d b2 5d c3 55 89 e5 83 ec 28 c6 05 60 d9
+0xb28bc4b0:   8d b2 00 a1 c0 d7 8d b2 89 45 f4 eb 3c 8b 45 f4
+0xb28bc4c0:   0f b6 40 0f 84 c0 74 29 8b 45 f4 c6 40 0e 01 8b
+0xb28bc4d0:   45 f4 c6 40 0f 00 c7 44 24 08 00 00 00 00 c7 44 
+
+Register to memory mapping:
+
+EAX=0xffffff9c is an unknown value
+EBX=0x00000000 is an unknown value
+ECX=0x00000000 is an unknown value
+EDX=0x00000000 is an unknown value
+ESP=0xb28dc2dc: <offset 0x322dc> in /home/user/Desktop/nfs/examples/ipv6/rpl-udp/obj_cooja/mtype687.cooja at 0xb28aa000
+EBP=0xb28dc304: <offset 0x32304> in /home/user/Desktop/nfs/examples/ipv6/rpl-udp/obj_cooja/mtype687.cooja at 0xb28aa000
+ESI=0x00000000 is an unknown value
+EDI=0x00000000 is an unknown value
+
+
+Stack: [0xb22a4000,0xb22f5000],  sp=0xb28dc2dc,  free space=6368k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [mtype687.cooja+0x124c0]  do_poll+0x1a
+C  [mtype687.cooja+0x1265a]  process_run+0x16
+C  [mtype687.cooja+0x10029]  process_run_thread_loop+0x1f
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  org.contikios.cooja.corecomm.Lib10.tick()V+0
+J 1679 C1 org.contikios.cooja.contikimote.ContikiMote.execute(J)V (99 bytes) @ 0xb4ab94ac [0xb4ab9340+0x16c]
+
+[error occurred during error reporting (printing Java stack), id 0xb]
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+=>

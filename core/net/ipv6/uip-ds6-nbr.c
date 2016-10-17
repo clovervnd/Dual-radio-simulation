@@ -77,6 +77,8 @@ void LINK_NEIGHBOR_CALLBACK(const linkaddr_t *addr, int status, int numtx);
 #endif /* UIP_CONF_DS6_LINK_NEIGHBOR_CALLBACK */
 
 NBR_TABLE_GLOBAL(uip_ds6_nbr_t, ds6_neighbors);
+
+	/* JOONKI */
 #if DUAL_RADIO
 #if ADDR_MAP
 uip_ds6_lr_addrmap_t ds6_lr_addrmap[NBR_TABLE_MAX_NEIGHBORS];
@@ -100,15 +102,16 @@ uip_ds6_nbr_add(const uip_ipaddr_t *ipaddr, const uip_lladdr_t *lladdr,
 	/* JOONKI */
 #if DUAL_RADIO
 #if ADDR_MAP
-//	int i;
+	int i,j;
 	PRINTF("Neighbors added to lr/lladdr table: \n");
-	PRINTF("Success?? %d\n",lladdr_map_add_lr(ds6_lr_addrmap, (linkaddr_t*)lladdr));
-/*	for (i=0;i<10;i++) {
-		PRINTLLADDR(lladdr);
+	j=lladdr_map_add_lr(ds6_lr_addrmap, (linkaddr_t*)lladdr);
+	PRINTF("Success?? %d\n",j);
+	for (i=0;i<10;i++) {
+		PRINTF("ADDR_MAP # %d",i);
 		PRINTF("        ");
 		PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
 		PRINTF("\n");
-	}*/
+	}
 #endif
 #endif
 

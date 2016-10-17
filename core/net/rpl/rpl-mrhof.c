@@ -111,7 +111,10 @@ calculate_path_metric(rpl_parent_t *p)
 //	  temp_lladdr = uip_ds6_nbr_get_ll(nbr);
 //	  temp_lladdr.u8[0]=
 	  printf("mrhof: %c id:%d %d\n",nbr->ipaddr.u8[8]==0x82?'L':'S',nbr->ipaddr.u8[15],p->rank + (uint16_t)nbr->link_metric);
-    return p->rank + (uint16_t)nbr->link_metric;
+    if(nbr->ipaddr.u8[8]==0x82)
+	  return p->rank + ((uint16_t)nbr->link_metric)*5*RPL_DAG_MC_ETX_DIVISOR;
+    else
+    	return p->rank + (uint16_t)nbr->link_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
   return p->mc.obj.etx + (uint16_t)nbr->link_metric;
