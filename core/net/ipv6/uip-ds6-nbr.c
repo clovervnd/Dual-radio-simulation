@@ -77,7 +77,11 @@ void LINK_NEIGHBOR_CALLBACK(const linkaddr_t *addr, int status, int numtx);
 #endif /* UIP_CONF_DS6_LINK_NEIGHBOR_CALLBACK */
 
 NBR_TABLE_GLOBAL(uip_ds6_nbr_t, ds6_neighbors);
+#if DUAL_RADIO
+#if ADDR_MAP
 uip_ds6_lr_addrmap_t ds6_lr_addrmap[NBR_TABLE_MAX_NEIGHBORS];
+#endif
+#endif
 
 /*---------------------------------------------------------------------------*/
 void

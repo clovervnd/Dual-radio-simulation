@@ -98,6 +98,7 @@ static rpl_path_metric_t
 calculate_path_metric(rpl_parent_t *p)
 {
   uip_ds6_nbr_t *nbr;
+  uip_lladdr_t temp_lladdr;
   if(p == NULL) {
     return MAX_PATH_COST * RPL_DAG_MC_ETX_DIVISOR;
   }
@@ -107,6 +108,9 @@ calculate_path_metric(rpl_parent_t *p)
   }
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
   {
+//	  temp_lladdr = uip_ds6_nbr_get_ll(nbr);
+//	  temp_lladdr.u8[0]=
+	  printf("mrhof: %c id:%d %d\n",nbr->ipaddr.u8[8]==0x82?'L':'S',nbr->ipaddr.u8[15],p->rank + (uint16_t)nbr->link_metric);
     return p->rank + (uint16_t)nbr->link_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
@@ -244,7 +248,9 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
              PARENT_SWITCH_THRESHOLD_DIV;
 
   p1_metric = calculate_path_metric(p1);
+  printf("p1_metric %d\n",p1_metric);
   p2_metric = calculate_path_metric(p2);
+  printf("p2_metric %d\n",p2_metric);
 
   /* Maintain stability of the preferred parent in case of similar ranks. */
   if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {

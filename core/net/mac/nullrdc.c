@@ -350,7 +350,8 @@ packet_input(void)
     	uint8_t src_addr1=original_dataptr[original_datalen-4];
     	uint8_t src_addr2=original_dataptr[original_datalen-3];
     	uint8_t src_addr3=original_dataptr[original_datalen-2];
-    	if(original_dataptr[original_datalen-1]=='X' && linkaddr_node_addr.u8[1]!=1)
+//    	if(original_dataptr[original_datalen-1]=='X' && linkaddr_node_addr.u8[1]!=1)
+    	if(original_dataptr[original_datalen-1]=='X')
     		printf("DATA from:%c%c%c via:%d id:%c%c%c %c\n",
     				src_addr1,src_addr2,src_addr3,linkaddr_node_addr.u8[1],seq_id1,seq_id2,seq_id3,
 					radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S');
