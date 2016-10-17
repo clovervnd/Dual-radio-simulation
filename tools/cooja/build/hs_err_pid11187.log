@@ -1,0 +1,58 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x0000fdf2, pid=11187, tid=0x83178b40
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_101-b13) (build 1.8.0_101-b13)
+# Java VM: Java HotSpot(TM) Server VM (25.101-b13 mixed mode linux-x86 )
+# Problematic frame:
+# C  0x0000fdf2
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x83ccbc00):  JavaThread "Thread-15" [_thread_in_native, id=11447, stack(0x83128000,0x83179000)]
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 1 (SEGV_MAPERR), si_addr: 0x0000fdf2
+
+Registers:
+EAX=0x0000fdf2, EBX=0x82fd6553, ECX=0x00000000, EDX=0x00000069
+ESP=0x82ff91c8, EBP=0x82ff91e4, ESI=0x0000004a, EDI=0x00000000
+EIP=0x0000fdf2, EFLAGS=0x00010202, CR2=0x0000fdf2
+
+Top of Stack: (sp=0x82ff91c8)
+0x82ff91c8:   82fe9539 00000000 00000001 00000001
+0x82ff91d8:   00000052 82fe8521 82fd6553 82ff9224
+0x82ff91e8:   82fe97ab 0000fdf2 00000000 00000001
+0x82ff91f8:   00000001 82ffc6c2 82ffc6e0 f7dc61d8
+0x82ff9208:   00000001 00030003 00078003 00070007
+0x82ff9218:   00000052 0007823a 00070007 3d029b07
+0x82ff9228:   00401e7f 0000fdf2 00000000 00000000
+0x82ff9238:   0000feff 00120501 0000fd80 00000000 
+
+Instructions: (pc=0x0000fdf2)
+0x0000fdd2:   
+[error occurred during error reporting (printing registers, top of stack, instructions near pc), id 0xb]
+
+Register to memory mapping:
+
+EAX=0x0000fdf2 is an unknown value
+EBX=0x82fd6553: <offset 0x12553> in /home/user/longrange/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype997.cooja at 0x82fc4000
+ECX=0x00000000 is an unknown value
+EDX=0x00000069 is an unknown value
+ESP=0x82ff91c8: <offset 0x351c8> in /home/user/longrange/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype997.cooja at 0x82fc4000
+EBP=0x82ff91e4: <offset 0x351e4> in /home/user/longrange/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype997.cooja at 0x82fc4000
+ESI=0x0000004a is an unknown value
+EDI=0x00000000 is an unknown value
+
+
+Stack: [0x83128000,0x83179000],  sp=0x82ff91c8,  free space=4193092k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C
