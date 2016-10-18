@@ -108,7 +108,7 @@ send_packet(void *ptr)
 #endif /* SERVER_REPLY */
 
   seq_id++;
-  PRINTF("DATA id:%03d from:%03d\n",
+  PRINTF("app: DATA id:%03d from:%03d\n",
          seq_id,myaddr);
   sprintf(buf,"DATA id:%03d from:%03dX",seq_id,myaddr);
   uip_udp_packet_sendto(client_conn, buf, strlen(buf),
