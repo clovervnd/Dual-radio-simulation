@@ -205,7 +205,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
   public void signalReceptionStart() {
       /* hwijoon */
     setLongRangeReceivingMode(this instanceof LongRangeInterface);
-    logger.warn("Reception starts, is it longrange? : "+(this instanceof LongRangeInterface));
+    // logger.warn("Reception starts, is it longrange? : "+(this instanceof LongRangeInterface));
     packetToMote = null;
     if (isInterfered() || isReceiving() || isTransmitting()) {
       interfereAnyReception();
@@ -224,7 +224,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
   }
 
   public void signalReceptionEnd() {
-    logger.warn("Reception ends, is it longrange? : "+(this instanceof LongRangeInterface));
+    // logger.warn("Reception ends, is it longrange? : "+(this instanceof LongRangeInterface));
 
       if (isInterfered || packetToMote == null) {
       isInterfered = false;
@@ -376,9 +376,9 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
           packetFromMote = new COOJARadioPacket(myMoteMemory.getByteArray(getSymbolNameLR("simOutDataBuffer"), size));
 
           /* JOONKI */
-          logger.warn("\n\nTransmitting packet is " + new String(myMoteMemory.getByteArray(getSymbolNameLR("simOutDataBuffer"),size)));
-          logger.warn("LongRangeMode = " + isLongRangeMode() + ", R=" + this);
-          logger.warn("This instanceof Longrange = " +(this instanceof LongRangeInterface));
+          // logger.warn("\n\nTransmitting packet is " + new String(myMoteMemory.getByteArray(getSymbolNameLR("simOutDataBuffer"),size)));
+          // logger.warn("LongRangeMode = " + isLongRangeMode() + ", R=" + this);
+          // logger.warn("This instanceof Longrange = " +(this instanceof LongRangeInterface));
           if (packetFromMote.getPacketData() == null || packetFromMote.getPacketData().length == 0) {
             logger.warn("Skipping zero sized Contiki packet (no buffer)");
             myMoteMemory.setIntValueOf(getSymbolNameLR("simOutSize"), 0);

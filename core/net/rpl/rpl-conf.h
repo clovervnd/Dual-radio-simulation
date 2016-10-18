@@ -68,6 +68,7 @@
 #else
 /* ETX is the default objective function. */
 #define RPL_OF rpl_mrhof
+// #define RPL_OF rpl_of0
 #endif /* RPL_CONF_OF */
 
 /* This value decides which DAG instance we should participate in by default. */
