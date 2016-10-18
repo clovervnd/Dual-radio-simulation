@@ -51,7 +51,7 @@
 #include "sys/cooja_mt.h"
 #endif /* CONTIKI_TARGET_COOJA */
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -123,9 +123,9 @@ send_one_packet(mac_callback_t sent, void *ptr)
 {
   int ret;
   int last_sent_ok = 0;
-
+	// JJH
+  printf("rdc %x\n",sent);
 	/* JOONKI */
-
 #if DUAL_RADIO
 	if(sending_in_LR() == LONG_RADIO){
   	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
@@ -142,7 +142,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
 #if NULLRDC_802154_AUTOACK || NULLRDC_802154_AUTOACK_HW
   packetbuf_set_attr(PACKETBUF_ATTR_MAC_ACK, 1);
 #endif /* NULLRDC_802154_AUTOACK || NULLRDC_802154_AUTOACK_HW */
-
   if(NETSTACK_FRAMER.create() < 0) {
     /* Failed to allocate space for headers */
     PRINTF("nullrdc: send failed, too large header\n");
@@ -167,7 +166,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
       if(!is_broadcast) {
         RIMESTATS_ADD(reliabletx);
       }
-
       switch(NETSTACK_RADIO.transmit(packetbuf_totlen())) {
       case RADIO_TX_OK:
         if(is_broadcast) {
@@ -227,7 +225,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
         break;
       }
     }
-
 #else /* ! NULLRDC_802154_AUTOACK */
 
     switch(NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen())) {
@@ -244,12 +241,15 @@ send_one_packet(mac_callback_t sent, void *ptr)
       ret = MAC_TX_ERR;
       break;
     }
-
 #endif /* ! NULLRDC_802154_AUTOACK */
   }
   if(ret == MAC_TX_OK) {
     last_sent_ok = 1;
   }
+/*  if(sent==0x0000fdf2)
+  {
+	  return 0;
+  }*/
   mac_call_sent_callback(sent, ptr, ret, 1);
   return last_sent_ok;
 }

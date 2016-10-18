@@ -83,8 +83,8 @@
 /* Network setup for IPv6 */
 #define NETSTACK_CONF_NETWORK       sicslowpan_driver
 /* JOONKI */ 
-#define NETSTACK_CONF_MAC           csma_driver
-//#define NETSTACK_CONF_MAC           nullmac_driver
+//#define NETSTACK_CONF_MAC           csma_driver
+#define NETSTACK_CONF_MAC           nullmac_driver
 #define NETSTACK_CONF_RDC           nullrdc_driver
 #define NETSTACK_CONF_RADIO         cooja_radio_driver
 #define NETSTACK_CONF_FRAMER        framer_802154

@@ -1254,6 +1254,8 @@ send_packet(linkaddr_t *dest)
 
   /* Provide a callback function to receive the result of
      a packet transmission. */
+  // JJH
+  printf("llsec sent %x\n",&packet_sent);
   NETSTACK_LLSEC.send(&packet_sent, NULL);
 
   /* If we are sending multiple packets in a row, we need to let the
