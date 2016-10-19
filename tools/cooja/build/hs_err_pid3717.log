@@ -1,0 +1,65 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00021e00, pid=3717, tid=2998508352
+#
+# JRE version: OpenJDK Runtime Environment (7.0_111-b01) (build 1.7.0_111-b01)
+# Java VM: OpenJDK Client VM (24.111-b01 mixed mode, sharing linux-x86 )
+# Derivative: IcedTea 2.6.7
+# Distribution: Ubuntu 14.04 LTS, package 7u111-2.6.7-0ubuntu0.14.04.3
+# Problematic frame:
+# C  0x00021e00
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please include
+# instructions on how to reproduce the bug and visit:
+#   http://icedtea.classpath.org/bugzilla
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x08c9e000):  JavaThread "Thread-8" [_thread_in_native, id=3877, stack(0xb2b49000,0xb2b9a000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x00021e00
+
+Registers:
+EAX=0x00021e00, EBX=0xb27a3023, ECX=0x00000058, EDX=0x00000069
+ESP=0xb27c21c8, EBP=0xb27c21e4, ESI=0x0000004a, EDI=0x00000000
+EIP=0x00021e00, EFLAGS=0x00010206, CR2=0x00021e00
+
+Top of Stack: (sp=0xb27c21c8)
+0xb27c21c8:   b27b4b79 2e163d22 00000001 00000001
+0xb27c21d8:   00000048 b27b3b61 b27a3023 b27c2224
+0xb27c21e8:   b27b4deb 00021e00 2e163d22 00000001
+0xb27c21f8:   00000001 b27c56c2 b27c56e0 9edc6191
+0xb27c2208:   00000001 00010001 00038001 00030003
+0xb27c2218:   00000048 03820000 03000300 01000300
+0xb27c2228:   04630011 00021e00 2e163d22 7a2e1d00
+0xb27c2238:   41544144 3a646920 20373631 6d6f7266 
+
+Instructions: (pc=0x00021e00)
+0x00021de0:   
+[error occurred during error reporting (printing registers, top of stack, instructions near pc), id 0xb]
+
+Register to memory mapping:
+
+EAX=0x00021e00 is an unknown value
+EBX=0xb27a3023: <offset 0x11023> in /media/user/JK/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype927.cooja at 0xb2792000
+ECX=0x00000058 is an unknown value
+EDX=0x00000069 is an unknown value
+ESP=0xb27c21c8: <offset 0x301c8> in /media/user/JK/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype927.cooja at 0xb2792000
+EBP=0xb27c21e4: <offset 0x301e4> in /media/user/JK/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype927.cooja at 0xb2792000
+ESI=0x0000004a is an unknown value
+EDI=0x00000000 is an unknown value
+
+
+Stack: [0xb2b49000,0xb2b9a000],  sp=0xb27c21c8,  free space=4190692k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  0x00021e00
+C  [mtype927.cooja+0x22deb]  send_one_packet+0x1f7
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 1692  org.contikios.cooja.corecomm.Lib2.tick()V (0 bytes) @ 0xb4adfb90 [0xb4adfb50+0x40]
