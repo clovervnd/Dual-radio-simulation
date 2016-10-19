@@ -63,15 +63,26 @@ int simInSize = 0;
 int simInSizeLR = 0;
 char simOutDataBuffer[COOJA_RADIO_BUFSIZE];
 char simOutDataBufferLR[COOJA_RADIO_BUFSIZE];
-int simOutSize = 0;
-int simOutSizeLR = 0;
-char simRadioHWOn = 1;
-int simSignalStrength = -100;
-int simLastSignalStrength = -100;
-char simPower = 100;
 int simRadioChannel = 26;
 int simRadioChannelLR = 26;
+int simOutSize = 0;
+int simOutSizeLR = 0;
+
+char simRadioHWOn = 1;
+char simRadioHWOnLR = 1;
+
+int simSignalStrength = -100;
+int simSignalStrengthLR = -100;
+
+/* Not used variable */
+int simLastSignalStrength = -100;
+int simLastSignalStrengthLR = -100;
+
+char simPower = 100;
+char simPowerLR = 100;
+
 int simLQI = 105;
+int simLQILR = 105;
 
 int LongRangeTransmit = 0;
 int LongRangeReceiving = 0;
@@ -92,23 +103,27 @@ radio_set_txpower(unsigned char power)
 {
   /* 1 - 100: Number indicating output power */
   simPower = power;
+	simPowerLR = power;
 }
 /*---------------------------------------------------------------------------*/
 int
 radio_signal_strength_last(void)
 {
+	/* Not used function */
   return simLastSignalStrength;
 }
 /*---------------------------------------------------------------------------*/
 int
 radio_signal_strength_current(void)
 {
+	/* Not used function */
   return simSignalStrength;
 }
 /*---------------------------------------------------------------------------*/
 int
 radio_LQI(void)
 {
+	/* Not used function */
 	return simLQI;
 }
 /*---------------------------------------------------------------------------*/
@@ -132,14 +147,22 @@ doInterfaceActionsBeforeTick(void)
   if(!simRadioHWOn) {
     simInSize = 0;
     return;
+  }	else if(!simRadioHWOnLR) {
+    simInSizeLR = 0;
+    return;
   }
   if(simReceiving) {
     simLastSignalStrength = simSignalStrength;
     return;
+  }	else if(simReceivingLR) {
+    simLastSignalStrengthLR = simSignalStrengthLR;
+    return;
   }
 
   if(simInSize > 0 || simInSizeLR > 0) {
-    process_poll(&cooja_radio_process);
+		if (simReceiving == 0 || simReceivingLR == 0){
+	    process_poll(&cooja_radio_process);
+		}
   }
 }
 /*---------------------------------------------------------------------------*/
@@ -155,7 +178,8 @@ radio_read(void *buf, unsigned short bufsize)
 
   if(simInSize == 0 && simInSizeLR == 0) {
     return 0;
-  }
+  }	
+
   if(bufsize < simInSize) {
     simInSize = 0; /* rx flush */
     RIMESTATS_ADD(toolong);
@@ -169,9 +193,14 @@ radio_read(void *buf, unsigned short bufsize)
 		memcpy(buf, simInDataBuffer, simInSize);
 		simInSize = 0;
 	}
-
-  packetbuf_set_attr(PACKETBUF_ATTR_RSSI, simSignalStrength);
-  packetbuf_set_attr(PACKETBUF_ATTR_LINK_QUALITY, simLQI);
+	
+	if(LongRangeReceiving > 0) {
+	  packetbuf_set_attr(PACKETBUF_ATTR_RSSI, simSignalStrengthLR);
+	  packetbuf_set_attr(PACKETBUF_ATTR_LINK_QUALITY, simLQILR);
+	} else {
+		packetbuf_set_attr(PACKETBUF_ATTR_RSSI, simSignalStrength);
+		packetbuf_set_attr(PACKETBUF_ATTR_LINK_QUALITY, simLQI);
+	}
 
   return tmp;
 }
@@ -180,6 +209,8 @@ static int
 channel_clear(void)
 {
   if(simSignalStrength > CCA_SS_THRESHOLD) {
+    return 0;
+  } else if(simSignalStrengthLR > CCA_SS_THRESHOLD) {
     return 0;
   }
   return 1;
@@ -313,7 +344,6 @@ PROCESS_THREAD(cooja_radio_process, ev, data)
     len = radio_read(packetbuf_dataptr(), PACKETBUF_SIZE);
     if(len > 0) {
       packetbuf_set_datalen(len);
-
       NETSTACK_RDC.input();
     }
   }

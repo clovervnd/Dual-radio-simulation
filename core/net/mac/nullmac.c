@@ -43,11 +43,13 @@
 #include "net/ip/tcpip.h"
 #include "net/packetbuf.h"
 #include "net/netstack.h"
+#include <stdio.h>
 
 /*---------------------------------------------------------------------------*/
 static void
 send_packet(mac_callback_t sent, void *ptr)
 {
+	printf("nullmac sent %x\n",&sent);
   NETSTACK_RDC.send(sent, ptr);
 }
 /*---------------------------------------------------------------------------*/

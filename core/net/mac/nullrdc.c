@@ -123,9 +123,9 @@ send_one_packet(mac_callback_t sent, void *ptr)
 {
   int ret;
   int last_sent_ok = 0;
-
+	// JJH
+  printf("rdc %x\n",sent);
 	/* JOONKI */
-
 #if DUAL_RADIO
 	if(sending_in_LR() == LONG_RADIO){
   	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
@@ -142,7 +142,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
 #if NULLRDC_802154_AUTOACK || NULLRDC_802154_AUTOACK_HW
   packetbuf_set_attr(PACKETBUF_ATTR_MAC_ACK, 1);
 #endif /* NULLRDC_802154_AUTOACK || NULLRDC_802154_AUTOACK_HW */
-
   if(NETSTACK_FRAMER.create() < 0) {
     /* Failed to allocate space for headers */
     PRINTF("nullrdc: send failed, too large header\n");
@@ -167,7 +166,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
       if(!is_broadcast) {
         RIMESTATS_ADD(reliabletx);
       }
-
       switch(NETSTACK_RADIO.transmit(packetbuf_totlen())) {
       case RADIO_TX_OK:
         if(is_broadcast) {
@@ -227,7 +225,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
         break;
       }
     }
-
 #else /* ! NULLRDC_802154_AUTOACK */
 
     switch(NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen())) {
@@ -244,12 +241,15 @@ send_one_packet(mac_callback_t sent, void *ptr)
       ret = MAC_TX_ERR;
       break;
     }
-
 #endif /* ! NULLRDC_802154_AUTOACK */
   }
   if(ret == MAC_TX_OK) {
     last_sent_ok = 1;
   }
+/*  if(sent==0x0000fdf2)
+  {
+	  return 0;
+  }*/
   mac_call_sent_callback(sent, ptr, ret, 1);
   return last_sent_ok;
 }
@@ -344,17 +344,16 @@ packet_input(void)
 #if NULLRDC_SEND_802154_ACK
     {
     	// JJH successful receiving data trace
-    	uint8_t seq_id1=original_dataptr[original_datalen-12];
-    	uint8_t seq_id2=original_dataptr[original_datalen-11];
-    	uint8_t seq_id3=original_dataptr[original_datalen-10];
-    	uint8_t src_addr1=original_dataptr[original_datalen-4];
-    	uint8_t src_addr2=original_dataptr[original_datalen-3];
-    	uint8_t src_addr3=original_dataptr[original_datalen-2];
+//    	uint8_t seq_id1=original_dataptr[original_datalen-12];
+//    	uint8_t seq_id2=original_dataptr[original_datalen-11];
+//    	uint8_t seq_id3=original_dataptr[original_datalen-10];
+//    	uint8_t src_addr1=original_dataptr[original_datalen-4];
+//    	uint8_t src_addr2=original_dataptr[original_datalen-3];
+//    	uint8_t src_addr3=original_dataptr[original_datalen-2];
 //    	if(original_dataptr[original_datalen-1]=='X' && linkaddr_node_addr.u8[1]!=1)
     	if(original_dataptr[original_datalen-1]=='X')
-    		printf("DATA from:%c%c%c via:%d id:%c%c%c %c\n",
-    				src_addr1,src_addr2,src_addr3,linkaddr_node_addr.u8[1],seq_id1,seq_id2,seq_id3,
-					radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S');
+    		printf("DATA from: %d to: %d %c\n",
+    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S');
 
 			/* JOONKI
 			 * Is the retransmission comming from this part?? */

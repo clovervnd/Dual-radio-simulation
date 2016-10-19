@@ -173,6 +173,8 @@ transmit_packet_list(void *ptr)
       PRINTF("csma: preparing number %d %p, queue len %d\n", n->transmissions, q,
           list_length(n->queued_packet_list));
       /* Send packets in the neighbor's list */
+      // JJH
+      printf("csma send_list %x\n",packet_sent);
       NETSTACK_RDC.send_list(packet_sent, n, q);
     }
   }
@@ -368,7 +370,8 @@ send_packet(mac_callback_t sent, void *ptr)
   static uint8_t initialized = 0;
   static uint16_t seqno;
   const linkaddr_t *addr = packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
-
+  // JJH
+  printf("csma %x\n",sent);
   if(!initialized) {
     initialized = 1;
     /* Initialize the sequence number to a random value as per 802.15.4. */

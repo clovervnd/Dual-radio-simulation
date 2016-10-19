@@ -59,7 +59,6 @@ mac_call_sent_callback(mac_callback_t sent, void *ptr, int status, int num_tx)
   default:
     PRINTF("mac: error %d after %d tx\n", status, num_tx);
   }
-
   if(sent) {
     sent(ptr, status, num_tx);
   }
