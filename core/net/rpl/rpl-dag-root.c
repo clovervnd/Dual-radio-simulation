@@ -254,8 +254,11 @@ rpl_dag_root_init_dag(void)
   to_become_root = 1;
 
   /* Send a DIS packet to request RPL info from neighbors. */
+	/* JOONKI */
 #if DUAL_RADIO
 		dis_broadcast();	
+		// dual_radio_switch(SHORT_RADIO);
+		// dis_output(NULL);
 #else
     dis_output(NULL);
 #endif

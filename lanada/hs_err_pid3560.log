@@ -1,0 +1,68 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00000000, pid=3560, tid=3001559872
+#
+# JRE version: OpenJDK Runtime Environment (7.0_111-b01) (build 1.7.0_111-b01)
+# Java VM: OpenJDK Client VM (24.111-b01 mixed mode, sharing linux-x86 )
+# Derivative: IcedTea 2.6.7
+# Distribution: Ubuntu 14.04 LTS, package 7u111-2.6.7-0ubuntu0.14.04.3
+# Problematic frame:
+# C  0x00000000
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please include
+# instructions on how to reproduce the bug and visit:
+#   http://icedtea.classpath.org/bugzilla
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0xb2b70c00):  JavaThread "Thread-6" [_thread_in_native, id=3674, stack(0xb2e32000,0xb2e83000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x00000000
+
+Registers:
+EAX=0x000e000e, EBX=0x3d029b3a, ECX=0x00000000, EDX=0x00000069
+ESP=0xb2f1222c, EBP=0x0000fdf2, ESI=0x00401e3c, EDI=0x00000000
+EIP=0x00000000, EFLAGS=0x00010282, CR2=0x00000000
+
+Top of Stack: (sp=0xb2f1222c)
+0xb2f1222c:   00000000 0000feff 00120501 0000fd80
+0xb2f1223c:   00000000 000a0200 000a000a 0004060a
+0xb2f1224c:   00000000 00000069 b2f12284 b2f04274
+0xb2f1225c:   b2f04580 b2f16160 b2f161e0 0000122f
+0xb2f1226c:   b2f100b8 00000088 b2f16160 b2f161e0
+0xb2f1227c:   b2f1616c b2f1846c b2f122b4 b2ef3c13
+0xb2f1228c:   b2f16160 b2f1616c b2f102c0 00000088
+0xb2f1229c:   00000005 010003dc b2f1616c b2f100f4 
+
+Instructions: (pc=0x00000000)
+0xffffffe0:   
+
+Register to memory mapping:
+
+EAX=0x000e000e is an unknown value
+EBX=0x3d029b3a is an unknown value
+ECX=0x00000000 is an unknown value
+EDX=0x00000069 is an unknown value
+ESP=0xb2f1222c: <offset 0x3022c> in /media/user/JK/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype759.cooja at 0xb2ee2000
+EBP=0x0000fdf2 is an unknown value
+ESI=0x00401e3c is an unknown value
+EDI=0x00000000 is an unknown value
+
+
+Stack: [0xb2e32000,0xb2e83000],  sp=0xb2f1222c,  free space=896k
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 1174  org.contikios.cooja.corecomm.Lib2.tick()V (0 bytes) @ 0xb49cccd0 [0xb49ccc90+0x40]
+
+[error occurred during error reporting (printing Java stack), id 0xb]
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  

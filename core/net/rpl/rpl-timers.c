@@ -94,7 +94,10 @@ handle_periodic_timer(void *ptr)
 		PRINTF("handle_periodic_timer\n");
 /*JOONKI*/
 #if DUAL_RADIO
-		dis_broadcast();	
+		dis_broadcast();
+
+		// dual_radio_switch(SHORT_RADIO);
+		// dis_output(NULL);
 #else
     dis_output(NULL);
 #endif
@@ -180,6 +183,8 @@ handle_dio_timer(void *ptr)
 			/*JOONKI*/
 #if DUAL_RADIO
 			dio_broadcast(instance);
+			//dual_radio_switch(SHORT_RADIO);
+			//dio_output(instance, NULL);
 #else
 			dio_output(instance, NULL);
 #endif

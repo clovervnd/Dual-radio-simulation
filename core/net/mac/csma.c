@@ -371,7 +371,14 @@ send_packet(mac_callback_t sent, void *ptr)
   static uint16_t seqno;
   const linkaddr_t *addr = packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
   // JJH
-  printf("csma %x\n",sent);
+
+	/* FILE* fp;
+	if (linkaddr_node_addr.u8[1] == 1){
+		fp = cfs_open("JOONKI.txt", 2);
+		cfs_write(fp,"csma",1);
+		cfs_close(fp);	
+	}	*/
+
   if(!initialized) {
     initialized = 1;
     /* Initialize the sequence number to a random value as per 802.15.4. */

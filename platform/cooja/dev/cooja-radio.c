@@ -43,6 +43,8 @@
 #include "dev/radio.h"
 #include "dev/cooja-radio.h"
 
+/* JOONKI */
+#include <stdio.h>
 
 #if DUAL_RADIO
 #include "../dual_conf.h"
@@ -64,7 +66,7 @@ int simInSizeLR = 0;
 char simOutDataBuffer[COOJA_RADIO_BUFSIZE];
 char simOutDataBufferLR[COOJA_RADIO_BUFSIZE];
 int simRadioChannel = 26;
-int simRadioChannelLR = 26;
+int simRadioChannelLR = 27;
 int simOutSize = 0;
 int simOutSizeLR = 0;
 
@@ -160,7 +162,7 @@ doInterfaceActionsBeforeTick(void)
   }
 
   if(simInSize > 0 || simInSizeLR > 0) {
-		if (simReceiving == 0 || simReceivingLR == 0){
+		if (simInSize == 0 || simInSizeLR == 0){
 	    process_poll(&cooja_radio_process);
 		}
   }
@@ -174,7 +176,7 @@ doInterfaceActionsAfterTick(void)
 static int
 radio_read(void *buf, unsigned short bufsize)
 {
-  int tmp = simInSize;
+	int tmp = simInSize;
 
   if(simInSize == 0 && simInSizeLR == 0) {
     return 0;
@@ -185,7 +187,8 @@ radio_read(void *buf, unsigned short bufsize)
     RIMESTATS_ADD(toolong);
     return 0;
   }
-	if(LongRangeReceiving > 0) { //	if(radio_received_is_longrange() == LONG_RADIO)	{
+	// if(LongRangeReceiving > 0) { 
+	if(radio_received_is_longrange() == LONG_RADIO)	{
 		memcpy(buf, simInDataBufferLR, simInSizeLR);
 		tmp = simInSizeLR;
 		simInSizeLR = 0;
@@ -194,7 +197,8 @@ radio_read(void *buf, unsigned short bufsize)
 		simInSize = 0;
 	}
 	
-	if(LongRangeReceiving > 0) {
+	if(radio_received_is_longrange() == LONG_RADIO) {
+	// if(LongRangeReceiving > 0) { 
 	  packetbuf_set_attr(PACKETBUF_ATTR_RSSI, simSignalStrengthLR);
 	  packetbuf_set_attr(PACKETBUF_ATTR_LINK_QUALITY, simLQILR);
 	} else {
@@ -340,12 +344,14 @@ PROCESS_THREAD(cooja_radio_process, ev, data)
 				dual_radio_received(SHORT_RADIO);
 			}
 #endif 
+		// if (simInSize >0 && simInSizeLR > 0)
+		//	dual_radio_received(SHORT_RADIO);
 
     len = radio_read(packetbuf_dataptr(), PACKETBUF_SIZE);
-    if(len > 0) {
+		if(len > 0) {
       packetbuf_set_datalen(len);
-      NETSTACK_RDC.input();
-    }
+   	  NETSTACK_RDC.input();
+   	}
   }
 
   PROCESS_END();
