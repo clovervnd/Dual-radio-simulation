@@ -1,10 +1,11 @@
 #include "dual_radio.h"
 #define DEBUG_DUAL	1
-#if DEBUG_DUAL
-#include <stdio.h>
+
 #include "net/rpl/rpl-icmp6.h"
 #include "contiki.h"
 
+#if DEBUG_DUAL
+#include <stdio.h>
 #define RADIO(...) printf(__VA_ARGS__)
 #else
 #define RADIO(...)

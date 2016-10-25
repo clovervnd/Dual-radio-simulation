@@ -381,9 +381,9 @@ packet_input(void)
 //    	uint8_t src_addr2=original_dataptr[original_datalen-3];
 //    	uint8_t src_addr3=original_dataptr[original_datalen-2];
 //    	if(original_dataptr[original_datalen-1]=='X' && linkaddr_node_addr.u8[1]!=1)
-    	if(original_dataptr[original_datalen-1]=='X')
-    		printf("DATA from: %d to: %d %c\n",
-    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S');
+//    	if(original_dataptr[original_datalen-1]=='X')
+//    		printf("DATA from: %d to: %d %c\n",
+//    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S');
 
 			/* JOONKI
 			 * Is the retransmission comming from this part?? */
