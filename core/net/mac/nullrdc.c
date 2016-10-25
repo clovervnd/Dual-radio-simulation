@@ -118,8 +118,8 @@
 #endif
 
 /* JOONKI */
-extern FILE *debugfp;
-extern mac_callback_t* global_sent;
+//extern FILE *debugfp;
+//extern mac_callback_t* global_sent;
 
 /*---------------------------------------------------------------------------*/
 static int

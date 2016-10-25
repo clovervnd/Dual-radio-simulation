@@ -36,6 +36,9 @@
 #define XMAC_CONF_COMPOWER          1
 #define CXMAC_CONF_COMPOWER         1
 
+#define DUAL_RADIO 	1
+#define ADDR_MAP 1
+
 #if NETSTACK_CONF_WITH_IPV6
 
 /* Network setup for IPv6 */

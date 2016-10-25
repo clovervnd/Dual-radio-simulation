@@ -172,7 +172,7 @@ void uip_log(char *msg);
 #endif
 
 /* JOONKI */
-extern FILE *debugfp;
+//extern FILE *debugfp;
 
 /** \name General variables
  *  @{

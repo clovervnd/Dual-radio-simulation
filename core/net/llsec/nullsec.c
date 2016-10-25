@@ -49,8 +49,8 @@
 
 
 /* JOONKI */
-#include <stdio.h>
-extern FILE *debugfp;
+//#include <stdio.h>
+//extern FILE *debugfp;
 
 /*---------------------------------------------------------------------------*/
 static void

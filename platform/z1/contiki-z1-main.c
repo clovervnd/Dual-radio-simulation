@@ -160,6 +160,20 @@ set_rime_addr(void)
     printf("%d.", addr.u8[i]);
   }
   printf("%d\n", addr.u8[i]);
+	/* JOONKI copy
+	 * link local ipv6 address is automatically determined when we set the lladdr */
+#if DUAL_RADIO
+	linkaddr_t long_addr;
+	long_addr = addr;
+	long_addr.u8[0] = 0x80;
+	linkaddr_set_node_long_addr(&long_addr);
+printf("Rime for long range radio started with address ");
+for(i = 0; i < sizeof(long_addr.u8) - 1; i++) {
+  printf("%d.", long_addr.u8[i]);
+}
+printf("%d\n", long_addr.u8[i]);
+#endif
+
 }
 /*---------------------------------------------------------------------------*/
 static void
