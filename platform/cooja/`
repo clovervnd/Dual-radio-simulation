@@ -137,11 +137,26 @@ static struct cooja_mt_thread rtimer_thread;
 static struct cooja_mt_thread process_run_thread;
 
 /* JOONKI */
-// FILE *debugfp;
-// FILE *debugfp_2;
+FILE *debugfp;
+FILE *debugfp_2;
 
-// #include "net/mac/mac.h"
-// mac_callback_t* global_sent;
+/* 
+char debug_message[100];
+int global_sent;
+
+PROCESS(log_print, "log_print");
+PROCESS_THREAD(log_print, ev, data)
+{
+	fprintf(debugfp_2,"sent: %x",&global_sent);
+	fflush(debugfp_2);
+}
+
+int log_print_function (mac_call_sent_callback * sent)
+{
+	global_sent = *sent;
+	process_start(&log_print, NULL);
+}
+*/
 
 /*---------------------------------------------------------------------------*/
 #if NETSTACK_CONF_WITH_IPV4
@@ -260,9 +275,12 @@ contiki_init()
   queuebuf_init();
 
 	/* JOONKI */
-	// char filename[100];
-	// sprintf(filename, "/home/user/Desktop/Debug_log/Debug%d.txt",linkaddr_node_addr.u8[1]);
-	// debugfp = fopen(filename,"w");
+	char filename[100];
+	char filename_2[100];
+	sprintf(filename, "/home/user/Desktop/Debug_log/Debug%d.txt",linkaddr_node_addr.u8[1]);
+	sprintf(filename_2, "/home/user/Desktop/Debug_log/Process_Debug%d.txt",linkaddr_node_addr.u8[1]);
+	debugfp = fopen(filename,"w");
+	debugfp_2 = fopen(filename_2,"w");
 	
   /* Initialize communication stack */
   netstack_init();

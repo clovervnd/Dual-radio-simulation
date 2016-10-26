@@ -171,6 +171,9 @@ void uip_log(char *msg);
 #define COMPRESSION_THRESHOLD 0
 #endif
 
+/* JOONKI */
+extern FILE *debugfp;
+
 /** \name General variables
  *  @{
  */
@@ -1255,7 +1258,10 @@ send_packet(linkaddr_t *dest)
   /* Provide a callback function to receive the result of
      a packet transmission. */
   // JJH
-  printf("llsec sent %x\n",&packet_sent);
+  // printf("llsec sent %x\n",&packet_sent);
+	
+	// fprintf(debugfp, "sicslowpan/send_packet/packet_sent : %x\n", &packet_sent);
+	// fflush(debugfp);
 
   NETSTACK_LLSEC.send(&packet_sent, NULL);
 

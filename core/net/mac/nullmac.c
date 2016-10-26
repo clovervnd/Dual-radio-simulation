@@ -45,11 +45,16 @@
 #include "net/netstack.h"
 #include <stdio.h>
 
+/* JOONKI */
+extern FILE *debugfp;
+
 /*---------------------------------------------------------------------------*/
 static void
 send_packet(mac_callback_t sent, void *ptr)
 {
-	printf("nullmac sent %x\n",&sent);
+	// printf("nullmac sent %x\n",&sent);
+	// fprintf(debugfp, "nullmac/send_packet/sent : %x\n", sent);
+	// fflush(debugfp);
   NETSTACK_RDC.send(sent, ptr);
 }
 /*---------------------------------------------------------------------------*/

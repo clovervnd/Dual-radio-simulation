@@ -92,6 +92,10 @@ static const void *pending_data;
 
 PROCESS(cooja_radio_process, "cooja radio process");
 
+/* JOONKI */
+extern mac_callback_t * global_sent;
+extern FILE *debugfp;
+
 /*---------------------------------------------------------------------------*/
 void
 radio_set_channel(int channel)
@@ -174,6 +178,7 @@ doInterfaceActionsAfterTick(void)
 }
 /*---------------------------------------------------------------------------*/
 static int
+// radio_read(void *buf, unsigned short bufsize)
 radio_read(void *buf, unsigned short bufsize)
 {
 	int tmp = simInSize;
@@ -182,23 +187,37 @@ radio_read(void *buf, unsigned short bufsize)
     return 0;
   }	
 
-  if(bufsize < simInSize) {
+  if(bufsize < simInSize || bufsize <simInSizeLR ) {
     simInSize = 0; /* rx flush */
+		simInSizeLR = 0;
     RIMESTATS_ADD(toolong);
     return 0;
   }
-	// if(LongRangeReceiving > 0) { 
+
+	/*	if (sent != NULL){
+		fprintf(debugfp,"INSIDE READ BEFORE memcpy: cooja-radio_driver/radio_read sent: %x\n\n", *sent);
+		fflush(debugfp);
+	}	*/
+
 	if(radio_received_is_longrange() == LONG_RADIO)	{
 		memcpy(buf, simInDataBufferLR, simInSizeLR);
 		tmp = simInSizeLR;
+		// fprintf(debugfp, "BUFFER address : %x, simInSizeLR : %d, simInSizeSR : %d\n\n",buf,simInSizeLR,simInSize);
+		// fflush(debugfp);
 		simInSizeLR = 0;
 	}	else {
 		memcpy(buf, simInDataBuffer, simInSize);
+		// fprintf(debugfp, "BUFFER address : %x, simInSizeLR : %d, simInSizeSR : %d\n\n",buf,simInSizeLR,simInSize);
+		// fflush(debugfp);
 		simInSize = 0;
 	}
 	
+	/* if (sent != NULL){
+		fprintf(debugfp,"INSIDE READ AFTER memcpy: cooja-radio_driver/radio_read sent: %x\n\n", *sent);
+		fflush(debugfp);
+	}	*/
+
 	if(radio_received_is_longrange() == LONG_RADIO) {
-	// if(LongRangeReceiving > 0) { 
 	  packetbuf_set_attr(PACKETBUF_ATTR_RSSI, simSignalStrengthLR);
 	  packetbuf_set_attr(PACKETBUF_ATTR_LINK_QUALITY, simLQILR);
 	} else {
@@ -206,6 +225,10 @@ radio_read(void *buf, unsigned short bufsize)
 		packetbuf_set_attr(PACKETBUF_ATTR_LINK_QUALITY, simLQI);
 	}
 
+	/* if (sent != NULL){
+		fprintf(debugfp,"INSIDE READ AFTER packetbuf: cooja-radio_driver/radio_read sent: %x\n\n", *sent);
+		fflush(debugfp);
+	}	*/
   return tmp;
 }
 /*---------------------------------------------------------------------------*/

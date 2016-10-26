@@ -117,6 +117,10 @@
 #endif
 #endif
 
+/* JOONKI */
+extern FILE *debugfp;
+extern mac_callback_t* global_sent;
+
 /*---------------------------------------------------------------------------*/
 static int
 send_one_packet(mac_callback_t sent, void *ptr)
@@ -124,7 +128,10 @@ send_one_packet(mac_callback_t sent, void *ptr)
   int ret;
   int last_sent_ok = 0;
 	// JJH
-  printf("rdc %x\n",sent);
+	
+	// fprintf(debugfp,"nullrdc/send_one_packet/sent : %x\n\n",sent);
+	// fflush(debugfp); 
+
 	/* JOONKI */
 #if DUAL_RADIO
 	if(sending_in_LR() == LONG_RADIO){
@@ -166,8 +173,15 @@ send_one_packet(mac_callback_t sent, void *ptr)
       if(!is_broadcast) {
         RIMESTATS_ADD(reliabletx);
       }
+
+			// fprintf(debugfp,"BEFORE NETSTACK_RADIO.transmit nullrdc/send_one_packet/sent : %x\n\n",sent);
+			// fflush(debugfp); 
+
       switch(NETSTACK_RADIO.transmit(packetbuf_totlen())) {
       case RADIO_TX_OK:
+				// fprintf(debugfp,"AFTER RADIO_TX_OK nullrdc/send_one_packet/sent : %x\n\n",sent);
+				// fflush(debugfp); 
+
         if(is_broadcast) {
           ret = MAC_TX_OK;
         } else {
@@ -181,6 +195,8 @@ send_one_packet(mac_callback_t sent, void *ptr)
             cooja_mt_yield();
 #endif /* CONTIKI_TARGET_COOJA */
           }
+					// fprintf(debugfp,"AFTER RTIMER_CLOCK_LT nullrdc/send_one_packet/sent : %x\n\n",sent);
+					// fflush(debugfp); 
 
           ret = MAC_TX_NOACK;
           if(NETSTACK_RADIO.receiving_packet() ||
@@ -197,12 +213,23 @@ send_one_packet(mac_callback_t sent, void *ptr)
       #if CONTIKI_TARGET_COOJA
                   simProcessRunValue = 1;
                   cooja_mt_yield();
+
       #endif /* CONTIKI_TARGET_COOJA */
               }
             }
+						// fprintf(debugfp,"BEFORE NETSTACK_RADIO.pending_packet nullrdc/send_one_packet/sent : %x\n\n",sent);
+						// fflush(debugfp); 
 
             if(NETSTACK_RADIO.pending_packet()) {
+							// fprintf(debugfp,"RIGHT AFTER NETSTACK_RADIO.pending_packet() nullrdc/send_one_packet/sent : %x\n\n",sent);
+							// fflush(debugfp); 
+							
+							/* JOONKI */
               len = NETSTACK_RADIO.read(ackbuf, ACK_LEN);
+						
+							// fprintf(debugfp,"RIGHT AFTER NETSTACK_RADIO.read nullrdc/send_one_packet/sent : %x\n\n",sent);
+							// fflush(debugfp); 
+              
               if(len == ACK_LEN && ackbuf[2] == dsn) {
                 /* Ack received */
                 RIMESTATS_ADD(ackrx);
@@ -212,6 +239,9 @@ send_one_packet(mac_callback_t sent, void *ptr)
                 ret = MAC_TX_COLLISION;
               }
             }
+						// fprintf(debugfp,"AFTER NETSTACK_RADIO.pending_packet nullrdc/send_one_packet/sent : %x\n\n",sent);
+						// fflush(debugfp); 
+
           } else {
 	    PRINTF("nullrdc tx noack\n");
 	  }
@@ -246,10 +276,10 @@ send_one_packet(mac_callback_t sent, void *ptr)
   if(ret == MAC_TX_OK) {
     last_sent_ok = 1;
   }
-/*  if(sent==0x0000fdf2)
-  {
-	  return 0;
-  }*/
+
+	// fprintf(debugfp,"RIGHT BEFORE nullrdc/send_one_packet/sent : %x\n\n",sent);
+	// fflush(debugfp); 
+
   mac_call_sent_callback(sent, ptr, ret, 1);
   return last_sent_ok;
 }

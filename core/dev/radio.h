@@ -231,6 +231,9 @@ enum {
   RADIO_TX_NOACK,
 };
 
+// #include "net/mac/mac.h"
+// typedef void (* mac_callback_tt) (void *ptr, int status, int transmission);
+
 /**
  * The structure of a device driver for a radio in Contiki.
  */
@@ -248,6 +251,7 @@ struct radio_driver {
   int (* send)(const void *payload, unsigned short payload_len);
 
   /** Read a received packet into a buffer. */
+  // int (* read)(void *buf, unsigned short buf_len);
   int (* read)(void *buf, unsigned short buf_len);
 
   /** Perform a Clear-Channel Assessment (CCA) to find out if there is

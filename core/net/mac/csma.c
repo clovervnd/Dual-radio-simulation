@@ -174,7 +174,7 @@ transmit_packet_list(void *ptr)
           list_length(n->queued_packet_list));
       /* Send packets in the neighbor's list */
       // JJH
-      printf("csma send_list %x\n",packet_sent);
+      // printf("csma send_list %x\n",packet_sent);
       NETSTACK_RDC.send_list(packet_sent, n, q);
     }
   }
@@ -370,15 +370,6 @@ send_packet(mac_callback_t sent, void *ptr)
   static uint8_t initialized = 0;
   static uint16_t seqno;
   const linkaddr_t *addr = packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
-  // JJH
-
-	/* FILE* fp;
-	if (linkaddr_node_addr.u8[1] == 1){
-		fp = cfs_open("JOONKI.txt", 2);
-		cfs_write(fp,"csma",1);
-		cfs_close(fp);	
-	}	*/
-
   if(!initialized) {
     initialized = 1;
     /* Initialize the sequence number to a random value as per 802.15.4. */

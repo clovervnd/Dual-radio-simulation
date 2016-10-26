@@ -47,6 +47,11 @@
 #include "net/netstack.h"
 #include "net/packetbuf.h"
 
+
+/* JOONKI */
+#include <stdio.h>
+extern FILE *debugfp;
+
 /*---------------------------------------------------------------------------*/
 static void
 init(void)
@@ -59,7 +64,9 @@ send(mac_callback_t sent, void *ptr)
 {
   packetbuf_set_attr(PACKETBUF_ATTR_FRAME_TYPE, FRAME802154_DATAFRAME);
   // JJH
-  printf("sec %x\n",sent);
+  // printf("sec %x\n",sent);
+	// fprintf(debugfp, "nullllsec/send/sent : %x\n", sent);
+	// fflush(debugfp);
   NETSTACK_MAC.send(sent, ptr);
 }
 /*---------------------------------------------------------------------------*/
