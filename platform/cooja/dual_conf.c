@@ -75,12 +75,12 @@ int radio_received_is_longrange(void)
 {
 	if (radio_received == LONG_RADIO)
 	{
-		RADIO("$$$$$$$$$$$$$$$$$$  LONG_RADIO_RECEIVED\n");
+		// RADIO("$$$$$$$$$$$$$$$$$$  LONG_RADIO_RECEIVED\n");
 		return LONG_RADIO;
 	}
 	else
 	{
-		RADIO("$$$$$$$$$$$$$$$$$$  SHORT_RADIO_RECEIVED\n");
+		// RADIO("$$$$$$$$$$$$$$$$$$  SHORT_RADIO_RECEIVED\n");
 		return SHORT_RADIO;
 	}
 }

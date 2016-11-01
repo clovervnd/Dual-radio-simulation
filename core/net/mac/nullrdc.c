@@ -394,8 +394,8 @@ packet_input(void)
 #if DUAL_RADIO
       if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
          info154.fcf.ack_required != 0 &&
-				 (linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
-                      &linkaddr_node_addr))||linkaddr_cmp((linkaddr_t*)&info154.dest_addr,&long_linkaddr_node_addr)) {
+				 ((linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+                      &linkaddr_node_addr))||linkaddr_cmp((linkaddr_t*)&info154.dest_addr,&long_linkaddr_node_addr))) {
 #else
 			if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
         	info154.fcf.ack_required != 0 &&

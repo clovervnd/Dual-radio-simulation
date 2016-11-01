@@ -109,13 +109,8 @@ calculate_path_metric(rpl_parent_t *p)
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
   {
 	  // JJH
-//	  temp_lladdr = uip_ds6_nbr_get_ll(nbr);
-//	  temp_lladdr.u8[0]=
 //	  printf("mrhof: %c id:%d %d\n",nbr->ipaddr.u8[8]==0x82?'L':'S',nbr->ipaddr.u8[15],p->rank + (uint16_t)nbr->link_metric);
-    if(nbr->ipaddr.u8[8]==0x82)
-    	ret_metric=p->rank + 5*((uint16_t)nbr->link_metric);
-    else
-    	ret_metric=p->rank + (uint16_t)nbr->link_metric;
+    ret_metric=p->rank + (uint16_t)nbr->link_metric;
 //    printf("ret_metric:%d\n",ret_metric);
     return ret_metric;
   }
