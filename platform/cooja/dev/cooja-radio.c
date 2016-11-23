@@ -277,7 +277,7 @@ radio_send(const void *payload, unsigned short payload_len)
 	    return RADIO_TX_ERR;
 	  }
 		printf("$$$$$$$$$$$$$$$ Sending in LR ------------------------>\n");
-		printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
+		// printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
   	/* Transmit on CCA */
 #if WITH_SEND_CCA
 	  if(!channel_clear()) {
@@ -292,7 +292,7 @@ radio_send(const void *payload, unsigned short payload_len)
 	else {	
 #endif /* DUAL_RADIO */
 		printf("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
-		printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
+		// printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
 	  if(simOutSize > 0) {
 	    return RADIO_TX_ERR;
 	  }

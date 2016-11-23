@@ -699,7 +699,7 @@ tcpip_ipv6_output(void)
 				break;
 			}
 		}
-#else /* ADDR_MAP */
+	#else /* ADDR_MAP */
 		if (foraddr.u8[8] == 0x82){
 			dual_radio_switch(LONG_RADIO);
 		}	else {

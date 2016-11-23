@@ -50,7 +50,7 @@
 #endif	/* DUAL_RADIO */
 
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #include "sys/ctimer.h"
