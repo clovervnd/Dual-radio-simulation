@@ -51,7 +51,7 @@
 #include "sys/cooja_mt.h"
 #endif /* CONTIKI_TARGET_COOJA */
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -358,8 +358,8 @@ packet_input(void)
 #if RDC_WITH_DUPLICATE_DETECTION
     /* Check for duplicate packet. */
     duplicate = mac_sequence_is_duplicate();
-		PRINTF("nullrdc: input packet mac sequence number is  %u\n",
-             packetbuf_attr(PACKETBUF_ATTR_MAC_SEQNO));
+// 		PRINTF("nullrdc: input packet mac sequence number is  %u\n",
+//             packetbuf_attr(PACKETBUF_ATTR_MAC_SEQNO));
 
     if(duplicate) {
       /* Drop the packet. */
@@ -403,7 +403,7 @@ packet_input(void)
                       &linkaddr_node_addr)) {
 #endif   
 
-				PRINTF("802154 Framer ack\n");
+//				PRINTF("802154 Framer ack\n");
 				uint8_t ackdata[ACK_LEN] = {0, 0, 0};
 
         ackdata[0] = FRAME802154_ACKFRAME;

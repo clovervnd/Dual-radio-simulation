@@ -118,10 +118,10 @@ calculate_path_metric(rpl_parent_t *p)
   }
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
   {
-	  // JJH
-//	  printf("mrhof: %c id:%d %d\n",nbr->ipaddr.u8[8]==0x82?'L':'S',nbr->ipaddr.u8[15],p->rank + (uint16_t)nbr->link_metric);
+	  // JOONKI
+//	  PRINTF("jkof: %c id:%d %d\n",nbr->ipaddr.u8[8]==0x82?'L':'S',nbr->ipaddr.u8[15],p->rank + (uint16_t)nbr->link_metric);
     ret_metric=p->rank + (uint16_t)nbr->link_metric;
-//    printf("ret_metric:%d\n",ret_metric);
+//    PRINTF("ret_metric:%d\n",ret_metric);
     return ret_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
@@ -136,7 +136,7 @@ calculate_path_metric(rpl_parent_t *p)
 static void
 reset(rpl_dag_t *dag)
 {
-  PRINTF("RPL: Reset MRHOF\n");
+  PRINTF("RPL_JKOF: Reset MRHOF\n");
 }
 
 #if RPL_WITH_DAO_ACK
@@ -147,7 +147,7 @@ dao_ack_callback(rpl_parent_t *p, int status)
     return;
   }
   /* here we need to handle failed DAO's and other stuff */
-  PRINTF("RPL: MRHOF - DAO ACK received with status: %d\n", status);
+  PRINTF("RPL_JKOF: JKOF - DAO ACK received with status: %d\n", status);
   if(status >= RPL_DAO_ACK_UNABLE_TO_ACCEPT) {
     /* punish the ETX as if this was 10 packets lost */
     neighbor_link_callback(p, MAC_TX_OK, 10);
@@ -183,7 +183,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 		/* Bit rate of CC1200 is 50kbps, bit rate of CC2420 is 250kbps */
 		/* Transmission range of CC1200 is 700 m, transmission range of CC2420 is 100m */
 		if (radio_received_is_longrange() == LONG_RADIO)  {
-			packet_ett = packet_ett * 5;
+			packet_ett = packet_ett *100;
 		}
 #endif
     if(p->flags & RPL_PARENT_FLAG_LINK_METRIC_VALID) {
@@ -197,7 +197,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
       p->flags |= RPL_PARENT_FLAG_LINK_METRIC_VALID;
     }
 
-    PRINTF("RPL: ETT changed from %u to %u (packet ETT = %u)\n",
+    PRINTF("RPL_JKOF: ETT changed from %u to %u (packet ETT = %u)\n",
         (unsigned)(recorded_ett / RPL_DAG_MC_ETX_DIVISOR),
         (unsigned)(new_ett  / RPL_DAG_MC_ETX_DIVISOR),
         (unsigned)(packet_ett / RPL_DAG_MC_ETX_DIVISOR));
@@ -233,7 +233,9 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
       stored otherwise. */
     new_rank = base_rank + rank_increase;
   }
-
+ 	/* JOONKI */
+	PRINTF("RPL_JKOF: My new_rank is %d\n",new_rank);
+	
   return new_rank;
 }
 
@@ -271,7 +273,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
     if(p1_metric < p2_metric + min_diff &&
        p1_metric > p2_metric - min_diff) {
-      PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+      PRINTF("RPL_JKOF: JKOF hysteresis: %u <= %u <= %u\n",
              p2_metric - min_diff,
              p1_metric,
              p2_metric + min_diff);
@@ -306,7 +308,7 @@ update_metric_container(rpl_instance_t *instance)
   dag = instance->current_dag;
 
   if (!dag->joined) {
-    PRINTF("RPL: Cannot update the metric container when not joined\n");
+    PRINTF("RPL_JKOF: Cannot update the metric container when not joined\n");
     return;
   }
 
@@ -320,7 +322,7 @@ update_metric_container(rpl_instance_t *instance)
   instance->mc.length = sizeof(instance->mc.obj.etx);
   instance->mc.obj.etx = path_metric;
 
-  PRINTF("RPL: My path ETX to the root is %u.%u\n",
+  PRINTF("RPL_JKOF: My path ETX to the root is %u.%u\n",
 	instance->mc.obj.etx / RPL_DAG_MC_ETX_DIVISOR,
 	(instance->mc.obj.etx % RPL_DAG_MC_ETX_DIVISOR * 100) /
 	 RPL_DAG_MC_ETX_DIVISOR);
