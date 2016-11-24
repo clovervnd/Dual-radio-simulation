@@ -25,7 +25,12 @@ obj_z1/nullrdc.o: ../../../../core/net/mac/nullrdc.c \
  ../../../../core/./net/mac/tsch/tsch-conf.h \
  ../../../../core/./net/queuebuf.h ../../../../core/./net/netstack.h \
  ../../../../core/./net/llsec/llsec.h ../../../../core/./net/mac/framer.h \
- ../../../../core/./net/rime/rimestats.h
+ ../../../../core/./net/rime/rimestats.h \
+ ../../../../core/./../platform/z1/dual_radio.h \
+ ../../../../core/./../platform/z1/platform-conf.h \
+ ../../../../dev/cc1200/cc1200.h ../../../../dev/cc2420/cc2420.h \
+ ../../../../core/./dev/spi.h ../../../../dev/cc2420/cc2420_const.h \
+ ../../../../core/./lib/aes-128.h
 ../../../../core/net/mac/nullrdc.c :
  ../../../../core/./net/mac/mac-sequence.h :
  ../../../../core/./net/mac/nullrdc.h ../../../../core/./net/mac/rdc.h :
@@ -54,3 +59,8 @@ obj_z1/nullrdc.o: ../../../../core/net/mac/nullrdc.c \
  ../../../../core/./net/queuebuf.h ../../../../core/./net/netstack.h :
  ../../../../core/./net/llsec/llsec.h ../../../../core/./net/mac/framer.h :
  ../../../../core/./net/rime/rimestats.h :
+ ../../../../core/./../platform/z1/dual_radio.h :
+ ../../../../core/./../platform/z1/platform-conf.h :
+ ../../../../dev/cc1200/cc1200.h ../../../../dev/cc2420/cc2420.h :
+ ../../../../core/./dev/spi.h ../../../../dev/cc2420/cc2420_const.h :
+ ../../../../core/./lib/aes-128.h :

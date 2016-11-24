@@ -22,7 +22,14 @@ obj_z1/nbr-table.o: ../../../../core/net/nbr-table.c \
  ../../../../core/./net/llsec/llsec802154.h \
  ../../../../core/./net/mac/frame802154.h ../../../../core/./net/ip/uip.h \
  ../../../../core/./net/ip/uipopt.h ../../../../core/./net/ip/tcpip.h \
- ../../../../core/./net/mac/framer.h
+ ../../../../core/./net/mac/framer.h \
+ ../../../../core/./../platform/z1/dual_radio.h \
+ ../../../../core/./../platform/z1/platform-conf.h \
+ ../../../../dev/cc1200/cc1200.h ../../../../core/./net/packetbuf.h \
+ ../../../../core/./net/mac/tsch/tsch-conf.h \
+ ../../../../core/./net/rime/rimestats.h ../../../../dev/cc2420/cc2420.h \
+ ../../../../core/./dev/spi.h ../../../../dev/cc2420/cc2420_const.h \
+ ../../../../core/./lib/aes-128.h ../../../../core/./sys/ctimer.h
 ../../../../core/net/nbr-table.c :
  ../../../../core/./contiki.h ../../../../core/./contiki-version.h :
  ../../../../platform/z1/./contiki-conf.h :
@@ -48,3 +55,10 @@ obj_z1/nbr-table.o: ../../../../core/net/nbr-table.c \
  ../../../../core/./net/mac/frame802154.h ../../../../core/./net/ip/uip.h :
  ../../../../core/./net/ip/uipopt.h ../../../../core/./net/ip/tcpip.h :
  ../../../../core/./net/mac/framer.h :
+ ../../../../core/./../platform/z1/dual_radio.h :
+ ../../../../core/./../platform/z1/platform-conf.h :
+ ../../../../dev/cc1200/cc1200.h ../../../../core/./net/packetbuf.h :
+ ../../../../core/./net/mac/tsch/tsch-conf.h :
+ ../../../../core/./net/rime/rimestats.h ../../../../dev/cc2420/cc2420.h :
+ ../../../../core/./dev/spi.h ../../../../dev/cc2420/cc2420_const.h :
+ ../../../../core/./lib/aes-128.h ../../../../core/./sys/ctimer.h :

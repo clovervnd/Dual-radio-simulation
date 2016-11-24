@@ -705,7 +705,7 @@ cc1200_init(void)
      * configuration of the GPIO0 pin
      */
  
-
+    printf("cc1200 init state: %x\n",state());
 #if DEBUG_LEVEL==5
 		while(1){	
 	  	set_channel(CC1200_DEFAULT_CHANNEL);
@@ -732,7 +732,7 @@ prepare(const void *payload, unsigned short payload_len)
 {
 
   INFO("RF: Prepare (%d)\n", payload_len);
-
+  printf("cc1200 prepare state: %x\n",state());
   if((payload_len < ACK_LEN) ||
      (payload_len > CC1200_MAX_PAYLOAD_LEN)) {
     ERROR("RF: Invalid payload length!\n");
@@ -750,7 +750,7 @@ prepare(const void *payload, unsigned short payload_len)
 static int
 transmit(unsigned short transmit_len)
 {
-
+	printf("cc1200 transmit state: %x\n",state());
   uint8_t was_off = 0;
   int ret = RADIO_TX_OK;
 
@@ -862,6 +862,7 @@ send(const void *payload, unsigned short payload_len)
 {
 
   int ret;
+  printf("cc1200 send state: %x\n",state());
 	ERROR("######################  cc1200_send #########################\n");
   INFO("RF: Send (%d)\n", payload_len);
 
@@ -956,8 +957,10 @@ channel_clear(void)
     on();
   }
 
-  LOCK_SPI();
 
+  clock_delay(100);
+  LOCK_SPI();
+  printf("cc1200 channel_clear state: %x\n",state());
   RF_ASSERT(state() == STATE_RX);
 
   /*
@@ -1771,6 +1774,7 @@ static void
 idle_calibrate_rx(void)
 {
   RF_ASSERT(state() == STATE_IDLE);
+  printf("cc1200 idle_calibrate state: %x\n",state());
 
 #if !CC1200_AUTOCAL
   calibrate();
