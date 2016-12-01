@@ -182,9 +182,11 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 #if DUAL_RADIO
 		/* Bit rate of CC1200 is 50kbps, bit rate of CC2420 is 250kbps */
 		/* Transmission range of CC1200 is 700 m, transmission range of CC2420 is 100m */
+		PRINTF("CALCULATING THE ETT\n");
 		if (radio_received_is_longrange() == LONG_RADIO)  {
-			packet_ett = packet_ett *100;
+			packet_ett = packet_ett *5;
 		}
+		PRINTF("PACKET_ETT is %d\n",packet_ett);
 #endif
     if(p->flags & RPL_PARENT_FLAG_LINK_METRIC_VALID) {
       /* We already have a valid link metric, use weighted moving average to update it */

@@ -658,10 +658,10 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 		uip_ds6_nbr_t *nbr = NULL;
 		nbr = uip_ds6_nbr_lookup(uc_addr);	
 		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
-			PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+			/* PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
 			PRINTF("\n");
 			PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
-			PRINTF("\n");
+			PRINTF("\n"); */
 			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
 				if (ds6_lr_addrmap[i].lr == 1){
 						dual_radio_switch(LONG_RADIO);
