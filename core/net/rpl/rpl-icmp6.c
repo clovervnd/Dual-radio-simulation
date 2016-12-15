@@ -668,6 +668,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 					}	else	{
 						dual_radio_switch(SHORT_RADIO);
 					}
+				PRINTF("SUCCESS!!!\n");
 				break;
 			}
 		}
@@ -870,16 +871,17 @@ dao_input(void)
 			uip_ds6_nbr_t *nbr = NULL;
 			nbr = uip_ds6_nbr_lookup(&tmp_addr);	
 			for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
-				PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+				/* PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
 				PRINTF("\n");
 				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
-				PRINTF("\n");
+				PRINTF("\n");*/
 				if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
 					if (ds6_lr_addrmap[i].lr == 1){
 							dual_radio_switch(LONG_RADIO);
 						}	else	{
 							dual_radio_switch(SHORT_RADIO);
 						}
+					PRINTF("SUCCESS!!!\n");
 					break;
 				}
 			}
@@ -989,16 +991,17 @@ fwd_dao:
 			uip_ds6_nbr_t *nbr = NULL;
 			nbr = uip_ds6_nbr_lookup(&tmp_addr_2);	
 			for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
-				PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+				/* PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
 				PRINTF("\n");
 				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
-				PRINTF("\n");
+				PRINTF("\n");*/
 				if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
 					if (ds6_lr_addrmap[i].lr == 1){
 							dual_radio_switch(LONG_RADIO);
 						}	else	{
 							dual_radio_switch(SHORT_RADIO);
 						}
+					PRINTF("SUCCESS!!!\n");
 					break;
 				}
 			}
@@ -1224,16 +1227,17 @@ dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
 
 	nbr = uip_ds6_nbr_lookup(&dst);	
 	for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
-		PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+		/* PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
 		PRINTF("\n");
 		PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
-		PRINTF("\n");
+		PRINTF("\n"); */
 		if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
 			if (ds6_lr_addrmap[i].lr == 1){
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
 				}
+			PRINTF("SUCCESS!!!\n");
 			break;
 		}
 	}
@@ -1246,7 +1250,7 @@ dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
 	}
 #endif	/* ADDR_MAP */
 #endif /* DUAL_RADIO */
-
+	PRINTF("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ DAO_OUTPUT @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
   PRINTF("RPL: Sending a %sDAO with sequence number %u, lifetime %u, prefix ",
       lifetime == RPL_ZERO_LIFETIME ? "No-Path " : "", seq_no, lifetime);
   PRINT6ADDR(prefix);
@@ -1344,16 +1348,17 @@ dao_ack_input(void)
 			uip_ds6_nbr_t *nbr = NULL;
 			nbr = uip_ds6_nbr_lookup(nexthop);	
 			for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
-				PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+				/* PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
 				PRINTF("\n");
 				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
-				PRINTF("\n");
+				PRINTF("\n"); */
 				if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
 					if (ds6_lr_addrmap[i].lr == 1){
 							dual_radio_switch(LONG_RADIO);
 						}	else	{
 							dual_radio_switch(SHORT_RADIO);
 						}
+					PRINTF("SUCCESS!!!\n");
 					break;
 				}
 			}
@@ -1403,16 +1408,17 @@ dao_ack_output(rpl_instance_t *instance, uip_ipaddr_t *dest, uint8_t sequence,
 		uip_ds6_nbr_t *nbr = NULL;
 		nbr = uip_ds6_nbr_lookup(dest);	
 		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
-			PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+			/* PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
 			PRINTF("\n");
 			PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
-			PRINTF("\n");
+			PRINTF("\n"); */
 			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
 				if (ds6_lr_addrmap[i].lr == 1){
 					dual_radio_switch(LONG_RADIO);
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
 				}
+				PRINTF("SUCCESS!!!\n");
 				break;
 			}
 		}

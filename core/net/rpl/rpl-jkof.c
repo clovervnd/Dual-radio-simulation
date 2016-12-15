@@ -184,7 +184,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 		/* Transmission range of CC1200 is 700 m, transmission range of CC2420 is 100m */
 		PRINTF("CALCULATING THE ETT\n");
 		if (radio_received_is_longrange() == LONG_RADIO)  {
-			packet_ett = packet_ett *5;
+			packet_ett = packet_ett*5;
 		}
 		PRINTF("PACKET_ETT is %d\n",packet_ett);
 #endif
@@ -236,6 +236,9 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
     new_rank = base_rank + rank_increase;
   }
  	/* JOONKI */
+	PRINTF("RPL_JKOF: rank calculation with parent");
+	PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+	PRINTF("\n");
 	PRINTF("RPL_JKOF: My new_rank is %d\n",new_rank);
 	
   return new_rank;
