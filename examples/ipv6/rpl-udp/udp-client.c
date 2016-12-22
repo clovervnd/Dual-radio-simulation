@@ -62,8 +62,14 @@
 #define SEND_TIME		(random_rand() % (SEND_INTERVAL))
 #define MAX_PAYLOAD_LEN		30
 
+#include "param.h"
+/* Remaining energy init JJH*/
+uint8_t remaining_energy = INITIAL_ENERGY;
+uint8_t alpha = ALPHA;
+
 static struct uip_udp_conn *client_conn;
 static uip_ipaddr_t server_ipaddr;
+
 
 /*---------------------------------------------------------------------------*/
 PROCESS(udp_client_process, "UDP client process");
@@ -106,7 +112,8 @@ send_packet(void *ptr)
              reply == seq_id ? "GREEN" : "RED", uip_ds6_route_num_routes(), num_used);
   }
 #endif /* SERVER_REPLY */
-
+  if(remaining_energy == 1)
+	  return;
   seq_id++;
   PRINTF("app: DATA id:%03d from:%03d\n",
          seq_id,myaddr);

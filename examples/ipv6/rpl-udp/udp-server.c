@@ -50,6 +50,11 @@
 
 #define UDP_EXAMPLE_ID  190
 
+#include "param.h"
+/* Remaining energy init JJH*/
+uint8_t remaining_energy = INITIAL_ENERGY;
+uint8_t alpha = ALPHA;
+
 static struct uip_udp_conn *server_conn;
 
 PROCESS(udp_server_process, "UDP server process");
@@ -105,7 +110,7 @@ PROCESS_THREAD(udp_server_process, ev, data)
 
   PROCESS_PAUSE();
 
-  SENSORS_ACTIVATE(button_sensor);
+//  SENSORS_ACTIVATE(button_sensor);
 
   PRINTF("UDP server started. nbr:%d routes:%d\n",
          NBR_TABLE_CONF_MAX_NEIGHBORS, UIP_CONF_MAX_ROUTES);
@@ -149,7 +154,7 @@ PROCESS_THREAD(udp_server_process, ev, data)
 
   /* The data sink runs with a 100% duty cycle in order to ensure high 
      packet reception rates. */
-  NETSTACK_MAC.off(1);
+//  NETSTACK_MAC.off(1);
 
   server_conn = udp_new(NULL, UIP_HTONS(UDP_CLIENT_PORT), NULL);
   if(server_conn == NULL) {

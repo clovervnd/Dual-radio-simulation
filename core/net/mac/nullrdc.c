@@ -51,7 +51,7 @@
 #include "sys/cooja_mt.h"
 #endif /* CONTIKI_TARGET_COOJA */
 
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -121,6 +121,9 @@
 //extern FILE *debugfp;
 //extern mac_callback_t* global_sent;
 
+/* remaining energy JJH */
+#include "../lanada/param.h"
+extern uint8_t remaining_energy;
 /*---------------------------------------------------------------------------*/
 static int
 send_one_packet(mac_callback_t sent, void *ptr)
@@ -128,7 +131,9 @@ send_one_packet(mac_callback_t sent, void *ptr)
   int ret;
   int last_sent_ok = 0;
 	// JJH
-	
+  int original_datalen;
+  uint8_t *original_dataptr;
+
 	// fprintf(debugfp,"nullrdc/send_one_packet/sent : %x\n\n",sent);
 	// fflush(debugfp); 
 
@@ -160,6 +165,26 @@ send_one_packet(mac_callback_t sent, void *ptr)
     dsn = ((uint8_t *)packetbuf_hdrptr())[2] & 0xff;
     NETSTACK_RADIO.prepare(packetbuf_hdrptr(), packetbuf_totlen());
 
+    /* Relaying Tx energy consumption for Data packet JJH */
+    original_datalen = packetbuf_totlen();
+    original_dataptr = packetbuf_hdrptr();
+//    PRINTF("nullrdc: Tx test %c\n",original_dataptr[original_datalen-1]);
+    if(original_dataptr[original_datalen-1]=='X')
+    {
+    	/* For each data relay, energy reduction 1 for short 2 for long */
+    	if(remaining_energy >1)
+    		if(radio_received_is_longrange()==LONG_RADIO)
+    		{
+    			if(remaining_energy-2 < 1)
+    				remaining_energy=1;
+    			else
+    				remaining_energy-=2;
+    		}
+    		else
+    			remaining_energy--;
+    	if(remaining_energy == 1) // A node dies first
+    		PRINTF("ENERGY DEPLETION\n");
+    }
     is_broadcast = packetbuf_holds_broadcast();
 
     if(NETSTACK_RADIO.receiving_packet() ||
@@ -315,6 +340,7 @@ send_list(mac_callback_t sent, void *ptr, struct rdc_buf_list *buf_list)
 static void
 packet_input(void)
 {
+	PRINTF("nullrdc: packet_input\n");
 #if NULLRDC_SEND_802154_ACK
   int original_datalen;
   uint8_t *original_dataptr;
@@ -374,16 +400,31 @@ packet_input(void)
 #if NULLRDC_SEND_802154_ACK
     {
     	// JJH successful receiving data trace
-//    	uint8_t seq_id1=original_dataptr[original_datalen-12];
-//    	uint8_t seq_id2=original_dataptr[original_datalen-11];
-//    	uint8_t seq_id3=original_dataptr[original_datalen-10];
-//    	uint8_t src_addr1=original_dataptr[original_datalen-4];
-//    	uint8_t src_addr2=original_dataptr[original_datalen-3];
-//    	uint8_t src_addr3=original_dataptr[original_datalen-2];
+    	uint8_t seq_id1=original_dataptr[original_datalen-12];
+    	uint8_t seq_id2=original_dataptr[original_datalen-11];
+    	uint8_t seq_id3=original_dataptr[original_datalen-10];
+    	uint8_t src_addr1=original_dataptr[original_datalen-4];
+    	uint8_t src_addr2=original_dataptr[original_datalen-3];
+    	uint8_t src_addr3=original_dataptr[original_datalen-2];
 //    	if(original_dataptr[original_datalen-1]=='X' && linkaddr_node_addr.u8[1]!=1)
-//    	if(original_dataptr[original_datalen-1]=='X')
-//    		printf("DATA from: %d to: %d %c\n",
-//    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S');
+    	if(original_dataptr[original_datalen-1]=='X')
+    	{
+    		/* For each data relay, energy reduction 1 for short 2 for long */
+    		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1)
+    			if(radio_received_is_longrange()==LONG_RADIO)
+    			{
+    				if(remaining_energy-2 < 1)
+    					remaining_energy=1;
+    				else
+    					remaining_energy-=2;
+    			}
+    			else
+    				remaining_energy--;
+    		if(remaining_energy == 1) // A node dies first
+    			PRINTF("ENERGY DEPLETION\n");
+    		printf("DATA from: %d to: %d %c %d\n",
+    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S',remaining_energy);
+    	}
 
 			/* JOONKI
 			 * Is the retransmission comming from this part?? */
@@ -422,6 +463,7 @@ packet_input(void)
     }
 #endif /* NULLRDC_SEND_ACK */
     if(!duplicate) {
+    	PRINTF("nullrdc: MAC_input\n");
       NETSTACK_MAC.input();
     }
   }

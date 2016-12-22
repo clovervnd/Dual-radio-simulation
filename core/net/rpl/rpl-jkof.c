@@ -61,7 +61,12 @@
 #include	"../platform/cooja/dual_conf.h"
 #endif /* ZOLERTIA_Z1 */
 #endif /* DUAL_RADIO */
-
+/* JJH */
+#include "../lanada/param.h"
+#if RPL_ENERGY_MODE
+extern uint8_t remaining_energy; // My remaining_energy
+extern uint8_t alpha;
+#endif
 
 static void reset(rpl_dag_t *);
 static void neighbor_link_callback(rpl_parent_t *, int, int);
@@ -120,8 +125,19 @@ calculate_path_metric(rpl_parent_t *p)
   {
 	  // JOONKI
 //	  PRINTF("jkof: %c id:%d %d\n",nbr->ipaddr.u8[8]==0x82?'L':'S',nbr->ipaddr.u8[15],p->rank + (uint16_t)nbr->link_metric);
-    ret_metric=p->rank + (uint16_t)nbr->link_metric;
-//    PRINTF("ret_metric:%d\n",ret_metric);
+		/* metric update using remaining_energy JJH */
+#if RPL_ENERGY_MODE
+	  if(p->rem_energy != 0)
+	  {
+//		  PRINTF("test: %d\n",(INITIAL_ENERGY/(p->rem_energy)) * alpha);
+		  ret_metric = p->rank +  (uint16_t)nbr->link_metric * (INITIAL_ENERGY/(p->rem_energy)) * alpha;
+	  }
+	  else
+		  ret_metric = p->rank + (uint16_t)nbr->link_metric;
+#else
+	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
+#endif
+    PRINTF("ret_metric:%d\n",ret_metric);
     return ret_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
@@ -177,14 +193,16 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
   /* Do not penalize the ETX when collisions or transmission errors occur. */
   if(status == MAC_TX_OK || status == MAC_TX_NOACK) {
     if(status == MAC_TX_NOACK) {
-      packet_ett = MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
+      //      packet_ett = MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
+      packet_ett = 5 * RPL_DAG_MC_ETX_DIVISOR;
     }
 #if DUAL_RADIO
 		/* Bit rate of CC1200 is 50kbps, bit rate of CC2420 is 250kbps */
 		/* Transmission range of CC1200 is 700 m, transmission range of CC2420 is 100m */
+    	/* packet_ett should be smaller than MAX_LINK_METRIC */
 		PRINTF("CALCULATING THE ETT\n");
-		if (radio_received_is_longrange() == LONG_RADIO)  {
-			packet_ett = packet_ett*5;
+		if (radio_received_is_longrange() == LONG_RADIO && packet_ett < MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR)  {
+			packet_ett = packet_ett * LONG_ETX_PENALTY;
 		}
 		PRINTF("PACKET_ETT is %d\n",packet_ett);
 #endif
@@ -214,6 +232,7 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
   rpl_rank_t new_rank;
   rpl_rank_t rank_increase;
   uip_ds6_nbr_t *nbr;
+  uint8_t energy_penalty;
 
   if(p == NULL || (nbr = rpl_get_nbr(p)) == NULL) {
     if(base_rank == 0) {
@@ -221,10 +240,19 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
     }
     rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
   } else {
+	/* Rank update using remaining_energy JJH */
+#if RPL_ENERGY_MODE
+    if(p->rem_energy != 0)
+    	rank_increase = nbr->link_metric * (INITIAL_ENERGY/(p->rem_energy)) * alpha;
+    else
+    	rank_increase = nbr->link_metric;
+#else
     rank_increase = nbr->link_metric;
+#endif
     if(base_rank == 0) {
       base_rank = p->rank;
     }
+
   }
 
   if(INFINITE_RANK - base_rank < rank_increase) {
@@ -233,6 +261,7 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
   } else {
    /* Calculate the rank based on the new rank information from DIO or
       stored otherwise. */
+    //	PRINTF("RPL_JKOF: P's rem_energy %d\n",p->rem_energy); // need to check NULL
     new_rank = base_rank + rank_increase;
   }
  	/* JOONKI */
@@ -261,6 +290,7 @@ best_dag(rpl_dag_t *d1, rpl_dag_t *d2)
 static rpl_parent_t *
 best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 {
+  PRINTF("RPL_JKOF: Best parent\n");
   rpl_dag_t *dag;
   rpl_path_metric_t min_diff;
   rpl_path_metric_t p1_metric;

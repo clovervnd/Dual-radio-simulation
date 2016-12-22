@@ -172,7 +172,7 @@
 #ifdef RPL_CONF_DIO_INTERVAL_DOUBLINGS
 #define RPL_DIO_INTERVAL_DOUBLINGS  RPL_CONF_DIO_INTERVAL_DOUBLINGS
 #else
-#define RPL_DIO_INTERVAL_DOUBLINGS  8
+#define RPL_DIO_INTERVAL_DOUBLINGS  6
 #endif
 
 /*
@@ -192,7 +192,7 @@
  * Initial metric attributed to a link when the ETX is unknown
  */
 #ifndef RPL_CONF_INIT_LINK_METRIC
-#define RPL_INIT_LINK_METRIC        2
+#define RPL_INIT_LINK_METRIC        1
 #else
 #define RPL_INIT_LINK_METRIC        RPL_CONF_INIT_LINK_METRIC
 #endif

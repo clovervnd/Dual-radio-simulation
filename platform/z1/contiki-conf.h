@@ -43,12 +43,14 @@
 
 /* Network setup for IPv6 */
 #define NETSTACK_CONF_NETWORK sicslowpan_driver
-//#define NETSTACK_CONF_MAC     csma_driver
-#define NETSTACK_CONF_MAC     nullmac_driver
-#define NETSTACK_CONF_RDC     contikimac_driver
+#define NETSTACK_CONF_MAC     csma_driver
+//#define NETSTACK_CONF_MAC     nullmac_driver
+//#define NETSTACK_CONF_RDC     contikimac_driver
+#define NETSTACK_CONF_RDC     nullrdc_driver
 //#define NETSTACK_CONF_RDC     cxmac_driver
 // #define NETSTACK_CONF_RADIO   cc2420_driver
-#define NETSTACK_CONF_FRAMER  framer_802154
+//#define NETSTACK_CONF_FRAMER  framer_802154
+#define NETSTACK_CONF_FRAMER  contikimac_framer
 
 /* Specify a minimum packet size for 6lowpan compression to be
    enabled. This is needed for ContikiMAC, which needs packets to be
@@ -149,9 +151,9 @@
 #define UIP_CONF_ROUTER                 1
 
 /* Handle 10 neighbors */
-#define NBR_TABLE_CONF_MAX_NEIGHBORS     15
+#define NBR_TABLE_CONF_MAX_NEIGHBORS     5
 /* Handle 10 routes    */
-#define UIP_CONF_MAX_ROUTES   15
+#define UIP_CONF_MAX_ROUTES   10
 
 #define UIP_CONF_ND6_SEND_RA    0
 #define UIP_CONF_ND6_REACHABLE_TIME     600000
