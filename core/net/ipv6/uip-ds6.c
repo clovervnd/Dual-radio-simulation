@@ -99,8 +99,9 @@ uint8_t uip_ds6_netif_addr_list_offset;
 
 /* "full" (as opposed to pointer) ip address used in this file,  */
 static uip_ipaddr_t loc_fipaddr;
+#if DUAL_RADIO
 static uip_ipaddr_t loc_long_fipaddr;
-
+#endif
 /* Pointers used in this file */
 static uip_ds6_addr_t *locaddr;
 static uip_ds6_maddr_t *locmaddr;
@@ -124,7 +125,9 @@ uip_ds6_init(void)
   memset(uip_ds6_prefix_list, 0, sizeof(uip_ds6_prefix_list));
   memset(&uip_ds6_if, 0, sizeof(uip_ds6_if));
 	/* JOONKI */
+#if DUAL_RADIO
   memset(&long_uip_ds6_if, 0, sizeof(long_uip_ds6_if));
+#endif
   uip_ds6_addr_size = sizeof(struct uip_ds6_addr);
   uip_ds6_netif_addr_list_offset = offsetof(struct uip_ds6_netif, addr_list);
 

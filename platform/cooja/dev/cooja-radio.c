@@ -198,7 +198,7 @@ radio_read(void *buf, unsigned short bufsize)
 		fprintf(debugfp,"INSIDE READ BEFORE memcpy: cooja-radio_driver/radio_read sent: %x\n\n", *sent);
 		fflush(debugfp);
 	}	*/
-
+#if DUAL_RADIO
 	if(radio_received_is_longrange() == LONG_RADIO)	{
 		memcpy(buf, simInDataBufferLR, simInSizeLR);
 		tmp = simInSizeLR;
@@ -211,12 +211,15 @@ radio_read(void *buf, unsigned short bufsize)
 		// fflush(debugfp);
 		simInSize = 0;
 	}
-	
+#else
+		memcpy(buf, simInDataBuffer, simInSize);
+		simInSize = 0;
+#endif
 	/* if (sent != NULL){
 		fprintf(debugfp,"INSIDE READ AFTER memcpy: cooja-radio_driver/radio_read sent: %x\n\n", *sent);
 		fflush(debugfp);
 	}	*/
-
+#if DUAL_RADIO
 	if(radio_received_is_longrange() == LONG_RADIO) {
 	  packetbuf_set_attr(PACKETBUF_ATTR_RSSI, simSignalStrengthLR);
 	  packetbuf_set_attr(PACKETBUF_ATTR_LINK_QUALITY, simLQILR);
@@ -224,7 +227,10 @@ radio_read(void *buf, unsigned short bufsize)
 		packetbuf_set_attr(PACKETBUF_ATTR_RSSI, simSignalStrength);
 		packetbuf_set_attr(PACKETBUF_ATTR_LINK_QUALITY, simLQI);
 	}
-
+#else
+		packetbuf_set_attr(PACKETBUF_ATTR_RSSI, simSignalStrength);
+		packetbuf_set_attr(PACKETBUF_ATTR_LINK_QUALITY, simLQI);
+#endif
 	/* if (sent != NULL){
 		fprintf(debugfp,"INSIDE READ AFTER packetbuf: cooja-radio_driver/radio_read sent: %x\n\n", *sent);
 		fflush(debugfp);

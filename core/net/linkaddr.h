@@ -118,12 +118,14 @@ void linkaddr_set_node_addr(linkaddr_t *addr);
  *             used.
  *
  */
+#if DUAL_RADIO
 void linkaddr_set_node_long_addr(linkaddr_t * addr);
+#endif
 
 extern linkaddr_t linkaddr_node_addr;
-
+#if DUAL_RADIO
 extern linkaddr_t long_linkaddr_node_addr;
-
+#endif
 
 /**
  * \brief      The null Rime address

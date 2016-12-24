@@ -36,8 +36,8 @@
 #define XMAC_CONF_COMPOWER          1
 #define CXMAC_CONF_COMPOWER         1
 
-#define DUAL_RADIO 	1
-#define ADDR_MAP 1
+#define DUAL_RADIO 	1 // JJH
+#define ADDR_MAP 1 // JJH
 
 #if NETSTACK_CONF_WITH_IPV6
 

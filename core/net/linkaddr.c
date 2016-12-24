@@ -79,11 +79,12 @@ linkaddr_set_node_addr(linkaddr_t *t)
 	linkaddr_copy(&linkaddr_node_addr, t);
 }
 /*---------------------------------------------------------------------------*/
+#if DUAL_RADIO
 void
 linkaddr_set_node_long_addr(linkaddr_t *t)
 {
 	linkaddr_copy(&long_linkaddr_node_addr, t);
 }
-
+#endif
 /*---------------------------------------------------------------------------*/
 /** @} */

@@ -144,6 +144,8 @@ send_one_packet(mac_callback_t sent, void *ptr)
 	}	else	{
   	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 	}
+#else
+  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 #endif
   // packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
   // packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &temp_node_lladdr);
@@ -173,6 +175,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
     {
     	/* For each data relay, energy reduction 1 for short 2 for long */
     	if(remaining_energy >1)
+#if DUAL_RADIO
     		if(radio_received_is_longrange()==LONG_RADIO)
     		{
     			if(remaining_energy-2 < 1)
@@ -182,6 +185,9 @@ send_one_packet(mac_callback_t sent, void *ptr)
     		}
     		else
     			remaining_energy--;
+#else
+	remaining_energy--;
+#endif
     	if(remaining_energy == 1) // A node dies first
     		PRINTF("ENERGY DEPLETION\n");
     }
@@ -400,9 +406,9 @@ packet_input(void)
 #if NULLRDC_SEND_802154_ACK
     {
     	// JJH successful receiving data trace
-    	uint8_t seq_id1=original_dataptr[original_datalen-12];
-    	uint8_t seq_id2=original_dataptr[original_datalen-11];
-    	uint8_t seq_id3=original_dataptr[original_datalen-10];
+      //    	uint8_t seq_id1=original_dataptr[original_datalen-12];
+      //    	uint8_t seq_id2=original_dataptr[original_datalen-11];
+      //    	uint8_t seq_id3=original_dataptr[original_datalen-10];
     	uint8_t src_addr1=original_dataptr[original_datalen-4];
     	uint8_t src_addr2=original_dataptr[original_datalen-3];
     	uint8_t src_addr3=original_dataptr[original_datalen-2];
@@ -411,6 +417,7 @@ packet_input(void)
     	{
     		/* For each data relay, energy reduction 1 for short 2 for long */
     		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1)
+#if DUAL_RADIO
     			if(radio_received_is_longrange()==LONG_RADIO)
     			{
     				if(remaining_energy-2 < 1)
@@ -420,10 +427,18 @@ packet_input(void)
     			}
     			else
     				remaining_energy--;
-    		if(remaining_energy == 1) // A node dies first
+#else
+		remaining_energy--;
+#endif
+    		if(remaining_energy == 1) // A node dies 
     			PRINTF("ENERGY DEPLETION\n");
-    		printf("DATA from: %d to: %d %c %d\n",
+#if DUAL_RADIO		
+    		PRINTF("DATA from: %d to: %d %c %d\n",
     				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S',remaining_energy);
+#else
+		PRINTF("DATA from: %d to: %d %d\n",
+    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
+#endif
     	}
 
 			/* JOONKI
