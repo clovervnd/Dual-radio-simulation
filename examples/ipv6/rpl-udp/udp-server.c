@@ -50,11 +50,6 @@
 
 #define UDP_EXAMPLE_ID  190
 
-#include "param.h"
-/* Remaining energy init JJH*/
-uint8_t remaining_energy = INITIAL_ENERGY;
-uint8_t alpha = ALPHA;
-
 static struct uip_udp_conn *server_conn;
 
 PROCESS(udp_server_process, "UDP server process");

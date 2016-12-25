@@ -11,7 +11,7 @@
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the Institute nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
+v *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND
@@ -175,6 +175,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
     {
     	/* For each data relay, energy reduction 1 for short 2 for long */
     	if(remaining_energy >1)
+	{
 #if DUAL_RADIO
     		if(radio_received_is_longrange()==LONG_RADIO)
     		{
@@ -188,6 +189,8 @@ send_one_packet(mac_callback_t sent, void *ptr)
 #else
 	remaining_energy--;
 #endif
+	}
+	PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
     	if(remaining_energy == 1) // A node dies first
     		PRINTF("ENERGY DEPLETION\n");
     }
@@ -244,7 +247,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
       #if CONTIKI_TARGET_COOJA
                   simProcessRunValue = 1;
                   cooja_mt_yield();
-
       #endif /* CONTIKI_TARGET_COOJA */
               }
             }
@@ -430,6 +432,7 @@ packet_input(void)
 #else
 		remaining_energy--;
 #endif
+		PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
     		if(remaining_energy == 1) // A node dies 
     			PRINTF("ENERGY DEPLETION\n");
 #if DUAL_RADIO		

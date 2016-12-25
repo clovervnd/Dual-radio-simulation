@@ -62,11 +62,6 @@
 #define SEND_TIME		(random_rand() % (SEND_INTERVAL))
 #define MAX_PAYLOAD_LEN		30
 
-#include "param.h"
-/* Remaining energy init JJH*/
-uint8_t remaining_energy = INITIAL_ENERGY;
-uint8_t alpha = ALPHA;
-
 static struct uip_udp_conn *client_conn;
 static uip_ipaddr_t server_ipaddr;
 

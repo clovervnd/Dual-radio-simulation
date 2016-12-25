@@ -137,7 +137,7 @@ calculate_path_metric(rpl_parent_t *p)
 #else
 	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
 #endif
-    PRINTF("ret_metric:%d\n",ret_metric);
+	  //    PRINTF("ret_metric:%d\n",ret_metric);
     return ret_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
