@@ -12,7 +12,7 @@
  *    documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the Institute nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
-vvv *    without specific prior written permission.
+ *    without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -229,7 +229,7 @@ static int we_are_receiving_burst = 0;
 #define MAX_PHASE_STROBE_TIME              RTIMER_ARCH_SECOND / 60
 #endif
 
-#define CONTIKIMAC_CONF_SEND_SW_ACK 1
+#define CONTIKIMAC_CONF_SEND_SW_ACK 1 // JJH
 #ifdef CONTIKIMAC_CONF_SEND_SW_ACK
 #define CONTIKIMAC_SEND_SW_ACK CONTIKIMAC_CONF_SEND_SW_ACK
 #else
@@ -344,7 +344,7 @@ schedule_powercycle_fixed(struct rtimer *t, rtimer_clock_t fixed_time)
     if(RTIMER_CLOCK_LT(fixed_time, now + RTIMER_GUARD_TIME)) {
       fixed_time = now + RTIMER_GUARD_TIME;
     }
-
+    printf("before rtimer_set\n");
     r = rtimer_set(t, fixed_time, 1, powercycle_wrapper, NULL);
     if(r != RTIMER_OK) {
       PRINTF("schedule_powercycle: could not set rtimer\n");
@@ -380,6 +380,7 @@ powercycle_turn_radio_on(void)
 static void
 powercycle_wrapper(struct rtimer *t, void *ptr)
 {
+	printf("powercycle_wrapper\n");
   powercycle(t, ptr);
 }
 /*---------------------------------------------------------------------------*/
@@ -422,10 +423,11 @@ powercycle(struct rtimer *t, void *ptr)
 #endif
 
     packet_seen = 0;
-
+printf("powercycle before radio_on\n");
     for(count = 0; count < CCA_COUNT_MAX; ++count) {
       if(we_are_sending == 0 && we_are_receiving_burst == 0) {
         powercycle_turn_radio_on();
+        printf("powercycle after radio_on\n");
         /* Check if a packet is seen in the air. If so, we keep the
              radio on for a while (LISTEN_TIME_AFTER_PACKET_DETECTED) to
              be able to receive the packet. We also continuously check
@@ -434,12 +436,15 @@ powercycle(struct rtimer *t, void *ptr)
              caused by an incoming packet. */
         if(NETSTACK_RADIO.channel_clear() == 0) {
           packet_seen = 1;
+          printf("not channel clear\n");
           break;
         }
         powercycle_turn_radio_off();
       }
+      printf("powercycle schedule\n");
       schedule_powercycle_fixed(t, RTIMER_NOW() + CCA_SLEEP_TIME);
       PT_YIELD(&pt);
+      printf("powercycle after pt_yield comeback\n");
     }
 
     if(packet_seen) {
@@ -1098,10 +1103,13 @@ input_packet(void)
 		PRINTF("DATA from: %d to: %d %d\n",
     				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
 #endif
-
+    	}
         frame802154_t info154;
         frame802154_parse(original_dataptr, original_datalen, &info154);
 
+        printf("debug %d %d %d %d\n",info154.fcf.frame_type == FRAME802154_DATAFRAME,info154.fcf.ack_required != 0,linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+                &linkaddr_node_addr),linkaddr_cmp((linkaddr_t*)&info154.dest_addr,
+		&long_linkaddr_node_addr));
 #if DUAL_RADIO
         if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
             info154.fcf.ack_required != 0 &&
@@ -1131,7 +1139,6 @@ input_packet(void)
 
           NETSTACK_RADIO.send(ackdata, ACK_LEN);
           we_are_sending = 0;
-        }
       }
 #endif /* CONTIKIMAC_SEND_SW_ACK */
 

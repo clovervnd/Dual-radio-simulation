@@ -40,8 +40,6 @@
 
 #define DUAL_RADIO 1
 #define ADDR_MAP 1
-/* CONTIKIMAC */
-#define CONTIKIMAC_CONF_SW_ACK 1
 
 #define PROFILE_CONF_ON 0
 #define ENERGEST_CONF_ON 0
