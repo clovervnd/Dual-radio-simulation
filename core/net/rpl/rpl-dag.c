@@ -82,6 +82,9 @@ static rpl_of_t * const objective_functions[] = {&RPL_OF};
 /*---------------------------------------------------------------------------*/
 /* Per-parent RPL information */
 NBR_TABLE_GLOBAL(rpl_parent_t, rpl_parents);
+#if RPL_LIFETIME_MAX_MODE
+NBR_TABLE_GLOBAL(rpl_child_t, rpl_children);
+#endif
 /*---------------------------------------------------------------------------*/
 /* Allocate instance table. */
 rpl_instance_t instance_table[RPL_MAX_INSTANCES];
@@ -131,11 +134,34 @@ nbr_callback(void *ptr)
 {
   rpl_remove_parent(ptr);
 }
+#if RPL_LIFETIME_MAX_MODE
+/*---------------------------------------------------------------------------*/
+uip_ds6_nbr_t *
+rpl_get_nbr_child(rpl_child_t *child)
+{
+  linkaddr_t *lladdr = NULL;
+  lladdr = nbr_table_get_lladdr(rpl_children, child);
+  if(lladdr != NULL) {
+    return nbr_table_get_from_lladdr(ds6_neighbors, lladdr);
+  } else {
+    return NULL;
+  }
+}
+/*---------------------------------------------------------------------------*/
+static void
+nbr_callback_child(void *ptr)
+{
+  rpl_remove_child(ptr);
+}
+#endif
 
 void
 rpl_dag_init(void)
 {
   nbr_table_register(rpl_parents, (nbr_table_callback *)nbr_callback);
+#if RPL_LIFETIME_MAX_MODE
+  nbr_table_register(rpl_children, (nbr_table_callback *)nbr_callback_child);
+#endif
 }
 /*---------------------------------------------------------------------------*/
 rpl_parent_t *
@@ -175,6 +201,15 @@ rpl_get_parent_ipaddr(rpl_parent_t *p)
   linkaddr_t *lladdr = nbr_table_get_lladdr(rpl_parents, p);
   return uip_ds6_nbr_ipaddr_from_lladdr((uip_lladdr_t *)lladdr);
 }
+/*---------------------------------------------------------------------------*/
+#if RPL_LIFETIME_MAX_MODE
+uip_ipaddr_t *
+rpl_get_child_ipaddr(rpl_child_t *c)
+{
+  linkaddr_t *lladdr = nbr_table_get_lladdr(rpl_children, c);
+  return uip_ds6_nbr_ipaddr_from_lladdr((uip_lladdr_t *)lladdr);
+}
+#endif
 /*---------------------------------------------------------------------------*/
 static void
 rpl_set_preferred_parent(rpl_dag_t *dag, rpl_parent_t *p)
@@ -680,6 +715,65 @@ rpl_find_parent(rpl_dag_t *dag, uip_ipaddr_t *addr)
   }
 }
 /*---------------------------------------------------------------------------*/
+#if RPL_LIFETIME_MAX_MODE
+rpl_child_t *
+rpl_add_child(uint8_t weight, uip_ipaddr_t *addr)
+{
+  rpl_child_t *c = NULL;
+  /* Is the parent known by ds6? Drop this request if not.
+   * Typically, the parent is added upon receiving a DIO. */
+  const uip_lladdr_t *lladdr = uip_ds6_nbr_lladdr_from_ipaddr(addr);
+  if(lladdr == NULL)
+  {
+	  PRINTF("RPL: rpl_add_child lladdr NULL\n");
+	  return c;
+  }
+  PRINTF("RPL: rpl_add_child lladdr %p ", lladdr);
+  PRINT6ADDR(addr);
+  PRINTF("\n");
+  if(lladdr != NULL) {
+    /* Add child in rpl_children - again this is due to DIO_ACK */
+    c = nbr_table_add_lladdr(rpl_children, (linkaddr_t *)lladdr,
+                             NBR_TABLE_REASON_UNDEFINED, &weight);
+    if(c == NULL) {
+      PRINTF("RPL: rpl_add_child c NULL\n");
+    } else {
+//      uip_ds6_nbr_t *nbr;
+//      nbr = rpl_get_nbr_child(c);
+      c->weight = weight;
+/*       Check whether we have a neighbor that has not gotten a link metric yet
+      if(nbr != NULL && nbr->link_metric == 0) {
+	nbr->link_metric = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
+      }
+#if RPL_DAG_MC != RPL_DAG_MC_NONE
+      memcpy(&p->mc, &dio->mc, sizeof(p->mc));
+#endif  RPL_DAG_MC != RPL_DAG_MC_NONE */
+    }
+  }
+
+  return c;
+}
+/*---------------------------------------------------------------------------*/
+static rpl_child_t *
+find_child_any_dag_any_instance(uip_ipaddr_t *addr)
+{
+  uip_ds6_nbr_t *ds6_nbr = uip_ds6_nbr_lookup(addr);
+  const uip_lladdr_t *lladdr = uip_ds6_nbr_get_ll(ds6_nbr);
+  return nbr_table_get_from_lladdr(rpl_children, (linkaddr_t *)lladdr);
+}
+/*---------------------------------------------------------------------------*/
+rpl_child_t *
+rpl_find_child(uip_ipaddr_t *addr)
+{
+  rpl_child_t *c = find_child_any_dag_any_instance(addr);
+  if(c != NULL) {
+    return c;
+  } else {
+    return NULL;
+  }
+}
+#endif
+/*---------------------------------------------------------------------------*/
 static rpl_dag_t *
 find_parent_dag(rpl_instance_t *instance, uip_ipaddr_t *addr)
 {
@@ -711,7 +805,6 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
 
   old_rank = instance->current_dag->rank;
   last_parent = instance->current_dag->preferred_parent;
-
   best_dag = instance->current_dag;
   if(best_dag->rank != ROOT_RANK(instance)) {
     if(rpl_select_parent(p->dag) != NULL) {
@@ -793,6 +886,11 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
     PRINTF("RPL: Preferred parent update, rank changed from %u to %u\n",
   	(unsigned)old_rank, best_dag->rank);
   }
+  if(last_parent != best_dag->preferred_parent)
+  {
+      /* Tx dio_ack only if parent changes */
+      dio_ack_output(rpl_get_parent_ipaddr(best_dag->preferred_parent)); // JJH for debug
+  }
   return best_dag;
 }
 /*---------------------------------------------------------------------------*/
@@ -844,6 +942,20 @@ rpl_remove_parent(rpl_parent_t *parent)
 
   nbr_table_remove(rpl_parents, parent);
 }
+/*---------------------------------------------------------------------------*/
+#if RPL_LIFETIME_MAX_MODE
+void
+rpl_remove_child(rpl_child_t *child)
+{
+  PRINTF("RPL: Removing child ");
+  PRINT6ADDR(rpl_get_child_ipaddr(child));
+  PRINTF("\n");
+
+//  rpl_nullify_parent(parent);
+
+  nbr_table_remove(rpl_children, child);
+}
+#endif
 /*---------------------------------------------------------------------------*/
 void
 rpl_nullify_parent(rpl_parent_t *parent)
@@ -1338,6 +1450,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     PRINTF("RPL: New instance detected (ID=%u): Joining...\n", dio->instance_id);
     if(add_nbr_from_dio(from, dio)) {
       rpl_join_instance(from, dio);
+      dio_ack_output(from); // Tx dio_ack when joining new instance
     } else {
       PRINTF("RPL: Not joining since could not add parent\n");
     }
@@ -1471,7 +1584,9 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     uip_ds6_defrt_add(from, RPL_DEFAULT_ROUTE_INFINITE_LIFETIME ? 0 : RPL_LIFETIME(instance, instance->default_lifetime));
   }
   p->dtsn = dio->dtsn;
+#if RPL_ENERGY_MODE
   p->rem_energy = dio->rem_energy; // Copy rem_energy to parent JJH
+#endif
 }
 /*---------------------------------------------------------------------------*/
 /** @} */

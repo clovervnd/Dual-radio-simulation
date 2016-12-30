@@ -183,6 +183,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
   uint16_t packet_ett = numtx * RPL_DAG_MC_ETX_DIVISOR;
   uint16_t new_ett;
   uip_ds6_nbr_t *nbr = NULL;
+  uint8_t is_longrange;
 
   nbr = rpl_get_nbr(p);
   if(nbr == NULL) {
@@ -198,6 +199,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
         packet_ett = MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
 //      packet_ett = 5 * RPL_DAG_MC_ETX_DIVISOR;
     }
+#if RPL_ENERGY_MODE
 #if DUAL_RADIO
 		/* Bit rate of CC1200 is 50kbps, bit rate of CC2420 is 250kbps */
 		/* Transmission range of CC1200 is 700 m, transmission range of CC2420 is 100m */
@@ -211,6 +213,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 			}
 		}
 		PRINTF("PACKET_ETT is %d\n",packet_ett);
+#endif
 #endif
     if(p->flags & RPL_PARENT_FLAG_LINK_METRIC_VALID) {
       /* We already have a valid link metric, use weighted moving average to update it */
@@ -229,7 +232,25 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
         (unsigned)(packet_ett / RPL_DAG_MC_ETX_DIVISOR));
     /* update the link metric for this nbr */
     nbr->link_metric = new_ett;
+#if RPL_LIFETIME_MAX_MODE
+    if(radio_received_is_longrange() == LONG_RADIO)
+    {
+    	is_longrange = 1;
+    }
+    else
+    {
+    	is_longrange = 0;
+    }
+	if(nbr->link_metric == 0)
+	{
+		p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
+	}
+	else
+	{
+		p->parent_weight = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_RX_COST : SHORT_RX_COST); // Tx cost using DIO_ACK
+	}
   }
+#endif
 }
 
 static rpl_rank_t
