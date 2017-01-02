@@ -93,8 +93,8 @@ static const void *pending_data;
 PROCESS(cooja_radio_process, "cooja radio process");
 
 /* JOONKI */
-extern mac_callback_t * global_sent;
-extern FILE *debugfp;
+//extern mac_callback_t * global_sent;
+//extern FILE *debugfp;
 
 /*---------------------------------------------------------------------------*/
 void
@@ -164,12 +164,12 @@ doInterfaceActionsBeforeTick(void)
     simLastSignalStrengthLR = simSignalStrengthLR;
     return;
   }
-
+//  printf("simInsize\n");
   if(simInSize > 0 || simInSizeLR > 0) {
-		if (simInSize == 0 || simInSizeLR == 0){
+	  printf("In the simInsize\n");
 	    process_poll(&cooja_radio_process);
-		}
   }
+//  printf("simInsize2\n");
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -181,18 +181,27 @@ static int
 // radio_read(void *buf, unsigned short bufsize)
 radio_read(void *buf, unsigned short bufsize)
 {
+	printf("radio read\n");
 	int tmp = simInSize;
 
   if(simInSize == 0 && simInSizeLR == 0) {
     return 0;
   }	
-
   if(bufsize < simInSize || bufsize <simInSizeLR ) {
     simInSize = 0; /* rx flush */
 		simInSizeLR = 0;
     RIMESTATS_ADD(toolong);
     return 0;
   }
+
+#if DUAL_RADIO
+			/*JOONKI*/
+			if (LongRangeReceiving > 0)	{
+				dual_radio_received(LONG_RADIO);
+			}	else {
+				dual_radio_received(SHORT_RADIO);
+			}
+#endif
 
 	/*	if (sent != NULL){
 		fprintf(debugfp,"INSIDE READ BEFORE memcpy: cooja-radio_driver/radio_read sent: %x\n\n", *sent);
@@ -364,15 +373,6 @@ PROCESS_THREAD(cooja_radio_process, ev, data)
   while(1) {
     PROCESS_YIELD_UNTIL(ev == PROCESS_EVENT_POLL);
     packetbuf_clear();
-
-#if DUAL_RADIO
-			/*JOONKI*/
-			if (LongRangeReceiving > 0)	{
-				dual_radio_received(LONG_RADIO);
-			}	else {
-				dual_radio_received(SHORT_RADIO);
-			}
-#endif 
 		// if (simInSize >0 && simInSizeLR > 0)
 		//	dual_radio_received(SHORT_RADIO);
 

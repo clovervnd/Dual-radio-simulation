@@ -60,6 +60,13 @@
 
 #include <string.h>
 
+/*
+#if CONTIKI_TARGET_COOJA
+#include "lib/simEnvChange.h"
+#include "sys/cooja_mt.h"
+#endif  CONTIKI_TARGET_COOJA
+*/
+
 #ifndef WITH_ACK_OPTIMIZATION
 #define WITH_ACK_OPTIMIZATION        1
 #endif
@@ -164,7 +171,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -178,6 +185,15 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_TOGGLE(x)
 #define PRINTF(...)
 #define PRINTDEBUG(...)
+#endif
+
+// JJH
+#if DUAL_RADIO
+#ifdef ZOLERTIA_Z1
+#include "../platform/z1/dual_radio.h"
+#else
+#include "../platform/cooja/dual_conf.h"
+#endif
 #endif
 
 #if CXMAC_CONF_ANNOUNCEMENTS
@@ -215,6 +231,11 @@ static uint8_t is_streaming;
 static linkaddr_t is_streaming_to, is_streaming_to_too;
 static rtimer_clock_t stream_until;
 #define DEFAULT_STREAM_TIME (RTIMER_ARCH_SECOND)
+
+/* remaining energy JJH */
+#include "../lanada/param.h"
+extern uint8_t remaining_energy;
+
 
 /*---------------------------------------------------------------------------*/
 static void
@@ -297,7 +318,6 @@ cpowercycle(void *ptr)
     powercycle_turn_radio_on();
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
     PT_YIELD(&pt);
-
     if(cxmac_config.off_time > 0) {
       powercycle_turn_radio_off();
       if(waiting_for_packet != 0) {
@@ -423,12 +443,25 @@ send_packet(void)
   struct queuebuf *packet;
   int is_already_streaming = 0;
   uint8_t collisions;
-
+	// JJH
+  int original_datalen;
+  uint8_t *original_dataptr;
 
   /* Create the X-MAC header for the data packet. */
 #if !NETSTACK_CONF_BRIDGE_MODE
   /* If NETSTACK_CONF_BRIDGE_MODE is set, assume PACKETBUF_ADDR_SENDER is already set. */
   packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
+#endif
+
+	/* JOONKI */
+#if DUAL_RADIO
+	if(sending_in_LR() == LONG_RADIO){
+	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
+	}	else	{
+	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
+	}
+#else
+	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 #endif
   if(packetbuf_holds_broadcast()) {
     is_broadcast = 1;
@@ -546,46 +579,56 @@ send_packet(void)
   on();
   collisions = 0;
   if(!is_already_streaming) {
-    watchdog_stop();
-    got_strobe_ack = 0;
-    t = RTIMER_NOW();
-    for(strobes = 0, collisions = 0;
-	got_strobe_ack == 0 && collisions == 0 &&
-	  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + cxmac_config.strobe_time);
-	strobes++) {
+	  watchdog_stop();
+	  got_strobe_ack = 0;
+	  t = RTIMER_NOW();
+	  for(strobes = 0, collisions = 0;
+			  got_strobe_ack == 0 && collisions == 0 &&
+					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + cxmac_config.strobe_time);
+			  strobes++) {
 
-      while(got_strobe_ack == 0 &&
-	    RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
-	rtimer_clock_t now = RTIMER_NOW();
-
-	/* See if we got an ACK */
-	packetbuf_clear();
-	len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
-	if(len > 0) {
-	  packetbuf_set_datalen(len);
-	  if(NETSTACK_FRAMER.parse() >= 0) {
-	    hdr = packetbuf_dataptr();
-	    is_dispatch = hdr->dispatch == DISPATCH;
-	    is_strobe_ack = hdr->type == TYPE_STROBE_ACK;
-	    if(is_dispatch && is_strobe_ack) {
-	      if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-			      &linkaddr_node_addr)) {
-		/* We got an ACK from the receiver, so we can immediately send
+		  while(got_strobe_ack == 0 &&
+				  RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
+			  rtimer_clock_t now = RTIMER_NOW();
+			  /* See if we got an ACK */
+			  //            printf("before read\n");
+			  packetbuf_clear();
+			  len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
+			  if(len > 0) {
+				  packetbuf_set_datalen(len);
+				  if(NETSTACK_FRAMER.parse() >= 0) {
+					  //		  printf("packet parsed\n");
+					  hdr = packetbuf_dataptr();
+					  is_dispatch = hdr->dispatch == DISPATCH;
+					  is_strobe_ack = hdr->type == TYPE_STROBE_ACK;
+					  if(is_dispatch && is_strobe_ack) {
+						  //	    	printf("ACK recognized\n");
+#if DUAL_RADIO
+						  if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+								  &linkaddr_node_addr) ||
+								  linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+										  &long_linkaddr_node_addr)) {
+#else
+							  if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+									  &linkaddr_node_addr)) {
+#endif
+								  /* We got an ACK from the receiver, so we can immediately send
 		   the packet. */
-		got_strobe_ack = 1;
-		encounter_time = now;
-	      } else {
-		PRINTDEBUG("cxmac: strobe ack for someone else\n");
-	      }
-	    } else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
-	      PRINTDEBUG("cxmac: strobe from someone else\n");
-	      collisions++;
-	    }
-	  } else {
-	    PRINTF("cxmac: send failed to parse %u\n", len);
-	  }
-	}
-      }
+								  printf("got strobe_ack\n");
+								  got_strobe_ack = 1;
+								  encounter_time = now;
+							  } else {
+								  PRINTDEBUG("cxmac: strobe ack for someone else\n");
+							  }
+						  } else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
+							  PRINTDEBUG("cxmac: strobe from someone else\n");
+							  collisions++;
+						  }
+					  } else {
+						  PRINTF("cxmac: send failed to parse %u\n", len);
+					  }
+				  }
+			  }
 
       t = RTIMER_NOW();
       /* Send the strobe packet. */
@@ -644,6 +687,32 @@ send_packet(void)
 
   /* Send the data packet. */
   if((is_broadcast || got_strobe_ack || is_streaming) && collisions == 0) {
+
+//	     Relaying Tx energy consumption for Data packet JJH
+	    original_datalen = packetbuf_totlen();
+	    original_dataptr = packetbuf_hdrptr();
+	    if(original_dataptr[original_datalen-1]=='X')
+	    {
+//	    	 For each data relay, energy reduction 1 for short 2 for long
+	    	if(remaining_energy >1)
+	#if DUAL_RADIO
+	    		if(radio_received_is_longrange()==LONG_RADIO)
+	    		{
+	    			if(remaining_energy-2 < 1)
+	    				remaining_energy=1;
+	    			else
+	    				remaining_energy-=2;
+	    		}
+	    		else
+	    			remaining_energy--;
+	#else
+		remaining_energy--;
+	#endif
+		PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
+	    	if(remaining_energy == 1) // A node dies first
+	    		PRINTF("ENERGY DEPLETION\n");
+	    }
+
     NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
   }
 
@@ -718,12 +787,24 @@ static void
 input_packet(void)
 {
   struct cxmac_hdr *hdr;
+	// JJH
+  int original_datalen;
+  uint8_t *original_dataptr;
 
   if(NETSTACK_FRAMER.parse() >= 0) {
     hdr = packetbuf_dataptr();
-
+    original_datalen = packetbuf_totlen();
+    original_dataptr = packetbuf_hdrptr();
     if(hdr->dispatch != DISPATCH) {
       someone_is_sending = 0;
+#if DUAL_RADIO
+      if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+                                           &linkaddr_node_addr) ||
+      	 linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+      			 	 	 	 	 	 	   &linkaddr_null) ||
+		linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+		     					     &long_linkaddr_node_addr)) {
+#else
       if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
                                      &linkaddr_node_addr) ||
 	 linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
@@ -733,7 +814,8 @@ input_packet(void)
 
 	/* We have received the final packet, so we can go back to being
 	   asleep. */
-	off();
+#endif
+    off();
 
 #if CXMAC_CONF_COMPOWER
 	/* Accumulate the power consumption for the packet reception. */
@@ -751,6 +833,38 @@ input_packet(void)
 
 	waiting_for_packet = 0;
 
+	uint8_t src_addr1=original_dataptr[original_datalen-4];
+	uint8_t src_addr2=original_dataptr[original_datalen-3];
+	uint8_t src_addr3=original_dataptr[original_datalen-2];
+	if(original_dataptr[original_datalen-1]=='X')
+	{
+//		 For each data relay, energy reduction 1 for short 2 for long
+		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1)
+#if DUAL_RADIO
+			if(radio_received_is_longrange()==LONG_RADIO)
+			{
+				if(remaining_energy-2 < 1)
+					remaining_energy=1;
+				else
+					remaining_energy-=2;
+			}
+			else
+				remaining_energy--;
+#else
+	remaining_energy--;
+#endif
+	PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
+		if(remaining_energy == 1) // A node dies
+			PRINTF("ENERGY DEPLETION\n");
+#if DUAL_RADIO
+		PRINTF("DATA from: %d to: %d %c %d\n",
+				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S',remaining_energy);
+#else
+	PRINTF("DATA from: %d to: %d %d\n",
+				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
+#endif
+
+	}
         PRINTDEBUG("cxmac: data(%u)\n", packetbuf_datalen());
 	NETSTACK_MAC.input();
         return;
@@ -760,9 +874,23 @@ input_packet(void)
 
     } else if(hdr->type == TYPE_STROBE) {
       someone_is_sending = 2;
-
+#if DUAL_RADIO
+				if (radio_received_is_longrange()==LONG_RADIO){
+					dual_radio_switch(LONG_RADIO);
+				}	else if (radio_received_is_longrange() == SHORT_RADIO){
+					dual_radio_switch(SHORT_RADIO);
+				}
+#endif
+#if DUAL_RADIO
+      if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+                      &linkaddr_node_addr) ||
+    	 linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+    		  		     &long_linkaddr_node_addr)) {
+#else
       if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
                       &linkaddr_node_addr)) {
+#endif
+     //}
 	/* This is a strobe packet for us. */
 
 	/* If the sender address is someone else, we should
@@ -772,7 +900,15 @@ input_packet(void)
 	hdr->type = TYPE_STROBE_ACK;
 	packetbuf_set_addr(PACKETBUF_ADDR_RECEIVER,
 			   packetbuf_addr(PACKETBUF_ADDR_SENDER));
-	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
+#if DUAL_RADIO
+	if(sending_in_LR() == LONG_RADIO){
+  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
+	}	else	{
+  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
+	}
+#else
+  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
+#endif
 	packetbuf_compact();
 	if(NETSTACK_FRAMER.create() >= 0) {
 	  /* We turn on the radio in anticipation of the incoming
