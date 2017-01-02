@@ -683,14 +683,14 @@ tcpip_ipv6_output(void)
 #if ADDR_MAP
 		int i;
 		PRINTF("At tcpip_ipv6_output :\n");
-		uip_ds6_nbr_t *nbr = NULL;
-		nbr = uip_ds6_nbr_lookup(&foraddr);	
+		uip_ds6_nbr_t *nbr_2 = NULL;
+		nbr_2 = uip_ds6_nbr_lookup(&foraddr);	
 		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
-			PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+			PRINTLLADDR(uip_ds6_nbr_get_ll(nbr_2));
 			PRINTF("\n");
 			PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
 			PRINTF("\n");
-			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr_2))){
 				if (ds6_lr_addrmap[i].lr == 1){
 						dual_radio_switch(LONG_RADIO);
 					}	else	{

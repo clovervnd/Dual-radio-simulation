@@ -418,17 +418,19 @@ packet_input(void)
     	if(original_dataptr[original_datalen-1]=='X')
     	{
     		/* For each data relay, energy reduction 1 for short 2 for long */
-    		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1)
+    		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1){
 #if DUAL_RADIO
     			if(radio_received_is_longrange()==LONG_RADIO)
     			{
-    				if(remaining_energy-2 < 1)
+    				if(remaining_energy-2 < 1){
     					remaining_energy=1;
-    				else
+						}	else {
     					remaining_energy-=2;
+						}
     			}
-    			else
+				} else {
     				remaining_energy--;
+				}
 #else
 		remaining_energy--;
 #endif

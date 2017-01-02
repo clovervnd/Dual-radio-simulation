@@ -56,7 +56,7 @@
  * - 2: Print errors + warnings (recoverable errors)
  * - 3: Print errors + warnings + information (what's going on...)
  */
-#define DEBUG_LEVEL                     3
+#define DEBUG_LEVEL                     1
 /*
  * RF test mode. Blocks inside "configure()".
  * - Set this parameter to 1 in order to produce an modulated carrier (PN9)

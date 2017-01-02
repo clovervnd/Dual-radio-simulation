@@ -201,8 +201,12 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 		/* Transmission range of CC1200 is 700 m, transmission range of CC2420 is 100m */
     	/* packet_ett should be smaller than MAX_LINK_METRIC */
 		PRINTF("CALCULATING THE ETT\n");
-		if (radio_received_is_longrange() == LONG_RADIO && packet_ett < MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR)  {
-			packet_ett = packet_ett * LONG_ETX_PENALTY;
+		if (radio_received_is_longrange() == LONG_RADIO){
+			if(packet_ett*LONG_ETX_PENALTY < MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR){
+				packet_ett = packet_ett * LONG_ETX_PENALTY;
+			}	else {
+				packet_ett = MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
+			}
 		}
 		PRINTF("PACKET_ETT is %d\n",packet_ett);
 #endif
@@ -232,7 +236,6 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
   rpl_rank_t new_rank;
   rpl_rank_t rank_increase;
   uip_ds6_nbr_t *nbr;
-  uint8_t energy_penalty;
 
   if(p == NULL || (nbr = rpl_get_nbr(p)) == NULL) {
     if(base_rank == 0) {
