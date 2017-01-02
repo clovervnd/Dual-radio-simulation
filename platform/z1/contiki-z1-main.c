@@ -67,6 +67,7 @@
 SENSORS(&button_sensor);
 
 extern unsigned char node_mac[8];
+extern unsigned char node_mac_long[8];
 
 #if DCOSYNCH_CONF_ENABLED
 static struct timer mgt_timer;
@@ -167,11 +168,11 @@ set_rime_addr(void)
 	long_addr = addr;
 	long_addr.u8[0] = 0x80;
 	linkaddr_set_node_long_addr(&long_addr);
-printf("Rime for long range radio started with address ");
-for(i = 0; i < sizeof(long_addr.u8) - 1; i++) {
-  printf("%d.", long_addr.u8[i]);
-}
-printf("%d\n", long_addr.u8[i]);
+	printf("Rime for long range radio started with address ");
+	for(i = 0; i < sizeof(long_addr.u8) - 1; i++) {
+	  printf("%d.", long_addr.u8[i]);
+	}
+	printf("%d\n", long_addr.u8[i]);
 #endif
 
 }
@@ -232,6 +233,13 @@ main(int argc, char **argv)
 
   /* Restore node id if such has been stored in external mem */
   node_id_restore();
+/* JOONKI */	
+	int count;
+	PRINTF("NODE_MAC = ");
+	for (count = 0; count<7;count++){
+	PRINTF("%02x:",node_mac[count]);
+	}
+	PRINTF("%02x\n",node_mac[7]);
 
   /* If no MAC address was burned, we use the node id or the Z1 product ID */
   if(!(node_mac[0] | node_mac[1] | node_mac[2] | node_mac[3] |
@@ -330,7 +338,14 @@ main(int argc, char **argv)
   }
 
 #if NETSTACK_CONF_WITH_IPV6
-  memcpy(&uip_lladdr.addr, node_mac, sizeof(uip_lladdr.addr));
+
+	/* Initializing link-local IPv6 address */
+  memcpy(&uip_lladdr.addr, node_mac, sizeof(uip_lladdr.addr)); 
+#if DUAL_RADIO
+  memcpy(&uip_long_lladdr.addr, node_mac_long, sizeof(uip_long_lladdr.addr)); 
+#endif
+
+
   /* Setup nullmac-like MAC for 802.15.4 */
 /*   sicslowpan_init(sicslowmac_init(&cc2420_driver)); */
 /*   printf(" %s channel %u\n", sicslowmac_driver.name, CC2420_CONF_CHANNEL); */
@@ -370,6 +385,21 @@ main(int argc, char **argv)
     printf("%02x%02x\n", lladdr->ipaddr.u8[14], lladdr->ipaddr.u8[15]);
   }
 
+	/* JOONKI */
+#if DUAL_RADIO
+	printf("Tentative long range link-local IPv6 address ");
+  {
+		int i;
+    uip_ds6_addr_t *long_lladdr;
+    long_lladdr = uip_ds6_long_get_link_local(-1);
+    for(i = 0; i < 7; ++i) {
+      printf("%02x%02x:", long_lladdr->ipaddr.u8[i * 2],
+             long_lladdr->ipaddr.u8[i * 2 + 1]);
+    }
+    printf("%02x%02x\n", long_lladdr->ipaddr.u8[14], long_lladdr->ipaddr.u8[15]);
+  }
+#endif
+
   if(!UIP_CONF_IPV6_RPL) {
     uip_ipaddr_t ipaddr;
     int i;
@@ -383,6 +413,21 @@ main(int argc, char **argv)
     }
     printf("%02x%02x\n",
            ipaddr.u8[7 * 2], ipaddr.u8[7 * 2 + 1]);
+		/* JOONKI */
+#if DUAL_RADIO
+	 	uip_ipaddr_t long_ipaddr;
+    int i;
+    uip_ip6addr(&long_ipaddr, UIP_DS6_DEFAULT_PREFIX, 0, 0, 0, 0, 0, 0, 0);
+    uip_ds6_set_addr_iid(&long_ipaddr, &uip_lladdr);
+    uip_ds6_long_addr_add(&long_ipaddr, 0, ADDR_TENTATIVE);
+    printf("Tentative global IPv6 address ");
+    for(i = 0; i < 7; ++i) {
+      printf("%02x%02x:",
+             long_ipaddr.u8[i * 2], long_ipaddr.u8[i * 2 + 1]);
+    }
+    printf("%02x%02x\n",
+           long_ipaddr.u8[7 * 2], long_ipaddr.u8[7 * 2 + 1]);
+#endif
   }
 
 #else /* NETSTACK_CONF_WITH_IPV6 */

@@ -42,8 +42,12 @@
 #include "dev/xmem.h"
 #include <string.h>
 
+/* JOONKI */
+#include <stdio.h>
+
 unsigned short node_id = 0;
 unsigned char node_mac[8];
+unsigned char node_mac_long[8];
 
 /*---------------------------------------------------------------------------*/
 void
@@ -55,6 +59,12 @@ node_id_restore(void)
      buf[1] == 0xde) {
     node_id = (buf[2] << 8) | buf[3];
     memcpy(node_mac, &buf[4], 8);
+    memcpy(node_mac_long, &buf[4], 8);
+		node_mac_long[0] = 0xc4;
+		int i; 
+		for (i=0;i<8;i++){
+			printf("node_mac[%d]: %02x, node_mac_long[%d]: %02x\n",i,node_mac[i],i, node_mac_long[i]);
+		}
   } else {
     node_id = 0;
   }
