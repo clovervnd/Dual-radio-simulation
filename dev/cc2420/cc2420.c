@@ -790,7 +790,8 @@ cc2420_prepare(const void *payload, unsigned short payload_len)
   GET_LOCK();
 
   PRINTF("cc2420: sending %d bytes\n", payload_len);
-
+	/* JOONKI */
+	PRINTF("$$$$$$$$$$$$$$$$$$$$ Sending in SR -------->\n");
   RIMESTATS_ADD(lltx);
 
   /* Wait for any previous transmission to finish. */

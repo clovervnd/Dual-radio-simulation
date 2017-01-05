@@ -166,7 +166,7 @@ doInterfaceActionsBeforeTick(void)
   }
 //  printf("simInsize\n");
   if(simInSize > 0 || simInSizeLR > 0) {
-	  printf("In the simInsize\n");
+	  // printf("In the simInsize\n");
 	    process_poll(&cooja_radio_process);
   }
 //  printf("simInsize2\n");
@@ -181,7 +181,7 @@ static int
 // radio_read(void *buf, unsigned short bufsize)
 radio_read(void *buf, unsigned short bufsize)
 {
-	printf("radio read\n");
+	// printf("radio read\n");
 	int tmp = simInSize;
 
   if(simInSize == 0 && simInSizeLR == 0) {

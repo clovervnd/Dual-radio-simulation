@@ -1,6 +1,6 @@
-[09:38:12 - AWT-EventQueue-0] [Cooja.java:2865] [INFO] - External tools default settings: /external_tools_linux.config
-[09:38:12 - AWT-EventQueue-0] [Cooja.java:2895] [INFO] - External tools user settings: /home/user/.cooja.user.properties
-[09:38:19 - Thread-0] [Cooja.java:3395] [WARN] - CONFIG = <?xml version="1.0" encoding="UTF-8"?>
+[01:47:14 - AWT-EventQueue-0] [Cooja.java:2865] [INFO] - External tools default settings: /external_tools_linux.config
+[01:47:14 - AWT-EventQueue-0] [Cooja.java:2895] [INFO] - External tools user settings: /home/user/.cooja.user.properties
+[01:49:59 - Thread-0] [Cooja.java:3395] [WARN] - CONFIG = <?xml version="1.0" encoding="UTF-8"?>
 <simconf>
   <project EXPORT="discard">[APPS_DIR]/mrm</project>
   <project EXPORT="discard">[APPS_DIR]/mspsim</project>
@@ -192,250 +192,503 @@
   </plugin>
 </simconf>
 
-[09:38:19 - Thread-0] [Simulation.java:416] [INFO] - Simulation random seed: 123456
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 50.0
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 75.0
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 1.0
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 1.0
-[09:38:19 - Thread-0] [Simulation.java:614] [WARN] - Trying to Load currentRadioMedium : Class = org.contikios.cooja.radiomediums.UDGM
-[09:38:19 - Thread-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
-[09:38:19 - Thread-0] [Simulation.java:616] [WARN] - Trying to Load currentRadioMedium_LR
-[09:38:19 - Thread-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
-[09:38:19 - Thread-0] [UDGM.java:95] [WARN] - UDGM setting...
-[09:38:19 - Thread-0] [UDGM.java:99] [WARN] - UDGM set for Long Range
-[09:38:19 - Thread-0] [Simulation.java:619] [WARN] - Successfully Loaded Two Radio Medium, one for SR and one for LR
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 40000
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : mtype452
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : Cooja Mote Type #1
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : [CONTIKI_DIR]/lanada/udp-server.c
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : make udp-server.cooja TARGET=cooja
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Battery
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiVib
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRS232
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiBeeper
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.RimeAddress
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiButton
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiPIR
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiClock
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiLED
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiCFS
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Mote2MoteRelations
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.MoteAttributes
-[09:38:19 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : false
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Position
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Battery
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiVib
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRS232
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiBeeper
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.RimeAddress
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadio
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiButton
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiPIR
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiClock
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiLED
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiCFS
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Mote2MoteRelations
-[09:38:19 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.MoteAttributes
-[09:38:19 - Thread-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
-[09:38:19 - Thread-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib1 and Contiki library '/home/user/Desktop/Dual-radio-simulation/lanada/obj_cooja/mtype452.cooja
-[09:38:20 - Thread-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2e020 ( 554 == 0x22a bytes)
-[09:38:20 - Thread-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2e260 ( 33544 == 0x8308 bytes)
-[09:38:20 - Thread-0] [ContikiMoteType.java:502] [INFO] - mtype452.cooja: offsetting Cooja mote address space: 0xb2981000
-[09:38:20 - Thread-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb29af020 ( 554 == 0x22a bytes)
-[09:38:21 - Thread-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb29af260 ( 33544 == 0x8308 bytes)
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : mtype211
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : Cooja Mote Type #2
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : [CONTIKI_DIR]/lanada/udp-client.c
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : make udp-client.cooja TARGET=cooja
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Battery
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiVib
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRS232
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiBeeper
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.RimeAddress
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiButton
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiPIR
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiClock
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiLED
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiCFS
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Mote2MoteRelations
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.MoteAttributes
-[09:38:21 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : false
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Position
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Battery
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiVib
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRS232
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiBeeper
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.RimeAddress
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadio
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiButton
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiPIR
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiClock
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiLED
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiCFS
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Mote2MoteRelations
-[09:38:21 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.MoteAttributes
-[09:38:21 - Thread-0] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
-[09:38:21 - Thread-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib2 and Contiki library '/home/user/Desktop/Dual-radio-simulation/lanada/obj_cooja/mtype211.cooja
-[09:38:21 - Thread-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2e020 ( 554 == 0x22a bytes)
-[09:38:22 - Thread-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2e260 ( 33672 == 0x8388 bytes)
-[09:38:22 - Thread-0] [ContikiMoteType.java:502] [INFO] - mtype211.cooja: offsetting Cooja mote address space: 0xb28a8000
-[09:38:22 - Thread-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb28d6020 ( 554 == 0x22a bytes)
-[09:38:22 - Thread-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb28d6260 ( 33672 == 0x8388 bytes)
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.interfaces.Position
-        60.603624987307604
-        28.09538193476304
-        0.0
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        1
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.contikimote.interfaces.ContikiRadio
-        250.0
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-        250.0
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : mtype452
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
-[09:38:22 - Thread-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-[09:38:22 - Thread-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
-[09:38:22 - Thread-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-[09:38:22 - Thread-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
-[09:38:22 - Thread-0] [ContikiRadio.java:442] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
-[09:38:22 - Thread-0] [ContikiRadio.java:442] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
-[09:38:22 - Thread-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@1ee2072
-[09:38:22 - Thread-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@171b6f5
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.interfaces.Position
-        44.981423069630445
-        44.12428939061524
-        0.0
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        2
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.contikimote.interfaces.ContikiRadio
-        250.0
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-        250.0
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 
-        org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
-      
-[09:38:22 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : mtype211
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
-[09:38:22 - Thread-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-[09:38:22 - Thread-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
-[09:38:22 - Thread-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-[09:38:22 - Thread-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
-[09:38:22 - Thread-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
-[09:38:22 - Thread-0] [ContikiRadio.java:442] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
-[09:38:22 - Thread-0] [ContikiRadio.java:442] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
-[09:38:22 - Thread-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@1ee2072
-[09:38:22 - Thread-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@171b6f5
-[09:38:22 - Thread-0] [Visualizer.java:256] [INFO] - Registered external visualizer: org.contikios.cooja.plugins.skins.DGRMVisualizerSkin
-[09:38:22 - Thread-0] [TimeLine.java:567] [INFO] - Zoom level: 500.0 microseconds/pixel 
-[10:30:23 - Thread-5] [Simulation.java:248] [INFO] - Simulation main loop started, system time: 1483349423868
-[10:30:24 - Thread-5] [Simulation.java:307] [INFO] - Simulation main loop stopped, system time: 1483349424256	Duration: 388 ms	Simulated time 311034 ms	Ratio 801.6340206185567
+[01:49:59 - Thread-0] [Simulation.java:416] [INFO] - Simulation random seed: 123456
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 50.0
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 75.0
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 1.0
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 1.0
+[01:49:59 - Thread-0] [Simulation.java:614] [WARN] - Trying to Load currentRadioMedium : Class = org.contikios.cooja.radiomediums.UDGM
+[01:49:59 - Thread-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[01:49:59 - Thread-0] [Simulation.java:616] [WARN] - Trying to Load currentRadioMedium_LR
+[01:49:59 - Thread-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[01:49:59 - Thread-0] [UDGM.java:95] [WARN] - UDGM setting...
+[01:49:59 - Thread-0] [UDGM.java:99] [WARN] - UDGM set for Long Range
+[01:49:59 - Thread-0] [Simulation.java:619] [WARN] - Successfully Loaded Two Radio Medium, one for SR and one for LR
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : 40000
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : mtype763
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : Cooja Mote Type #1
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : [CONTIKI_DIR]/lanada/udp-server.c
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : make udp-server.cooja TARGET=cooja
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Battery
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiVib
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.RimeAddress
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiButton
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiClock
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiLED
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Mote2MoteRelations
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.MoteAttributes
+[01:49:59 - Thread-0] [Simulation.java:557] [WARN] - Parsed Element Child : false
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Position
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Battery
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiVib
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.RimeAddress
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiButton
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiClock
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiLED
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Mote2MoteRelations
+[01:49:59 - Thread-0] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.MoteAttributes
+[01:49:59 - Thread-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >>                  from ..//core/./contiki.h:38,
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >>                  from ..//core/net/nbr-table.c:35:
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >> ./project-conf.h:63:0: warning: "NULLRDC_CONF_ACK_WAIT_TIME" redefined [enabled by default]
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >>  #define NULLRDC_CONF_ACK_WAIT_TIME RTIMER_SECOND / 30
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >>  ^
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >> In file included from ..//core/./contiki.h:38:0,
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >>                  from ..//core/net/nbr-table.c:35:
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >> ..//platform/cooja/./contiki-conf.h:79:0: note: this is the location of the previous definition
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >>  #define NULLRDC_CONF_ACK_WAIT_TIME                RTIMER_SECOND / 500
+[01:50:06 - Thread-0] [ContikiMoteType.java:352] [FATAL] - >>  ^
+[01:50:06 - Thread-0] [ContikiMoteType.java:355] [FATAL] - Compilation error: Compilation error: Aborted by user
+[01:50:06 - read error stream thread] [CompileContiki.java:192] [WARN] - Error while reading from process
+[01:50:37 - AWT-EventQueue-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[01:50:37 - AWT-EventQueue-0] [Simulation.java:1108] [WARN] - Changed RadioMedium
+[01:50:37 - AWT-EventQueue-0] [Simulation.java:1110] [WARN] - Trying to Load currentRadioMedium : Class = org.contikios.cooja.radiomediums.UDGM
+[01:50:37 - AWT-EventQueue-0] [Simulation.java:1113] [WARN] - Trying to Load currentRadioMedium_LR
+[01:50:37 - AWT-EventQueue-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[01:50:37 - AWT-EventQueue-0] [UDGM.java:95] [WARN] - UDGM setting...
+[01:50:37 - AWT-EventQueue-0] [UDGM.java:99] [WARN] - UDGM set for Long Range
+[01:50:37 - AWT-EventQueue-0] [Simulation.java:1119] [WARN] - Successfully Loaded Two Radio Medium, one for SR and one for LR
+[01:50:37 - AWT-EventQueue-0] [Simulation.java:416] [INFO] - Simulation random seed: 123456
+[01:50:37 - AWT-EventQueue-0] [Visualizer.java:256] [INFO] - Registered external visualizer: org.contikios.cooja.plugins.skins.DGRMVisualizerSkin
+[01:51:08 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[01:51:57 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
+[01:51:57 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib1 and Contiki library '/home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype766.cooja
+[01:51:57 - AWT-EventQueue-0] [Cooja.java:2192] [FATAL] - Exception when creating mote type
+org.contikios.cooja.MoteType$MoteTypeCreationException: Error when creating corecomm instance: Lib1
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:343)
+	at org.contikios.cooja.contikimote.ContikiMoteType.doInit(ContikiMoteType.java:407)
+	at org.contikios.cooja.contikimote.ContikiMoteType.configureAndInit(ContikiMoteType.java:368)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2187)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2166)
+	at org.contikios.cooja.Cooja$GUIEventHandler.actionPerformed(Cooja.java:2947)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:376)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:833)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:877)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3312)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:218)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:133)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:122)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:118)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:110)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:334)
+	... 43 more
+Caused by: java.lang.UnsatisfiedLinkError: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype766.cooja: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype766.cooja: undefined symbol: remaining_energy
+	at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.lang.ClassLoader.loadLibrary1(ClassLoader.java:1968)
+	at java.lang.ClassLoader.loadLibrary0(ClassLoader.java:1893)
+	at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1854)
+	at java.lang.Runtime.load0(Runtime.java:795)
+	at java.lang.System.load(System.java:1062)
+	at org.contikios.cooja.corecomm.Lib1.<init>(Lib1.java:49)
+	... 48 more
+[01:52:00 - Thread-6] [Cooja.java:3395] [WARN] - CONFIG = <?xml version="1.0" encoding="UTF-8"?>
+<simconf><simulation><title>My simulation</title><randomseed>123456</randomseed><motedelay_us>1000000</motedelay_us><radiomedium>org.contikios.cooja.radiomediums.UDGM<transmitting_range>50.0</transmitting_range><interference_range>75.0</interference_range><success_ratio_tx>1.0</success_ratio_tx><success_ratio_rx>1.0</success_ratio_rx></radiomedium><events><logoutput>40000</logoutput></events></simulation><plugin>org.contikios.cooja.plugins.SimControl<width>280</width><z>0</z><height>160</height><location_x>400</location_x><location_y>0</location_y></plugin><plugin>org.contikios.cooja.plugins.Visualizer<plugin_config><moterelations>true</moterelations><viewport>1.0 0.0 0.0 1.0 0.0 0.0</viewport></plugin_config><width>400</width><z>4</z><height>400</height><location_x>1</location_x><location_y>1</location_y></plugin><plugin>org.contikios.cooja.plugins.LogListener<plugin_config><filter></filter><formatted_time /><coloring /></plugin_config><width>1459</width><z>3</z><height>240</height><location_x>400</location_x><location_y>160</location_y></plugin><plugin>org.contikios.cooja.plugins.TimeLine<plugin_config><showRadioRXTX /><showRadioHW /><showLEDs /><zoomfactor>500.0</zoomfactor></plugin_config><width>1859</width><z>2</z><height>166</height><location_x>0</location_x><location_y>739</location_y></plugin><plugin>org.contikios.cooja.plugins.Notes<plugin_config><notes>Enter notes here</notes><decorations>true</decorations></plugin_config><width>1179</width><z>1</z><height>160</height><location_x>680</location_x><location_y>0</location_y></plugin></simconf>
+
+[01:52:00 - Thread-6] [Simulation.java:416] [INFO] - Simulation random seed: 123456
+[01:52:00 - Thread-6] [Simulation.java:557] [WARN] - Parsed Element Child : 50.0
+[01:52:00 - Thread-6] [Simulation.java:557] [WARN] - Parsed Element Child : 75.0
+[01:52:00 - Thread-6] [Simulation.java:557] [WARN] - Parsed Element Child : 1.0
+[01:52:00 - Thread-6] [Simulation.java:557] [WARN] - Parsed Element Child : 1.0
+[01:52:00 - Thread-6] [Simulation.java:614] [WARN] - Trying to Load currentRadioMedium : Class = org.contikios.cooja.radiomediums.UDGM
+[01:52:00 - Thread-6] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[01:52:00 - Thread-6] [Simulation.java:616] [WARN] - Trying to Load currentRadioMedium_LR
+[01:52:00 - Thread-6] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[01:52:00 - Thread-6] [UDGM.java:95] [WARN] - UDGM setting...
+[01:52:00 - Thread-6] [UDGM.java:99] [WARN] - UDGM set for Long Range
+[01:52:00 - Thread-6] [Simulation.java:619] [WARN] - Successfully Loaded Two Radio Medium, one for SR and one for LR
+[01:52:00 - Thread-6] [Simulation.java:557] [WARN] - Parsed Element Child : 40000
+[01:52:00 - Thread-6] [TimeLine.java:567] [INFO] - Zoom level: 500.0 microseconds/pixel 
+[01:52:10 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[01:53:26 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[01:54:51 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
+[01:54:51 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib1 and Contiki library '/home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype541.cooja
+[01:54:51 - AWT-EventQueue-0] [Cooja.java:2192] [FATAL] - Exception when creating mote type
+org.contikios.cooja.MoteType$MoteTypeCreationException: Error when creating corecomm instance: Lib1
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:343)
+	at org.contikios.cooja.contikimote.ContikiMoteType.doInit(ContikiMoteType.java:407)
+	at org.contikios.cooja.contikimote.ContikiMoteType.configureAndInit(ContikiMoteType.java:368)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2187)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2166)
+	at org.contikios.cooja.Cooja$GUIEventHandler.actionPerformed(Cooja.java:2947)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:376)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:833)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:877)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3312)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:218)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:133)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:122)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:118)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:110)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:334)
+	... 43 more
+Caused by: java.lang.UnsatisfiedLinkError: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype541.cooja: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype541.cooja: undefined symbol: remaining_energy
+	at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.lang.ClassLoader.loadLibrary1(ClassLoader.java:1968)
+	at java.lang.ClassLoader.loadLibrary0(ClassLoader.java:1893)
+	at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1854)
+	at java.lang.Runtime.load0(Runtime.java:795)
+	at java.lang.System.load(System.java:1062)
+	at org.contikios.cooja.corecomm.Lib1.<init>(Lib1.java:49)
+	... 48 more
+[01:58:02 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
+[01:58:07 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
+[01:58:07 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib1 and Contiki library '/home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype743.cooja
+[01:58:07 - AWT-EventQueue-0] [Cooja.java:2192] [FATAL] - Exception when creating mote type
+org.contikios.cooja.MoteType$MoteTypeCreationException: Error when creating corecomm instance: Lib1
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:343)
+	at org.contikios.cooja.contikimote.ContikiMoteType.doInit(ContikiMoteType.java:407)
+	at org.contikios.cooja.contikimote.ContikiMoteType.configureAndInit(ContikiMoteType.java:368)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2187)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2166)
+	at org.contikios.cooja.Cooja$GUIEventHandler.actionPerformed(Cooja.java:2947)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:376)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:833)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:877)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3312)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:218)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:133)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:122)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:118)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:110)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:334)
+	... 43 more
+Caused by: java.lang.UnsatisfiedLinkError: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype743.cooja: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype743.cooja: undefined symbol: remaining_energy
+	at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.lang.ClassLoader.loadLibrary1(ClassLoader.java:1968)
+	at java.lang.ClassLoader.loadLibrary0(ClassLoader.java:1893)
+	at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1854)
+	at java.lang.Runtime.load0(Runtime.java:795)
+	at java.lang.System.load(System.java:1062)
+	at org.contikios.cooja.corecomm.Lib1.<init>(Lib1.java:49)
+	... 48 more
+[01:58:25 - Thread-15] [Cooja.java:3395] [WARN] - CONFIG = <?xml version="1.0" encoding="UTF-8"?>
+<simconf><simulation><title>My simulation</title><randomseed>123456</randomseed><motedelay_us>1000000</motedelay_us><radiomedium>org.contikios.cooja.radiomediums.UDGM<transmitting_range>50.0</transmitting_range><interference_range>75.0</interference_range><success_ratio_tx>1.0</success_ratio_tx><success_ratio_rx>1.0</success_ratio_rx></radiomedium><events><logoutput>40000</logoutput></events></simulation><plugin>org.contikios.cooja.plugins.SimControl<width>280</width><z>0</z><height>160</height><location_x>400</location_x><location_y>0</location_y></plugin><plugin>org.contikios.cooja.plugins.Visualizer<plugin_config><moterelations>true</moterelations><viewport>1.0 0.0 0.0 1.0 0.0 0.0</viewport></plugin_config><width>400</width><z>4</z><height>400</height><location_x>1</location_x><location_y>1</location_y></plugin><plugin>org.contikios.cooja.plugins.LogListener<plugin_config><filter></filter><formatted_time /><coloring /></plugin_config><width>1459</width><z>3</z><height>240</height><location_x>400</location_x><location_y>160</location_y></plugin><plugin>org.contikios.cooja.plugins.TimeLine<plugin_config><showRadioRXTX /><showRadioHW /><showLEDs /><zoomfactor>500.0</zoomfactor></plugin_config><width>1859</width><z>2</z><height>166</height><location_x>0</location_x><location_y>739</location_y></plugin><plugin>org.contikios.cooja.plugins.Notes<plugin_config><notes>Enter notes here</notes><decorations>true</decorations></plugin_config><width>1179</width><z>1</z><height>160</height><location_x>680</location_x><location_y>0</location_y></plugin></simconf>
+
+[01:58:25 - Thread-15] [Simulation.java:416] [INFO] - Simulation random seed: 123456
+[01:58:25 - Thread-15] [Simulation.java:557] [WARN] - Parsed Element Child : 50.0
+[01:58:25 - Thread-15] [Simulation.java:557] [WARN] - Parsed Element Child : 75.0
+[01:58:25 - Thread-15] [Simulation.java:557] [WARN] - Parsed Element Child : 1.0
+[01:58:25 - Thread-15] [Simulation.java:557] [WARN] - Parsed Element Child : 1.0
+[01:58:25 - Thread-15] [Simulation.java:614] [WARN] - Trying to Load currentRadioMedium : Class = org.contikios.cooja.radiomediums.UDGM
+[01:58:25 - Thread-15] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[01:58:25 - Thread-15] [Simulation.java:616] [WARN] - Trying to Load currentRadioMedium_LR
+[01:58:25 - Thread-15] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[01:58:25 - Thread-15] [UDGM.java:95] [WARN] - UDGM setting...
+[01:58:25 - Thread-15] [UDGM.java:99] [WARN] - UDGM set for Long Range
+[01:58:25 - Thread-15] [Simulation.java:619] [WARN] - Successfully Loaded Two Radio Medium, one for SR and one for LR
+[01:58:25 - Thread-15] [Simulation.java:557] [WARN] - Parsed Element Child : 40000
+[01:58:25 - Thread-15] [TimeLine.java:567] [INFO] - Zoom level: 500.0 microseconds/pixel 
+[01:58:35 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
+[01:58:36 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
+[01:58:36 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib1 and Contiki library '/home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype392.cooja
+[01:58:37 - AWT-EventQueue-0] [Cooja.java:2192] [FATAL] - Exception when creating mote type
+org.contikios.cooja.MoteType$MoteTypeCreationException: Error when creating corecomm instance: Lib1
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:343)
+	at org.contikios.cooja.contikimote.ContikiMoteType.doInit(ContikiMoteType.java:407)
+	at org.contikios.cooja.contikimote.ContikiMoteType.configureAndInit(ContikiMoteType.java:368)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2187)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2166)
+	at org.contikios.cooja.Cooja$GUIEventHandler.actionPerformed(Cooja.java:2947)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:376)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:833)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:877)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3312)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:218)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:133)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:122)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:118)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:110)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:334)
+	... 43 more
+Caused by: java.lang.UnsatisfiedLinkError: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype392.cooja: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype392.cooja: undefined symbol: remaining_energy
+	at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.lang.ClassLoader.loadLibrary1(ClassLoader.java:1968)
+	at java.lang.ClassLoader.loadLibrary0(ClassLoader.java:1893)
+	at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1854)
+	at java.lang.Runtime.load0(Runtime.java:795)
+	at java.lang.System.load(System.java:1062)
+	at org.contikios.cooja.corecomm.Lib1.<init>(Lib1.java:49)
+	... 48 more
+[02:03:46 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
+[02:04:25 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
+[02:04:26 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
+[02:05:09 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
+[02:07:26 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
+[02:07:26 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib1 and Contiki library '/home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype136.cooja
+[02:07:26 - AWT-EventQueue-0] [Cooja.java:2192] [FATAL] - Exception when creating mote type
+org.contikios.cooja.MoteType$MoteTypeCreationException: Error when creating corecomm instance: Lib1
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:343)
+	at org.contikios.cooja.contikimote.ContikiMoteType.doInit(ContikiMoteType.java:407)
+	at org.contikios.cooja.contikimote.ContikiMoteType.configureAndInit(ContikiMoteType.java:368)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2187)
+	at org.contikios.cooja.Cooja.doCreateMoteType(Cooja.java:2166)
+	at org.contikios.cooja.Cooja$GUIEventHandler.actionPerformed(Cooja.java:2947)
+	at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2018)
+	at javax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2341)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:402)
+	at javax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:259)
+	at javax.swing.AbstractButton.doClick(AbstractButton.java:376)
+	at javax.swing.plaf.basic.BasicMenuItemUI.doClick(BasicMenuItemUI.java:833)
+	at javax.swing.plaf.basic.BasicMenuItemUI$Handler.mouseReleased(BasicMenuItemUI.java:877)
+	at java.awt.Component.processMouseEvent(Component.java:6516)
+	at javax.swing.JComponent.processMouseEvent(JComponent.java:3312)
+	at java.awt.Component.processEvent(Component.java:6281)
+	at java.awt.Container.processEvent(Container.java:2229)
+	at java.awt.Component.dispatchEventImpl(Component.java:4872)
+	at java.awt.Container.dispatchEventImpl(Container.java:2287)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4832)
+	at java.awt.LightweightDispatcher.processMouseEvent(Container.java:4492)
+	at java.awt.LightweightDispatcher.dispatchEvent(Container.java:4422)
+	at java.awt.Container.dispatchEventImpl(Container.java:2273)
+	at java.awt.Window.dispatchEventImpl(Window.java:2719)
+	at java.awt.Component.dispatchEvent(Component.java:4698)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:747)
+	at java.awt.EventQueue.access$300(EventQueue.java:103)
+	at java.awt.EventQueue$3.run(EventQueue.java:706)
+	at java.awt.EventQueue$3.run(EventQueue.java:704)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:720)
+	at java.awt.EventQueue$4.run(EventQueue.java:718)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:717)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:218)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:133)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:122)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:118)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:110)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:91)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at org.contikios.cooja.CoreComm.createCoreComm(CoreComm.java:334)
+	... 43 more
+Caused by: java.lang.UnsatisfiedLinkError: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype136.cooja: /home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype136.cooja: undefined symbol: remaining_energy
+	at java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.lang.ClassLoader.loadLibrary1(ClassLoader.java:1968)
+	at java.lang.ClassLoader.loadLibrary0(ClassLoader.java:1893)
+	at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1854)
+	at java.lang.Runtime.load0(Runtime.java:795)
+	at java.lang.System.load(System.java:1062)
+	at org.contikios.cooja.corecomm.Lib1.<init>(Lib1.java:49)
+	... 48 more
+[02:10:26 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[02:10:27 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
+[02:10:27 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib1 and Contiki library '/home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype886.cooja
+[02:10:28 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2d020 ( 562 == 0x232 bytes)
+[02:10:28 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2d260 ( 33544 == 0x8308 bytes)
+[02:10:28 - AWT-EventQueue-0] [ContikiMoteType.java:502] [INFO] - mtype886.cooja: offsetting Cooja mote address space: 0xb1f1e000
+[02:10:28 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb1f4b020 ( 562 == 0x232 bytes)
+[02:10:28 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb1f4b260 ( 33544 == 0x8308 bytes)
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[02:10:29 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[02:10:29 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[02:10:29 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[02:10:29 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@137854f
+[02:10:29 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@1b42cbe
+[02:10:36 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
+[02:10:37 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
+[02:10:37 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib2 and Contiki library '/home/user/Desktop/Dual-radio-simulation/examples/ipv6/rpl-udp/obj_cooja/mtype358.cooja
+[02:10:37 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2d020 ( 562 == 0x232 bytes)
+[02:10:37 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2d260 ( 33672 == 0x8388 bytes)
+[02:10:37 - AWT-EventQueue-0] [ContikiMoteType.java:502] [INFO] - mtype358.cooja: offsetting Cooja mote address space: 0xb1e46000
+[02:10:37 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb1e73020 ( 562 == 0x232 bytes)
+[02:10:37 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb1e73260 ( 33672 == 0x8388 bytes)
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[02:10:38 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[02:10:38 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[02:10:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[02:10:38 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@137854f
+[02:10:38 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@1b42cbe

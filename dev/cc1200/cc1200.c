@@ -46,6 +46,14 @@
 #include <string.h>
 #include <stdio.h>
 
+#if DUAL_RADIO
+#ifdef ZOLERTIA_Z1
+#include	"../platform/z1/dual_radio.h"
+#else	/* ZOLERTIA_Z1 */
+#include	"../platform/cooja/dual_conf.h"
+#endif /* ZOLERTIA_Z1 */
+#endif /* DUAL_RADIO */
+
 /*---------------------------------------------------------------------------*/
 /* Various implementation specific defines */
 /*---------------------------------------------------------------------------*/
@@ -616,6 +624,7 @@ static void
 pollhandler(void)
 {
 
+	ERROR("We are in pollhandler\n");
   if((rf_flags & (RF_ON + RF_POLL_RX_INTERRUPT)) ==
      (RF_ON + RF_POLL_RX_INTERRUPT)) {
     cc1200_rx_interrupt();
@@ -818,7 +827,8 @@ transmit(unsigned short transmit_len)
 
     BUSYWAIT_UNTIL_STATE(STATE_RX,
                          RTIMER_SECOND / 100);
-		ERROR("Busywait: transmit 1\n");
+		// ERROR("Busywait: transmit 1\n");
+		/* JOONKI */
 
     ENABLE_GPIO_INTERRUPTS();
 
@@ -859,7 +869,7 @@ send(const void *payload, unsigned short payload_len)
 {
 
   int ret;
-	ERROR("######################  cc1200_send #########################\n");
+	// ERROR("######################  cc1200_send #########################\n");
   INFO("RF: Send (%d)\n", payload_len);
 
   /* payload_len checked within prepare() */
@@ -1721,9 +1731,9 @@ calibrate(void)
 
   strobe(CC1200_SCAL);
   BUSYWAIT_UNTIL_STATE(STATE_CALIBRATE, RTIMER_SECOND / 100);
-	ERROR("Busywait: calibrate 2_1\n");
+	// ERROR("Busywait: calibrate 2_1\n");
   BUSYWAIT_UNTIL_STATE(STATE_IDLE, RTIMER_SECOND / 100);
-	ERROR("Busywait: calibrate 2_2\n");
+	// ERROR("Busywait: calibrate 2_2\n");
 
 #if CC1200_CAL_TIMEOUT_SECONDS
   cal_timer = clock_seconds();
@@ -1761,7 +1771,7 @@ idle(void)
 
   strobe(CC1200_SIDLE);
   BUSYWAIT_UNTIL_STATE(STATE_IDLE, RTIMER_SECOND / 100);
-	ERROR("Busywait: idle 3\n");
+	// ERROR("Busywait: idle 3\n");
 } /* idle(), 21.05.2015 */
 /*---------------------------------------------------------------------------*/
 /* Enter RX state. */
@@ -1910,6 +1920,7 @@ idle_tx_rx(const uint8_t *payload, uint16_t payload_len)
   /* Wait for synthesizer to be ready */
   BUSYWAIT_UNTIL_STATE(STATE_FSTXON, RTIMER_SECOND / 100);
 	ERROR("Busywait: idle_tx_rx 7\n");
+	ERROR("$$$$$$$$$$$$$$$$$$$$ Sending in LR ------------------------>\n");
 #endif
 
   /* Start TX */
@@ -2207,6 +2218,17 @@ addr_check_auto_ack(uint8_t *frame, uint16_t frame_len)
 
     /* We received a valid 802.15.4 frame */
 
+		/* JOONKI */
+#if DUAL_RADIO
+    if(!(rx_mode_value & RADIO_RX_MODE_ADDRESS_FILTER) ||
+       info154.fcf.frame_type == FRAME802154_ACKFRAME ||
+       is_broadcast_addr(info154.fcf.dest_addr_mode,
+                         (uint8_t *)&info154.dest_addr) ||
+       linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+                    &linkaddr_node_addr)||
+			  linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+                    &long_linkaddr_node_addr)) {
+#else /* DUAL_RADIO */
     if(!(rx_mode_value & RADIO_RX_MODE_ADDRESS_FILTER) ||
        info154.fcf.frame_type == FRAME802154_ACKFRAME ||
        is_broadcast_addr(info154.fcf.dest_addr_mode,
@@ -2214,6 +2236,8 @@ addr_check_auto_ack(uint8_t *frame, uint16_t frame_len)
        linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
                     &linkaddr_node_addr)) {
 
+
+#endif /* DUAL_RADIO */
       /* 
        * Address check succeeded or address filter disabled. 
        * We send an ACK in case a corresponding data frame
@@ -2221,12 +2245,23 @@ addr_check_auto_ack(uint8_t *frame, uint16_t frame_len)
        * enabled)!
        */
 
+#if DUAL_RADIO
       if((rx_mode_value & RADIO_RX_MODE_AUTOACK) &&
          info154.fcf.frame_type == FRAME802154_DATAFRAME &&
          info154.fcf.ack_required != 0 &&
          (!(rx_mode_value & RADIO_RX_MODE_ADDRESS_FILTER) || 
           linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+                       &linkaddr_node_addr)||
+					linkaddr_cmp((linkaddr_t*)&info154.dest_addr,
+												&long_linkaddr_node_addr))) {
+#else /* DUAL_RADIO */
+			 if((rx_mode_value & RADIO_RX_MODE_AUTOACK) &&
+         info154.fcf.frame_type == FRAME802154_DATAFRAME &&
+         info154.fcf.ack_required != 0 &&
+         (!(rx_mode_value & RADIO_RX_MODE_ADDRESS_FILTER) || 
+          linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
                        &linkaddr_node_addr))) {
+#endif /* DUAL_RADIO */
 
         /* 
          * Data frame destined for us & ACK request bit set -> send ACK.
@@ -2319,7 +2354,7 @@ cc1200_rx_interrupt(void)
   /* Make sure we are in a sane state. Sane means: either RX or IDLE */
   s = state();
   if((s == STATE_RX_FIFO_ERR) || (s == STATE_TX_FIFO_ERR)) {
-
+		ERROR("RX call: 1\n"); 
     rx_rx();
     RELEASE_SPI();
     return 0;
@@ -2354,6 +2389,7 @@ cc1200_rx_interrupt(void)
     if(num_rxbytes < PHR_LEN) {
 
       WARNING("RF: PHR incomplete!\n");
+			ERROR("RX call: 2\n"); 
       rx_rx();
       RELEASE_SPI();
       return 0;
@@ -2385,6 +2421,8 @@ cc1200_rx_interrupt(void)
       /* Packet to short. Discard it */
       WARNING("RF: Packet too short!\n");
       RIMESTATS_ADD(tooshort);
+
+			ERROR("RX call: 3\n"); 
       rx_rx();
       RELEASE_SPI();
       return 0;
@@ -2394,6 +2432,8 @@ cc1200_rx_interrupt(void)
       /* Packet to long. Discard it */
       WARNING("RF: Packet to long!\n");
       RIMESTATS_ADD(toolong);
+
+			ERROR("RX call: 4\n"); 
       rx_rx();
       RELEASE_SPI();
       return 0;
@@ -2427,6 +2467,8 @@ cc1200_rx_interrupt(void)
       WARNING("RF: RX length mismatch %d %d %d!\n", num_rxbytes,
               bytes_read,
               payload_len);
+
+			ERROR("RX call: 5\n"); 
       rx_rx();
       RELEASE_SPI();
       return 0;
@@ -2476,18 +2518,23 @@ cc1200_rx_interrupt(void)
 #endif
           rx_pkt_len = bytes_read;
           memcpy((void *)rx_pkt, buf, rx_pkt_len);
+
+					ERROR("RX call: 6\n"); 
           rx_rx();
           process_poll(&cc1200_process);
           RELEASE_SPI();
           return 1;
 
         } else {
+					ERROR("Invalid address\n");
           /* Invalid address. Drop the packet */
         }
 
       }
 
       /* Buffer full, address or CRC check failed */
+
+			ERROR("RX call: 7\n"); 
       rx_rx();
       RELEASE_SPI();
       return 0;

@@ -64,8 +64,10 @@
 
 #include "param.h"
 /* Remaining energy init JJH*/
-uint8_t remaining_energy = INITIAL_ENERGY;
-uint8_t alpha = ALPHA;
+// uint8_t remaining_energy = INITIAL_ENERGY;
+// uint8_t alpha = ALPHA;
+extern static uint8_t remaining_energy;
+extern static uint8_t alpha;
 
 static struct uip_udp_conn *client_conn;
 static uip_ipaddr_t server_ipaddr;

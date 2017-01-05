@@ -107,8 +107,6 @@ send_packet(void *ptr)
              reply == seq_id ? "GREEN" : "RED", uip_ds6_route_num_routes(), num_used);
   }
 #endif /* SERVER_REPLY */
-  if(remaining_energy == 1)
-	  return;
   seq_id++;
   PRINTF("app: DATA id:%03d from:%03d\n",
          seq_id,myaddr);

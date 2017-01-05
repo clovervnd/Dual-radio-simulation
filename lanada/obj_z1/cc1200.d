@@ -20,7 +20,10 @@ obj_z1/cc1200.o: ..//dev/cc1200/cc1200.c ..//dev/cc1200/cc1200-const.h \
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h \
  ..//core/./net/mac/framer.h ..//dev/cc1200/cc1200.h \
  ..//core/./net/packetbuf.h ..//core/./net/mac/tsch/tsch-conf.h \
- ..//core/./net/rime/rimestats.h ..//core/./dev/leds.h
+ ..//core/./net/rime/rimestats.h ..//core/./dev/leds.h \
+ ../platform/z1/dual_radio.h ../platform/z1/platform-conf.h \
+ ..//dev/cc1200/cc1200.h ..//dev/cc2420/cc2420.h ..//core/./dev/spi.h \
+ ..//dev/cc2420/cc2420_const.h ..//core/./lib/aes-128.h
 ..//dev/cc1200/cc1200.c ..//dev/cc1200/cc1200-const.h :
  ..//dev/cc1200/cc1200-conf.h ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//platform/z1/./contiki-conf.h :
@@ -44,3 +47,6 @@ obj_z1/cc1200.o: ..//dev/cc1200/cc1200.c ..//dev/cc1200/cc1200-const.h \
  ..//core/./net/mac/framer.h ..//dev/cc1200/cc1200.h :
  ..//core/./net/packetbuf.h ..//core/./net/mac/tsch/tsch-conf.h :
  ..//core/./net/rime/rimestats.h ..//core/./dev/leds.h :
+ ../platform/z1/dual_radio.h ../platform/z1/platform-conf.h :
+ ..//dev/cc1200/cc1200.h ..//dev/cc2420/cc2420.h ..//core/./dev/spi.h :
+ ..//dev/cc2420/cc2420_const.h ..//core/./lib/aes-128.h :

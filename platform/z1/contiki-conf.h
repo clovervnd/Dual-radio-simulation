@@ -47,10 +47,10 @@
 #define NETSTACK_CONF_MAC     nullmac_driver
 //#define NETSTACK_CONF_RDC     contikimac_driver
 #define NETSTACK_CONF_RDC     nullrdc_driver
-//#define NETSTACK_CONF_RDC     cxmac_driver
-// #define NETSTACK_CONF_RADIO   cc2420_driver
-//#define NETSTACK_CONF_FRAMER  framer_802154
-#define NETSTACK_CONF_FRAMER  contikimac_framer
+// #define NETSTACK_CONF_RDC     cxmac_driver
+#define NETSTACK_CONF_RADIO   cc2420_driver
+#define NETSTACK_CONF_FRAMER  framer_802154
+// #define NETSTACK_CONF_FRAMER  contikimac_framer
 
 /* Specify a minimum packet size for 6lowpan compression to be
    enabled. This is needed for ContikiMAC, which needs packets to be

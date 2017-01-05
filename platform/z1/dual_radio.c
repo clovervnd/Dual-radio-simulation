@@ -23,8 +23,10 @@ int dual_radio_switch(int radio)
 	if (radio == LONG_RADIO)
 	{
 		long_range_radio = 1;
-		NETSTACK_CONF_RADIO = cc1200_driver;
-		NETSTACK_RADIO = cc1200_driver;
+//		NETSTACK_CONF_RADIO = cc1200_driver;
+//		NETSTACK_RADIO = cc1200_driver;
+		NETSTACK_CONF_RADIO = cc2420_driver;
+		NETSTACK_RADIO = cc2420_driver;
 	}
 	else if (radio == SHORT_RADIO)
 	{
@@ -61,13 +63,13 @@ int dual_radio_received(int radio)
 	if (radio == LONG_RADIO)
 	{
 		radio_received = LONG_RADIO;
-		RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! long-range radio\n");
+		// RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! long-range radio\n");
 		return 1;
 	}
 	else if(radio == SHORT_RADIO)
 	{
 		radio_received = SHORT_RADIO;
-		RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! short-range radio\n");
+		// RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! short-range radio\n");
 		return 1;
 	}
 	return 0;

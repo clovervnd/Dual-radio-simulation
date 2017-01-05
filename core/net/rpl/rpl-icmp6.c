@@ -674,7 +674,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 					}	else	{
 						dual_radio_switch(SHORT_RADIO);
 					}
-				PRINTF("SUCCESS!!!\n");
+				// PRINTF("SUCCESS!!!\n");
 				break;
 			}
 		}
@@ -887,7 +887,7 @@ dao_input(void)
 						}	else	{
 							dual_radio_switch(SHORT_RADIO);
 						}
-					PRINTF("SUCCESS!!!\n");
+					// PRINTF("SUCCESS!!!\n");
 					break;
 				}
 			}
@@ -1007,7 +1007,7 @@ fwd_dao:
 						}	else	{
 							dual_radio_switch(SHORT_RADIO);
 						}
-					PRINTF("SUCCESS!!!\n");
+					// PRINTF("SUCCESS!!!\n");
 					break;
 				}
 			}
@@ -1243,7 +1243,7 @@ dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
 				}
-			PRINTF("SUCCESS!!!\n");
+			// PRINTF("SUCCESS!!!\n");
 			break;
 		}
 	}
@@ -1364,7 +1364,7 @@ dao_ack_input(void)
 						}	else	{
 							dual_radio_switch(SHORT_RADIO);
 						}
-					PRINTF("SUCCESS!!!\n");
+					// PRINTF("SUCCESS!!!\n");
 					break;
 				}
 			}
@@ -1424,7 +1424,7 @@ dao_ack_output(rpl_instance_t *instance, uip_ipaddr_t *dest, uint8_t sequence,
 				}	else	{
 					dual_radio_switch(SHORT_RADIO);
 				}
-				PRINTF("SUCCESS!!!\n");
+				// PRINTF("SUCCESS!!!\n");
 				break;
 			}
 		}

@@ -374,9 +374,9 @@ main(int argc, char **argv)
   process_start(&tcpip_process, NULL);
 
   printf("Tentative link-local IPv6 address ");
+	int i;
   {
     uip_ds6_addr_t *lladdr;
-    int i;
     lladdr = uip_ds6_get_link_local(-1);
     for(i = 0; i < 7; ++i) {
       printf("%02x%02x:", lladdr->ipaddr.u8[i * 2],
@@ -389,7 +389,6 @@ main(int argc, char **argv)
 #if DUAL_RADIO
 	printf("Tentative long range link-local IPv6 address ");
   {
-		int i;
     uip_ds6_addr_t *long_lladdr;
     long_lladdr = uip_ds6_long_get_link_local(-1);
     for(i = 0; i < 7; ++i) {
@@ -402,7 +401,6 @@ main(int argc, char **argv)
 
   if(!UIP_CONF_IPV6_RPL) {
     uip_ipaddr_t ipaddr;
-    int i;
     uip_ip6addr(&ipaddr, UIP_DS6_DEFAULT_PREFIX, 0, 0, 0, 0, 0, 0, 0);
     uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
     uip_ds6_addr_add(&ipaddr, 0, ADDR_TENTATIVE);
@@ -416,7 +414,6 @@ main(int argc, char **argv)
 		/* JOONKI */
 #if DUAL_RADIO
 	 	uip_ipaddr_t long_ipaddr;
-    int i;
     uip_ip6addr(&long_ipaddr, UIP_DS6_DEFAULT_PREFIX, 0, 0, 0, 0, 0, 0, 0);
     uip_ds6_set_addr_iid(&long_ipaddr, &uip_lladdr);
     uip_ds6_long_addr_add(&long_ipaddr, 0, ADDR_TENTATIVE);
