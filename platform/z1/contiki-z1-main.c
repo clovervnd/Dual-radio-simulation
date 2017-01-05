@@ -352,9 +352,16 @@ main(int argc, char **argv)
 
   /* Setup X-MAC for 802.15.4 */
   queuebuf_init();
+
+	/* Don'y erase this part. This is necessary. */
+	NETSTACK_CONF_RADIO = cc2420_driver;
+	NETSTACK_RADIO = cc2420_driver;
+  NETSTACK_RDC.init();
+
 	NETSTACK_CONF_RADIO = cc1200_driver;
 	NETSTACK_RADIO = cc1200_driver;
   NETSTACK_RDC.init();
+
   NETSTACK_MAC.init();
   NETSTACK_NETWORK.init();
 
@@ -428,11 +435,10 @@ main(int argc, char **argv)
   }
 
 #else /* NETSTACK_CONF_WITH_IPV6 */
-/* useless right? JJH
 	NETSTACK_CONF_RADIO = cc2420_driver;
 	NETSTACK_RADIO = cc2420_driver;
   NETSTACK_RDC.init();
-*/
+
 
 	NETSTACK_CONF_RADIO = cc1200_driver;
 	NETSTACK_RADIO = cc1200_driver;

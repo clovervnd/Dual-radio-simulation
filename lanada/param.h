@@ -2,8 +2,8 @@
 #define INITIAL_ENERGY 200
 #define ALPHA 1
 
-static uint8_t remaining_energy = INITIAL_ENERGY;
-static uint8_t alpha = ALPHA;
+uint8_t remaining_energy;
+uint8_t alpha;
 
 #define RPL_ENERGY_MODE 1
 #define LONG_ETX_PENALTY 5
