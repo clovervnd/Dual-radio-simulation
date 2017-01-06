@@ -26,7 +26,18 @@ obj_z1/adxl345.o: ../../platform/z1/dev/adxl345.c ../../core/./contiki.h \
  ../../core/./net/rime/rimestats.h ../../platform/z1/dev/cc1200-z1-arch.h \
  ../../platform/z1/dev/i2cmaster.h ../../cpu/msp430/./isr_compat.h \
  ../../core/./../platform/z1/dual_radio.h \
- ../../core/./../platform/z1/platform-conf.h
+ ../../core/./../platform/z1/platform-conf.h \
+ ../../core/./net/rpl/rpl-private.h ../../core/./net/rpl/rpl.h \
+ ../../core/./net/rpl/rpl-conf.h ../../core/./lib/list.h \
+ ../../core/./net/ipv6/uip-ds6.h ../../core/./sys/stimer.h \
+ ../../core/./net/ipv6/uip-nd6.h ../../core/./net/ipv6/uip-ds6-route.h \
+ ../../core/./net/nbr-table.h ../../core/./net/ipv6/uip-ds6-nbr.h \
+ ../../core/./sys/ctimer.h ../../core/./net/ipv6/multicast/uip-mcast6.h \
+ ../../core/./net/ipv6/multicast/uip-mcast6-engines.h \
+ ../../core/./net/ipv6/multicast/uip-mcast6-route.h \
+ ../../core/./net/ipv6/multicast/smrf.h \
+ ../../core/./net/ipv6/multicast/roll-tm.h \
+ ../../core/./net/ipv6/multicast/uip-mcast6-stats.h
 ../../platform/z1/dev/adxl345.c ../../core/./contiki.h :
  ../../core/./contiki-version.h ../../platform/z1/./contiki-conf.h :
  ../../platform/z1/./platform-conf.h ../../core/./dev/radio.h :
@@ -56,3 +67,14 @@ obj_z1/adxl345.o: ../../platform/z1/dev/adxl345.c ../../core/./contiki.h \
  ../../platform/z1/dev/i2cmaster.h ../../cpu/msp430/./isr_compat.h :
  ../../core/./../platform/z1/dual_radio.h :
  ../../core/./../platform/z1/platform-conf.h :
+ ../../core/./net/rpl/rpl-private.h ../../core/./net/rpl/rpl.h :
+ ../../core/./net/rpl/rpl-conf.h ../../core/./lib/list.h :
+ ../../core/./net/ipv6/uip-ds6.h ../../core/./sys/stimer.h :
+ ../../core/./net/ipv6/uip-nd6.h ../../core/./net/ipv6/uip-ds6-route.h :
+ ../../core/./net/nbr-table.h ../../core/./net/ipv6/uip-ds6-nbr.h :
+ ../../core/./sys/ctimer.h ../../core/./net/ipv6/multicast/uip-mcast6.h :
+ ../../core/./net/ipv6/multicast/uip-mcast6-engines.h :
+ ../../core/./net/ipv6/multicast/uip-mcast6-route.h :
+ ../../core/./net/ipv6/multicast/smrf.h :
+ ../../core/./net/ipv6/multicast/roll-tm.h :
+ ../../core/./net/ipv6/multicast/uip-mcast6-stats.h :

@@ -44,6 +44,17 @@ obj_z1/contikimac.o: ../../core/net/mac/contikimac/contikimac.c \
  ../../core/./../platform/z1/platform-conf.h ../../dev/cc1200/cc1200.h \
  ../../dev/cc2420/cc2420.h ../../core/./dev/spi.h \
  ../../dev/cc2420/cc2420_const.h ../../core/./lib/aes-128.h \
+ ../../core/./net/rpl/rpl-private.h ../../core/./net/rpl/rpl.h \
+ ../../core/./net/rpl/rpl-conf.h ../../core/./net/ipv6/uip-ds6.h \
+ ../../core/./sys/stimer.h ../../core/./net/ipv6/uip-nd6.h \
+ ../../core/./net/ipv6/uip-ds6-route.h ../../core/./net/nbr-table.h \
+ ../../core/./net/ipv6/uip-ds6-nbr.h \
+ ../../core/./net/ipv6/multicast/uip-mcast6.h \
+ ../../core/./net/ipv6/multicast/uip-mcast6-engines.h \
+ ../../core/./net/ipv6/multicast/uip-mcast6-route.h \
+ ../../core/./net/ipv6/multicast/smrf.h \
+ ../../core/./net/ipv6/multicast/roll-tm.h \
+ ../../core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ../../core/./../lanada/param.h
 ../../core/net/mac/contikimac/contikimac.c :
  ../../platform/z1/./contiki-conf.h ../../platform/z1/./platform-conf.h :
@@ -91,4 +102,15 @@ obj_z1/contikimac.o: ../../core/net/mac/contikimac/contikimac.c \
  ../../core/./../platform/z1/platform-conf.h ../../dev/cc1200/cc1200.h :
  ../../dev/cc2420/cc2420.h ../../core/./dev/spi.h :
  ../../dev/cc2420/cc2420_const.h ../../core/./lib/aes-128.h :
+ ../../core/./net/rpl/rpl-private.h ../../core/./net/rpl/rpl.h :
+ ../../core/./net/rpl/rpl-conf.h ../../core/./net/ipv6/uip-ds6.h :
+ ../../core/./sys/stimer.h ../../core/./net/ipv6/uip-nd6.h :
+ ../../core/./net/ipv6/uip-ds6-route.h ../../core/./net/nbr-table.h :
+ ../../core/./net/ipv6/uip-ds6-nbr.h :
+ ../../core/./net/ipv6/multicast/uip-mcast6.h :
+ ../../core/./net/ipv6/multicast/uip-mcast6-engines.h :
+ ../../core/./net/ipv6/multicast/uip-mcast6-route.h :
+ ../../core/./net/ipv6/multicast/smrf.h :
+ ../../core/./net/ipv6/multicast/roll-tm.h :
+ ../../core/./net/ipv6/multicast/uip-mcast6-stats.h :
  ../../core/./../lanada/param.h :

@@ -88,15 +88,15 @@
 #error Change NETSTACK_RDC_CONF_CHANNEL_CHECK_RATE in contiki-conf.h, project-conf.h or in your Makefile.
 #endif
 
-//#ifndef NETSTACK_DUAL_RADIO
-//#ifndef NETSTACK_RADIO
-//#ifdef NETSTACK_CONF_RADIO
-//#define NETSTACK_RADIO NETSTACK_CONF_RADIO
-//#else /* NETSTACK_CONF_RADIO */
-//#define NETSTACK_RADIO   nullradio_driver
-//#endif /* NETSTACK_CONF_RADIO */
-//#endif /* NETSTACK_RADIO */
-//#endif /* NETSTACK_DUAL_RADIO */
+#ifndef NETSTACK_DUAL_RADIO
+#ifndef NETSTACK_RADIO
+#ifdef NETSTACK_CONF_RADIO
+#define NETSTACK_RADIO NETSTACK_CONF_RADIO
+#else /* NETSTACK_CONF_RADIO */
+#define NETSTACK_RADIO   nullradio_driver
+#endif /* NETSTACK_CONF_RADIO */
+#endif /* NETSTACK_RADIO */
+#endif /* NETSTACK_DUAL_RADIO */
 
 
 #ifndef NETSTACK_FRAMER
@@ -131,7 +131,7 @@ extern const struct llsec_driver   NETSTACK_LLSEC;
 extern const struct rdc_driver     NETSTACK_RDC;
 extern const struct mac_driver     NETSTACK_MAC;
 #ifndef NETSTACK_DUAL_RADIO
-// extern const struct radio_driver   NETSTACK_RADIO;
+extern const struct radio_driver   NETSTACK_RADIO;
 #endif 
 extern const struct framer         NETSTACK_FRAMER;
 

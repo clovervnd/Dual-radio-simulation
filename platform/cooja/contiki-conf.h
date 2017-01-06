@@ -37,7 +37,6 @@
 #include "subplatform-conf.h"
 #endif /* INCLUDE_SUBPLATFORM_CONF */
 
-
 #define DUAL_RADIO 1
 #define ADDR_MAP 1
 
