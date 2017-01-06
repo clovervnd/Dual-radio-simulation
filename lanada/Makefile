@@ -15,5 +15,7 @@ ifdef PERIOD
 CFLAGS+=-DPERIOD=$(PERIOD)
 endif
 
+# TARGET_MEMORY_MODEL = large
 CONTIKI_WITH_IPV6 = 1
 include $(CONTIKI)/Makefile.include
+

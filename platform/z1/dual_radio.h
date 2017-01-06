@@ -1,6 +1,7 @@
 #include "platform-conf.h"
 #include "cc1200.h"
 #include "cc2420.h"
+#include "net/rpl/rpl-private.h"
 
 #ifndef SHORT_RADIO
 #define SHORT_RADIO 1
@@ -18,7 +19,13 @@ extern struct radio_driver NETSTACK_RADIO;
 int dual_radio_switch(int radio);
 int dual_radio_change(void);
 int dual_radio_received(int radio);
+int radio_received_is_longrange(void);
+int sending_in_LR(void);
 
-/* Global variable for Cooja simulation */
+/* Process */
+int dio_broadcast(rpl_instance_t* instance);
+int dis_broadcast(void);
+
+/* Global variable for Dual RPL */
 int long_range_radio;
 int radio_received;

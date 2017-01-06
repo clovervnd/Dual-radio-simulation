@@ -52,8 +52,15 @@ obj_z1/tcpip.o: ..//core/net/ip/tcpip.c ..//core/./contiki-net.h \
  ../platform/z1/dual_radio.h ../platform/z1/platform-conf.h \
  ..//dev/cc1200/cc1200.h ..//dev/cc2420/cc2420.h ..//core/./dev/spi.h \
  ..//dev/cc2420/cc2420_const.h ..//core/./lib/aes-128.h \
+ ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h \
+ ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/multicast/uip-mcast6.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-engines.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
+ ..//core/./net/ipv6/multicast/smrf.h \
+ ..//core/./net/ipv6/multicast/roll-tm.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ..//core/net/ip/ip_debug.h ..//core/./net/ip/uip-debug.h \
- ..//core/net/rpl/rpl.h ..//core/net/rpl/rpl-conf.h
+ ..//core/net/rpl/rpl.h
 ..//core/net/ip/tcpip.c ..//core/./contiki-net.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :
  ..//platform/z1/./contiki-conf.h ..//platform/z1/./platform-conf.h :
@@ -108,5 +115,12 @@ obj_z1/tcpip.o: ..//core/net/ip/tcpip.c ..//core/./contiki-net.h \
  ../platform/z1/dual_radio.h ../platform/z1/platform-conf.h :
  ..//dev/cc1200/cc1200.h ..//dev/cc2420/cc2420.h ..//core/./dev/spi.h :
  ..//dev/cc2420/cc2420_const.h ..//core/./lib/aes-128.h :
+ ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
+ ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/multicast/uip-mcast6.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-engines.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
+ ..//core/./net/ipv6/multicast/smrf.h :
+ ..//core/./net/ipv6/multicast/roll-tm.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
  ..//core/net/ip/ip_debug.h ..//core/./net/ip/uip-debug.h :
- ..//core/net/rpl/rpl.h ..//core/net/rpl/rpl-conf.h :
+ ..//core/net/rpl/rpl.h :

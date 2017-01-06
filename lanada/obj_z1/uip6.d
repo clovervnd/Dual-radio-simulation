@@ -31,9 +31,10 @@ obj_z1/uip6.o: ..//core/net/ipv6/uip6.c ..//core/./sys/cc.h \
  ..//core/./net/mac/tsch/tsch-conf.h ..//core/./net/rime/rimestats.h \
  ..//dev/cc2420/cc2420.h ..//core/./dev/spi.h \
  ..//dev/cc2420/cc2420_const.h ..//core/./lib/aes-128.h \
+ ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h \
+ ..//core/./net/rpl/rpl-conf.h ..//core/./sys/ctimer.h \
  ..//core/net/ipv6/ipv6_debug.h ..//core/./net/ip/uip-debug.h \
- ..//core/net/rpl/rpl.h ..//core/net/rpl/rpl-conf.h \
- ..//core/./sys/ctimer.h
+ ..//core/net/rpl/rpl.h
 ..//core/net/ipv6/uip6.c ..//core/./sys/cc.h :
  ..//platform/z1/./contiki-conf.h ..//platform/z1/./platform-conf.h :
  ..//core/./dev/radio.h ..//cpu/msp430/./msp430def.h project-conf.h :
@@ -67,6 +68,7 @@ obj_z1/uip6.o: ..//core/net/ipv6/uip6.c ..//core/./sys/cc.h \
  ..//core/./net/mac/tsch/tsch-conf.h ..//core/./net/rime/rimestats.h :
  ..//dev/cc2420/cc2420.h ..//core/./dev/spi.h :
  ..//dev/cc2420/cc2420_const.h ..//core/./lib/aes-128.h :
+ ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
+ ..//core/./net/rpl/rpl-conf.h ..//core/./sys/ctimer.h :
  ..//core/net/ipv6/ipv6_debug.h ..//core/./net/ip/uip-debug.h :
- ..//core/net/rpl/rpl.h ..//core/net/rpl/rpl-conf.h :
- ..//core/./sys/ctimer.h :
+ ..//core/net/rpl/rpl.h :

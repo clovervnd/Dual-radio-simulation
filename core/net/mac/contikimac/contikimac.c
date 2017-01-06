@@ -645,16 +645,19 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
     {
     	/* For each data relay, energy reduction 1 for short 2 for long */
     	if(remaining_energy >1)
+			{
 #if DUAL_RADIO
     		if(radio_received_is_longrange()==LONG_RADIO)
     		{
-    			if(remaining_energy-2 < 1)
+    			if(remaining_energy-2 < 1)	{
     				remaining_energy=1;
-    			else
+					}	else	{
     				remaining_energy-=2;
+					}
     		}
-    		else
+			}	else	{
     			remaining_energy--;
+			}
 #else
 	remaining_energy--;
 #endif
@@ -1073,23 +1076,28 @@ input_packet(void)
 
 #if CONTIKIMAC_SEND_SW_ACK
 	printf("send_sw_ack\n");
-    	uint8_t src_addr1=original_dataptr[original_datalen-4];
+/*
+			uint8_t src_addr1=original_dataptr[original_datalen-4];
     	uint8_t src_addr2=original_dataptr[original_datalen-3];
     	uint8_t src_addr3=original_dataptr[original_datalen-2];
+*/
     	if(original_dataptr[original_datalen-1]=='X')
     	{
     		/* For each data relay, energy reduction 1 for short 2 for long */
     		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1)
+				{
 #if DUAL_RADIO
     			if(radio_received_is_longrange()==LONG_RADIO)
     			{
-    				if(remaining_energy-2 < 1)
+    				if(remaining_energy-2 < 1){
     					remaining_energy=1;
-    				else
+						}	else	{
     					remaining_energy-=2;
+						}
     			}
-    			else
+				}	else	{
     				remaining_energy--;
+				}
 #else
 		remaining_energy--;
 #endif
@@ -1113,10 +1121,10 @@ input_packet(void)
 #if DUAL_RADIO
         if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
             info154.fcf.ack_required != 0 &&
-            linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+            (linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
                 &linkaddr_node_addr) ||
 	    linkaddr_cmp((linkaddr_t*)&info154.dest_addr,
-		&long_linkaddr_node_addr)) {
+		&long_linkaddr_node_addr))) {
 #else
         if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
             info154.fcf.ack_required != 0 &&

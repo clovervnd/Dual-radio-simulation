@@ -358,7 +358,7 @@ packet_input(void)
 #endif
 
 	/* JOONKI */
-	int parse;
+	int parse = 0;
 #if NULLRDC_802154_AUTOACK
   if(packetbuf_datalen() == ACK_LEN) {
     /* Ignore ack packets */

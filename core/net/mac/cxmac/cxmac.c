@@ -694,7 +694,7 @@ send_packet(void)
 	    if(original_dataptr[original_datalen-1]=='X')
 	    {
 //	    	 For each data relay, energy reduction 1 for short 2 for long
-	    	if(remaining_energy >1)
+	    	if(remaining_energy >1){
 	#if DUAL_RADIO
 	    		if(radio_received_is_longrange()==LONG_RADIO)
 	    		{
@@ -703,8 +703,9 @@ send_packet(void)
 	    			else
 	    				remaining_energy-=2;
 	    		}
-	    		else
+				}	else {
 	    			remaining_energy--;
+				}
 	#else
 		remaining_energy--;
 	#endif
@@ -833,26 +834,31 @@ input_packet(void)
 
 	waiting_for_packet = 0;
 
-	uint8_t src_addr1=original_dataptr[original_datalen-4];
+/*
+  uint8_t src_addr1=original_dataptr[original_datalen-4];
 	uint8_t src_addr2=original_dataptr[original_datalen-3];
 	uint8_t src_addr3=original_dataptr[original_datalen-2];
+*/
+
 	if(original_dataptr[original_datalen-1]=='X')
 	{
 //		 For each data relay, energy reduction 1 for short 2 for long
-		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1)
+		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1){
 #if DUAL_RADIO
 			if(radio_received_is_longrange()==LONG_RADIO)
 			{
-				if(remaining_energy-2 < 1)
+				if(remaining_energy-2 < 1){
 					remaining_energy=1;
-				else
+				}	else	{
 					remaining_energy-=2;
-			}
-			else
+				}
+			}	else	{
 				remaining_energy--;
+			}
 #else
 	remaining_energy--;
 #endif
+		}
 	PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
 		if(remaining_energy == 1) // A node dies
 			PRINTF("ENERGY DEPLETION\n");
