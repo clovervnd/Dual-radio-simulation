@@ -1,6 +1,5 @@
-obj_z1/elfloader-msp430.o: ..//core/loader/elfloader-msp430.c \
- ..//core/loader/elfloader-arch.h ..//core/./loader/elfloader.h \
- ..//core/./cfs/cfs.h ..//core/./contiki.h ..//core/./contiki-version.h \
+obj_z1/elfloader-msp430x.o: ..//core/loader/elfloader-msp430x.c \
+ ..//core/./contiki.h ..//core/./contiki-version.h \
  ..//platform/z1/./contiki-conf.h ..//platform/z1/./platform-conf.h \
  ..//core/./dev/radio.h ..//cpu/msp430/./msp430def.h project-conf.h \
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h \
@@ -12,10 +11,11 @@ obj_z1/elfloader-msp430.o: ..//core/loader/elfloader-msp430.c \
  ..//cpu/msp430/./rtimer-arch.h ..//core/./sys/rtimer.h \
  ..//core/./sys/pt.h ..//core/./sys/procinit.h ..//core/./sys/loader.h \
  ..//core/./sys/clock.h ..//core/./sys/energest.h \
+ ..//core/./loader/elfloader.h ..//core/./cfs/cfs.h \
+ ..//core/./loader/elfloader-arch.h ..//core/./loader/symtab.h \
  ..//cpu/msp430/./dev/flash.h
-..//core/loader/elfloader-msp430.c :
- ..//core/loader/elfloader-arch.h ..//core/./loader/elfloader.h :
- ..//core/./cfs/cfs.h ..//core/./contiki.h ..//core/./contiki-version.h :
+..//core/loader/elfloader-msp430x.c :
+ ..//core/./contiki.h ..//core/./contiki-version.h :
  ..//platform/z1/./contiki-conf.h ..//platform/z1/./platform-conf.h :
  ..//core/./dev/radio.h ..//cpu/msp430/./msp430def.h project-conf.h :
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h :
@@ -27,4 +27,6 @@ obj_z1/elfloader-msp430.o: ..//core/loader/elfloader-msp430.c \
  ..//cpu/msp430/./rtimer-arch.h ..//core/./sys/rtimer.h :
  ..//core/./sys/pt.h ..//core/./sys/procinit.h ..//core/./sys/loader.h :
  ..//core/./sys/clock.h ..//core/./sys/energest.h :
+ ..//core/./loader/elfloader.h ..//core/./cfs/cfs.h :
+ ..//core/./loader/elfloader-arch.h ..//core/./loader/symtab.h :
  ..//cpu/msp430/./dev/flash.h :

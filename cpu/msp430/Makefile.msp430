@@ -164,8 +164,10 @@ ifneq (,$(findstring 4.7.,$(shell msp430-gcc -dumpversion)))
 ifdef CPU_HAS_MSP430X
  ifeq ($(TARGET_MEMORY_MODEL),large)
   CFLAGS += -mmemory-model=$(TARGET_MEMORY_MODEL)
-  CFLAGS += -mcode-region=far -mdata-region=far -msr20 -mc20 -md20
-  LDFLAGS += -mmemory-model=$(TARGET_MEMORY_MODEL) -mcode-region=far -mdata-region=far -msr20 -mc20 -md20
+  #CFLAGS += -mcode-region=far -mdata-region=far -msr20 -mc20 -md20
+  CFLAGS += -mcode-region=any -mdata-region=any -msr20 -mc20 -md20
+  #LDFLAGS += -mmemory-model=$(TARGET_MEMORY_MODEL) -mcode-region=far -mdata-region=far -msr20 -mc20 -md20
+  LDFLAGS += -mmemory-model=$(TARGET_MEMORY_MODEL) -mcode-region=any -mdata-region=any -msr20 -mc20 -md20
  else
   TARGET_MEMORY_MODEL = medium
   CFLAGS += -mmemory-model=$(TARGET_MEMORY_MODEL)

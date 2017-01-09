@@ -3,6 +3,16 @@ CONTIKI=../
 
 CFLAGS += -DPROJECT_CONF_H=\"project-conf.h\"
 
+TARGET_MEMORY_MODEL = large
+#CFLAGS += -mcode-region=any -mdata-region=any
+
+#CFLAGS += -mmemory-model=medium \
+				      -ffunction-sections -fdata-sections \
+							     -mcode-region=any -mdata-region=any
+#LDFLAGS += -mmemory-model=medium \
+					      -Wl,-gc-sections \
+								     -mcode-region=any -mdata-region=any
+
 ifdef WITH_COMPOWER
 APPS+=powertrace
 CFLAGS+= -DCONTIKIMAC_CONF_COMPOWER=1 -DWITH_COMPOWER=1 -DQUEUEBUF_CONF_NUM=4
@@ -15,7 +25,6 @@ ifdef PERIOD
 CFLAGS+=-DPERIOD=$(PERIOD)
 endif
 
-# TARGET_MEMORY_MODEL = large
 CONTIKI_WITH_IPV6 = 1
 include $(CONTIKI)/Makefile.include
 
