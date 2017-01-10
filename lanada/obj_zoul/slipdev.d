@@ -1,32 +1,32 @@
-obj_z1/elfloader-msp430x.o: ..//core/loader/elfloader-msp430x.c \
+obj_zoul/slipdev.o: ..//core/net/ip/slipdev.c ..//core/net/ip/uip.h \
+ ..//core/./net/ip/uipopt.h ..//platform/zoul/./contiki-conf.h \
+ ..//core/./dev/radio.h project-conf.h ..//platform/zoul/firefly/board.h \
+ ..//cpu/cc2538/./dev/gpio.h ..//cpu/cc2538/./reg.h \
+ ..//cpu/cc2538/./dev/nvic.h ..//core/./net/ip/tcpip.h \
  ..//core/./contiki.h ..//core/./contiki-version.h \
- ..//platform/z1/./contiki-conf.h ..//platform/z1/./platform-conf.h \
- ..//core/./dev/radio.h ..//cpu/msp430/./msp430def.h project-conf.h \
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h \
  ..//core/./sys/pt.h ..//core/./sys/lc.h ..//core/./sys/lc-switch.h \
  ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h ..//core/./sys/autostart.h \
  ..//core/./sys/process.h ..//core/./sys/timer.h ..//core/./sys/clock.h \
  ..//core/./sys/ctimer.h ..//core/./sys/etimer.h ..//core/./sys/timer.h \
  ..//core/./sys/etimer.h ..//core/./sys/rtimer.h \
- ..//cpu/msp430/./rtimer-arch.h ..//core/./sys/rtimer.h \
+ ..//cpu/cc2538/./rtimer-arch.h ..//cpu/cc2538/./dev/gptimer.h \
  ..//core/./sys/pt.h ..//core/./sys/procinit.h ..//core/./sys/loader.h \
- ..//core/./sys/clock.h ..//core/./sys/energest.h \
- ..//core/./loader/elfloader.h ..//core/./cfs/cfs.h \
- ..//core/./loader/elfloader-arch.h ..//core/./loader/symtab.h \
- ..//cpu/msp430/./dev/flash.h
-..//core/loader/elfloader-msp430x.c :
+ ..//core/./sys/clock.h ..//core/./sys/energest.h ..//core/./sys/rtimer.h \
+ ..//core/./net/ip/uip.h ..//core/net/ip/slipdev.h
+..//core/net/ip/slipdev.c ..//core/net/ip/uip.h :
+ ..//core/./net/ip/uipopt.h ..//platform/zoul/./contiki-conf.h :
+ ..//core/./dev/radio.h project-conf.h ..//platform/zoul/firefly/board.h :
+ ..//cpu/cc2538/./dev/gpio.h ..//cpu/cc2538/./reg.h :
+ ..//cpu/cc2538/./dev/nvic.h ..//core/./net/ip/tcpip.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :
- ..//platform/z1/./contiki-conf.h ..//platform/z1/./platform-conf.h :
- ..//core/./dev/radio.h ..//cpu/msp430/./msp430def.h project-conf.h :
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h :
  ..//core/./sys/pt.h ..//core/./sys/lc.h ..//core/./sys/lc-switch.h :
  ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h ..//core/./sys/autostart.h :
  ..//core/./sys/process.h ..//core/./sys/timer.h ..//core/./sys/clock.h :
  ..//core/./sys/ctimer.h ..//core/./sys/etimer.h ..//core/./sys/timer.h :
  ..//core/./sys/etimer.h ..//core/./sys/rtimer.h :
- ..//cpu/msp430/./rtimer-arch.h ..//core/./sys/rtimer.h :
+ ..//cpu/cc2538/./rtimer-arch.h ..//cpu/cc2538/./dev/gptimer.h :
  ..//core/./sys/pt.h ..//core/./sys/procinit.h ..//core/./sys/loader.h :
- ..//core/./sys/clock.h ..//core/./sys/energest.h :
- ..//core/./loader/elfloader.h ..//core/./cfs/cfs.h :
- ..//core/./loader/elfloader-arch.h ..//core/./loader/symtab.h :
- ..//cpu/msp430/./dev/flash.h :
+ ..//core/./sys/clock.h ..//core/./sys/energest.h ..//core/./sys/rtimer.h :
+ ..//core/./net/ip/uip.h ..//core/net/ip/slipdev.h :

@@ -45,6 +45,7 @@
 #ifndef CONTIKI_CONF_H_
 #define CONTIKI_CONF_H_
 
+#include "dev/radio.h"
 #include <stdint.h>
 #include <string.h>
 /*---------------------------------------------------------------------------*/
@@ -355,9 +356,23 @@ typedef uint32_t rtimer_clock_t;
 #endif /* NETSTACK_CONF_FRAMER */
 
 /* This can be overriden to use the cc1200_driver instead */
+
+/* JOONKI
+ * To switch the radio driver in runtime */
+#define NETSTACK_DUAL_RADIO	1
+#define DUAL_RADIO	1
+
+#if DUAL_RADIO
+struct radio_driver NETSTACK_CONF_RADIO;
+struct radio_driver NETSTACK_RADIO;
+
+#else /* DUAL_RADIO */
+
 #ifndef NETSTACK_CONF_RADIO
 #define NETSTACK_CONF_RADIO         cc2538_rf_driver
 #endif
+#endif /* DUAL_RADIO */
+
 
 /*
  * RE-Mote specific:

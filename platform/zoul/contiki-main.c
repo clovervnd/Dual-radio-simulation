@@ -85,6 +85,7 @@
 #else
 #define PUTS(s)
 #endif
+
 /*---------------------------------------------------------------------------*/
 /** \brief Board specific iniatialisation */
 void board_init(void);
@@ -113,6 +114,7 @@ set_rf_params(void)
 {
   uint16_t short_addr;
   uint8_t ext_addr[8];
+	linkaddr_t temp_node_addr;
 
   ieee_addr_cpy_to(ext_addr, 8);
 
@@ -121,6 +123,12 @@ set_rf_params(void)
 
   /* Populate linkaddr_node_addr. Maintain endianness */
   memcpy(&linkaddr_node_addr, &ext_addr[8 - LINKADDR_SIZE], LINKADDR_SIZE);
+#if DUAL_RADIO
+
+
+#endif
+
+
 
 #if STARTUP_CONF_VERBOSE
   {

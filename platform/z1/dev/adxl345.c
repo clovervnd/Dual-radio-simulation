@@ -50,11 +50,13 @@
 #include "isr_compat.h"
 #include "lib/sensors.h"
 
-#ifdef DUAL_RADIO
+#if DUAL_RADIO
 #ifdef ZOLERTIA_Z1
 #include	"../platform/z1/dual_radio.h"
-#else	/* ZOLERTIA_Z1 */
+#elif COOJA /* ZOLERTIA_Z1 */
 #include	"../platform/cooja/dual_conf.h"
+#else /* ZOLERTIA_Z1 */
+#include "../platform/zoul/dual_radio.h"
 #endif /* ZOLERTIA_Z1 */
 #endif /* DUAL_RADIO */
 
