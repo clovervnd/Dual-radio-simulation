@@ -1,5 +1,5 @@
 #!/bin/bash
-make clean
-make udp-server TARGET=z1
-make udp-server.upload MOTES=/dev/ttyUSB0
-make login MOTES=/dev/ttyUSB0
+make clean	TARGET=z1
+make udp-server	TARGET=z1
+make udp-server.upload TARGET=z1 MOTES=/dev/ttyUSB0
+make login TARGET=z1 MOTES=/dev/ttyUSB0

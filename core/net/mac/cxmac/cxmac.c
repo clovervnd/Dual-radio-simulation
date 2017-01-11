@@ -691,31 +691,31 @@ send_packet(void)
   if((is_broadcast || got_strobe_ack || is_streaming) && collisions == 0) {
 
 //	     Relaying Tx energy consumption for Data packet JJH
-	    original_datalen = packetbuf_totlen();
-	    original_dataptr = packetbuf_hdrptr();
-	    if(original_dataptr[original_datalen-1]=='X')
-	    {
+		original_datalen = packetbuf_totlen();
+	  original_dataptr = packetbuf_hdrptr();
+	  if(original_dataptr[original_datalen-1]=='X')
+	  {
 //	    	 For each data relay, energy reduction 1 for short 2 for long
-	    	if(remaining_energy >1){
-	#if DUAL_RADIO
-	    		if(radio_received_is_longrange()==LONG_RADIO)
-	    		{
-	    			if(remaining_energy-2 < 1)
-	    				remaining_energy=1;
-	    			else
-	    				remaining_energy-=2;
-	    		}
+	  	if(remaining_energy >1){
+#if DUAL_RADIO
+	    	if(radio_received_is_longrange()==LONG_RADIO)
+	    	{
+	    		if(remaining_energy-2 < 1)
+	    			remaining_energy=1;
+	    		else
+	    			remaining_energy-=2;
 				}	else {
-	    			remaining_energy--;
+	    		remaining_energy--;
 				}
-	#else
-		remaining_energy--;
-	#endif
-		PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
-	    	if(remaining_energy == 1) // A node dies first
-	    		PRINTF("ENERGY DEPLETION\n");
-	    }
-
+#else
+				remaining_energy--;
+#endif
+			}
+			PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
+	   	if(remaining_energy == 1) { // A node dies first 
+	   		PRINTF("ENERGY DEPLETION\n");
+			}
+		}
     NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
   }
 

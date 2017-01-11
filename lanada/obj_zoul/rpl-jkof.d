@@ -30,6 +30,12 @@ obj_zoul/rpl-jkof.o: ..//core/net/rpl/rpl-jkof.c \
  ..//core/./net/ipv6/multicast/roll-tm.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h \
+ ../platform/zoul/dual_radio.h ../platform/zoul/contiki-conf.h \
+ ..//dev/cc1200/cc1200.h ..//core/./net/packetbuf.h \
+ ..//core/./net/mac/tsch/tsch-conf.h ..//core/./net/rime/rimestats.h \
+ ../cpu/cc2538/dev/cc2538-rf.h ..//cpu/cc2538/./dev/rfcore.h \
+ ..//cpu/cc2538/./dev/rfcore-ffsm.h ..//cpu/cc2538/./dev/rfcore-xreg.h \
+ ..//cpu/cc2538/./dev/rfcore-sfr.h ..//cpu/cc2538/./dev/ana-regs.h \
  ../lanada/param.h
 ..//core/net/rpl/rpl-jkof.c :
  ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
@@ -63,4 +69,10 @@ obj_zoul/rpl-jkof.o: ..//core/net/rpl/rpl-jkof.c \
  ..//core/./net/ipv6/multicast/roll-tm.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h :
+ ../platform/zoul/dual_radio.h ../platform/zoul/contiki-conf.h :
+ ..//dev/cc1200/cc1200.h ..//core/./net/packetbuf.h :
+ ..//core/./net/mac/tsch/tsch-conf.h ..//core/./net/rime/rimestats.h :
+ ../cpu/cc2538/dev/cc2538-rf.h ..//cpu/cc2538/./dev/rfcore.h :
+ ..//cpu/cc2538/./dev/rfcore-ffsm.h ..//cpu/cc2538/./dev/rfcore-xreg.h :
+ ..//cpu/cc2538/./dev/rfcore-sfr.h ..//cpu/cc2538/./dev/ana-regs.h :
  ../lanada/param.h :

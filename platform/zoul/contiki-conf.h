@@ -359,8 +359,8 @@ typedef uint32_t rtimer_clock_t;
 
 /* JOONKI
  * To switch the radio driver in runtime */
-// #define NETSTACK_DUAL_RADIO	1
-#define DUAL_RADIO	0
+#define NETSTACK_DUAL_RADIO	1
+#define DUAL_RADIO	1
 
 #if DUAL_RADIO
 struct radio_driver NETSTACK_CONF_RADIO;

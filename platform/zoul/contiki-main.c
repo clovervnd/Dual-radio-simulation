@@ -73,6 +73,12 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
+
+/* JOONKI */
+#if DUAL_RADIO
+#include "dual_radio.h"
+#endif
+
 /*---------------------------------------------------------------------------*/
 #if STARTUP_CONF_VERBOSE
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -123,11 +129,12 @@ set_rf_params(void)
 
   /* Populate linkaddr_node_addr. Maintain endianness */
   memcpy(&linkaddr_node_addr, &ext_addr[8 - LINKADDR_SIZE], LINKADDR_SIZE);
+
 #if DUAL_RADIO
-
-
+  memcpy(&temp_node_addr, &ext_addr[8 - LINKADDR_SIZE], LINKADDR_SIZE);
+	temp_node_addr.u8[0] = 0x80;
+	memcpy(&long_linkaddr_node_addr, &temp_node_addr, LINKADDR_SIZE);
 #endif
-
 
 
 #if STARTUP_CONF_VERBOSE
@@ -138,6 +145,15 @@ set_rf_params(void)
       printf("%02x:", linkaddr_node_addr.u8[i]);
     }
     printf("%02x\n", linkaddr_node_addr.u8[i]);
+
+#if DUAL_RADIO
+		printf("Rime for long radio configured with address ");
+    for(i = 0; i < LINKADDR_SIZE - 1; i++) {
+      printf("%02x:", long_linkaddr_node_addr.u8[i]);
+    }
+    printf("%02x\n", long_linkaddr_node_addr.u8[i]);
+
+#endif
   }
 #endif
 
@@ -193,8 +209,8 @@ main(void)
 
   PUTS(CONTIKI_VERSION_STRING);
   PUTS(BOARD_STRING);
-
-  /* Initialise the H/W RNG engine. */
+  
+	/* Initialise the H/W RNG engine. */
   random_init(0);
 
   udma_init();
@@ -209,7 +225,16 @@ main(void)
   crypto_disable();
 #endif
 
+#if DUAL_RADIO
+	dual_radio_switch(LONG_RADIO);
+	netstack_init();
+
+	dual_radio_switch(SHORT_RADIO);
+	netstack_init();
+#else
   netstack_init();
+#endif
+
   set_rf_params();
 
   PRINTF(" Net: ");
@@ -221,6 +246,9 @@ main(void)
 
 #if NETSTACK_CONF_WITH_IPV6
   memcpy(&uip_lladdr.addr, &linkaddr_node_addr, sizeof(uip_lladdr.addr));
+#if DUAL_RADIO
+  memcpy(&uip_long_lladdr.addr, &long_linkaddr_node_addr, sizeof(uip_long_lladdr.addr));
+#endif
   queuebuf_init();
   process_start(&tcpip_process, NULL);
 #endif /* NETSTACK_CONF_WITH_IPV6 */
