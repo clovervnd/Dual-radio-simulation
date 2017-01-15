@@ -866,7 +866,6 @@ dio_ack_output(uip_ipaddr_t *dest)
 {
 	unsigned char *buffer;
 	uint8_t is_longrange = 0;
-//	uip_ipaddr_t addr = *dest;
 	uip_ds6_nbr_t *nbr = NULL;
 	nbr = uip_ds6_nbr_lookup(dest);
 	/*JOONKI*/
@@ -880,15 +879,13 @@ dio_ack_output(uip_ipaddr_t *dest)
 				PRINTF("\n");*/
 		if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
 			if (ds6_lr_addrmap[i].lr == 1){
-				PRINTF("switch to LONG\n");
 				dual_radio_switch(LONG_RADIO);
 				is_longrange = 1;
 			}	else	{
-				PRINTF("switch to SHORT\n");
 				dual_radio_switch(SHORT_RADIO);
 				is_longrange = 0;
 			}
-			PRINTF("SUCCESS!!!\n");
+//			PRINTF("SUCCESS!!!\n");
 			break;
 		}
 	}
@@ -903,20 +900,7 @@ dio_ack_output(uip_ipaddr_t *dest)
 #endif	/* ADDR_MAP */
 #endif /* DUAL_RADIO */
 
-/*
-	PRINTF("RPL: Sending a DAO %s with sequence number %d to ", status < 128 ? "ACK" : "NACK", sequence);
-	PRINT6ADDR(dest);
-	PRINTF(" with status %d\n", status);
-*/
 	buffer = UIP_ICMP_PAYLOAD;
-/*	if(nbr->link_metric == 0)
-	{
-		buffer[0] = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
-	}
-	else
-	{
-		buffer[0] = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_RX_COST : SHORT_RX_COST); // Tx cost using DIO_ACK
-	}*/
 	if(rpl_get_parent(dest) != NULL)
 	{
 		buffer[0] = rpl_get_parent(dest)->parent_weight;
@@ -925,10 +909,7 @@ dio_ack_output(uip_ipaddr_t *dest)
 	{
 		buffer[0] = 1;
 	}
-	PRINTF("before dio_ack tx\n");
-	PRINT6ADDR(dest);
 	uip_icmp6_send(dest, ICMP6_RPL, RPL_CODE_DIO_ACK, 1);
-	PRINTF("after dio_ack tx\n");
 }
 #endif
 /*---------------------------------------------------------------------------*/
