@@ -554,25 +554,17 @@ dio_input(void)
 #if RPL_LIFETIME_MAX_MODE
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
-  uip_ds6_addr_t *lladdr;
-  uip_ds6_addr_t *long_lladdr;
 
   PRINTF("before child cmp\n");
   c = rpl_find_child(&from);
   if(c != NULL)
   {
 	  PRINTF("after child cmp\n");
-	  uip_ipaddr_copy(lladdr,uip_ds6_get_link_local(-1));
-	  uip_ipaddr_copy(long_lladdr,uip_ds6_long_get_link_local(-1));
 	  PRINT6ADDR(&dio.parent_addr);
 	  PRINTF("\n");
-	  PRINT6ADDR(&lladdr->ipaddr);
-	  PRINTF("\n");
-	  PRINT6ADDR(&long_lladdr->ipaddr);
-	  PRINTF("\n");
 	  
-	  if(uip_ipaddr_cmp(&dio.parent_addr, &lladdr->ipaddr) ||
-	     uip_ipaddr_cmp(&dio.parent_addr, &long_lladdr->ipaddr))
+	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
+		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
 	    {
 	      PRINTF("it's me\n");
 	      // weight update
@@ -662,6 +654,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	  buffer[pos++] = 0;
   }
 //  buffer[pos++] = 0; /* reserved */
+  PRINTF("send my weight %d\n",my_weight);
   buffer[pos++] = my_weight;
 #else
   /* reserved 2 bytes */
@@ -856,7 +849,7 @@ dio_ack_input(void)
 		{
 			my_weight -= c->weight;
 			c->weight = weight;
-			my_weight += weight;
+			my_weight += c->weight;
 			PRINTF("my_weight update %d\n",my_weight);
 		}
 	}

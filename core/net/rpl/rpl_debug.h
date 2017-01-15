@@ -6,7 +6,7 @@
 #define DEBUG_RPL_ICMP6	1
 #define DEBUG_RPL_MRHOF	0
 #define DEBUG_RPL_JKOF	0
-#define DEBUG_RPL_TIMER	0
+#define DEBUG_RPL_TIMER	1
 
 
 #define ANA_RPL	1

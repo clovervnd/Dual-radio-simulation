@@ -249,6 +249,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 	{
 		p->parent_weight = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_RX_COST : SHORT_RX_COST); // Tx cost using DIO_ACK
 	}
+	printf("OF parent_weight %d\n",p->parent_weight);
   }
 #endif
 }
