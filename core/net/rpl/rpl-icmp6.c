@@ -547,8 +547,13 @@ dio_input(void)
 #endif
 
 #if RPL_LIFETIME_MAX_MODE
-  if(rpl_get_parent(&from) != NULL)
-	  rpl_get_parent(&from)->parent_weight = dio.dio_weight;
+  rpl_parent_t *p;
+  p = rpl_find_parent_any_dag(rpl_get_default_instance(),&from);
+  if(p != NULL)
+  {
+//	  PRINTF("dio input parent not null\n");
+	  p->parent_weight = dio.dio_weight;
+  }
 #endif
   rpl_process_dio(&from, &dio);
 #if RPL_LIFETIME_MAX_MODE
@@ -573,6 +578,7 @@ dio_input(void)
 		  my_weight -= c->weight;
 		  c->weight = dio.parent_weight;
 		  my_weight += c->weight;
+		  PRINTF("my_weight update in dio %d\n",my_weight);
 		}
 	    }
 	  else
@@ -840,7 +846,7 @@ dio_ack_input(void)
 		else
 		{
 			my_weight += c->weight;
-			PRINTF("my_weight %d\n",my_weight);
+			PRINTF("my_weight in dio_ack %d\n",my_weight);
 		}
 	}
 	else
@@ -850,7 +856,7 @@ dio_ack_input(void)
 			my_weight -= c->weight;
 			c->weight = weight;
 			my_weight += c->weight;
-			PRINTF("my_weight update %d\n",my_weight);
+			PRINTF("my_weight update in dio_ack %d\n",my_weight);
 		}
 	}
 
@@ -864,6 +870,7 @@ dio_ack_output(uip_ipaddr_t *dest)
 {
 	unsigned char *buffer;
 	uip_ds6_nbr_t *nbr = NULL;
+	rpl_parent_t *p;
 	nbr = uip_ds6_nbr_lookup(dest);
 	/*JOONKI*/
 #if DUAL_RADIO
@@ -894,9 +901,11 @@ dio_ack_output(uip_ipaddr_t *dest)
 #endif /* DUAL_RADIO */
 
 	buffer = UIP_ICMP_PAYLOAD;
-	if(rpl_get_parent(dest) != NULL)
+	p = rpl_find_parent_any_dag(rpl_get_default_instance(),dest);
+	if(p != NULL)
 	{
-		buffer[0] = rpl_get_parent(dest)->parent_weight;
+		PRINTF("p weight %d\n",p->parent_weight);
+		buffer[0] = p->parent_weight;
 	}
 	else
 	{

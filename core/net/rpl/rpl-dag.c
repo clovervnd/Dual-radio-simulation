@@ -690,6 +690,9 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
 #if RPL_DAG_MC != RPL_DAG_MC_NONE
       memcpy(&p->mc, &dio->mc, sizeof(p->mc));
 #endif /* RPL_DAG_MC != RPL_DAG_MC_NONE */
+#if RPL_LIFETIME_MAX_MODE
+      p->parent_weight = dio->parent_weight;
+#endif
     }
   }
 
