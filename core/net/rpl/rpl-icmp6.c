@@ -546,15 +546,6 @@ dio_input(void)
   RPL_DEBUG_DIO_INPUT(&from, &dio);
 #endif
 
-#if RPL_LIFETIME_MAX_MODE
-  rpl_parent_t *p;
-  p = rpl_find_parent_any_dag(rpl_get_default_instance(),&from);
-  if(p != NULL)
-  {
-//	  PRINTF("dio input parent not null\n");
-	  p->parent_weight = dio.dio_weight;
-  }
-#endif
   rpl_process_dio(&from, &dio);
 #if RPL_LIFETIME_MAX_MODE
   // Check 1. sender is my child or not, 2. dio-> parent is me or not

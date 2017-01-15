@@ -15,7 +15,7 @@ uint8_t my_weight;
 
 #define DATA_PKT_SIZE 10 // 'B' in theory
 #define SHORT_TX_COST 1
-#define SHORT_RX_COST 3
+#define SHORT_RX_COST 1
 #define LONG_TX_COST 9
 #define LONG_RX_COST 6
 
