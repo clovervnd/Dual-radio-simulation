@@ -562,34 +562,34 @@ dio_input(void)
   if(c != NULL)
   {
 	  PRINTF("after child cmp\n");
-	  //	  lladdr = uip_ds6_long_get_link_local(ADDR_TENTATIVE);
-	  //	  long_lladdr = uip_ds6_long_get_link_local(ADDR_TENTATIVE);
+	  uip_ipaddr_copy(lladdr,uip_ds6_get_link_local(-1));
+	  uip_ipaddr_copy(long_lladdr,uip_ds6_long_get_link_local(-1));
 	  PRINT6ADDR(&dio.parent_addr);
 	  PRINTF("\n");
-	  //	  PRINTLLADDR(lladdr);
+	  PRINT6ADDR(&lladdr->ipaddr);
 	  PRINTF("\n");
-	  //	  PRINTLLADDR(long_lladdr);
+	  PRINT6ADDR(&long_lladdr->ipaddr);
 	  PRINTF("\n");
 	  
-	  //	  	  if(uip_ipaddr_cmp(&dio.parent_addr, lladdr) ||
-	  //	     uip_ipaddr_cmp(&dio.parent_addr, long_lladdr))
-	  //	  {
-	  //		  PRINTF("it's me\n");
-		  /* weight update */
-	  //		  if(c->weight != dio.parent_weight)
-	  //		  {
-	  //			  my_weight -= c->weight;
-	  //			  c->weight = dio.parent_weight;
-	  //			  my_weight += c->weight;
-	  //		  }
-	  //	  }
-	  //	  else
-	  //	  {
-	  //		  rpl_remove_child(c);
-		  /* In my child list but I'm not the parent any more, so remove child */
-	  //	  } 
+	  if(uip_ipaddr_cmp(&dio.parent_addr, &lladdr->ipaddr) ||
+	     uip_ipaddr_cmp(&dio.parent_addr, &long_lladdr->ipaddr))
+	    {
+	      PRINTF("it's me\n");
+	      // weight update
+	      if(c->weight != dio.parent_weight)
+		{
+		  my_weight -= c->weight;
+		  c->weight = dio.parent_weight;
+		  my_weight += c->weight;
+		}
+	    }
+	  else
+	    {
+	      rpl_remove_child(c);
+	      // In my child list but I'm not the parent any more, so remove child
+	    }
   }
-
+  
 #endif
 
  discard:
@@ -863,6 +863,7 @@ dio_ack_input(void)
 
 	/* child info list add
 	   Compare it with previous info */
+	uip_clear_buf();
 }
 /*---------------------------------------------------------------------------*/
 void
