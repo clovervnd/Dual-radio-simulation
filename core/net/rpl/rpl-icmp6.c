@@ -588,8 +588,10 @@ dio_input(void)
   }
   else
   {
-	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
-		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
+	  if((is_longrange == LONG_RADIO
+			  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
+			  || (is_longrange == SHORT_RADIO
+					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))
 	  {
 		  c = rpl_add_child(dio.parent_weight, &from);
 		  if(c == NULL)
