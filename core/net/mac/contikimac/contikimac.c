@@ -657,16 +657,17 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
 					}	else	{
     				remaining_energy-=2;
 					}
-    		}
-			}	else	{
+				}	else	{
     			remaining_energy--;
-			}
+				}
 #else
 	remaining_energy--;
 #endif
-	PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
-    	if(remaining_energy == 1) // A node dies first
+		}
+		PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
+    	if(remaining_energy == 1) {		// A node dies first
     		PRINTF("ENERGY DEPLETION\n");
+			}
     }
   
   if(!is_broadcast && !is_receiver_awake) {
@@ -1097,13 +1098,13 @@ input_packet(void)
 						}	else	{
     					remaining_energy-=2;
 						}
-    			}
-				}	else	{
+					}	else	{
     				remaining_energy--;
-				}
+					}
 #else
-		remaining_energy--;
+					remaining_energy--;
 #endif
+				}
 		PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
     		if(remaining_energy == 1) // A node dies 
     			PRINTF("ENERGY DEPLETION\n");
@@ -1118,9 +1119,9 @@ input_packet(void)
         frame802154_t info154;
         frame802154_parse(original_dataptr, original_datalen, &info154);
 
-        printf("debug %d %d %d %d\n",info154.fcf.frame_type == FRAME802154_DATAFRAME,info154.fcf.ack_required != 0,linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
+        /* printf("debug %d %d %d %d\n",info154.fcf.frame_type == FRAME802154_DATAFRAME,info154.fcf.ack_required != 0,linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
                 &linkaddr_node_addr),linkaddr_cmp((linkaddr_t*)&info154.dest_addr,
-		&long_linkaddr_node_addr));
+		&long_linkaddr_node_addr)); */
 #if DUAL_RADIO
         if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
             info154.fcf.ack_required != 0 &&

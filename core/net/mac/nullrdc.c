@@ -126,16 +126,21 @@
 
 /* remaining energy JJH */
 #include "../lanada/param.h"
+#if RPL_ENERGY_MODE
 extern uint8_t remaining_energy;
+#endif
 /*---------------------------------------------------------------------------*/
 static int
 send_one_packet(mac_callback_t sent, void *ptr)
 {
   int ret;
   int last_sent_ok = 0;
+
+#if RPL_ENERGY_MODE
 	// JJH
   int original_datalen;
   uint8_t *original_dataptr;
+#endif
 
 	// fprintf(debugfp,"nullrdc/send_one_packet/sent : %x\n\n",sent);
 	// fflush(debugfp); 
@@ -170,6 +175,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
     dsn = ((uint8_t *)packetbuf_hdrptr())[2] & 0xff;
     NETSTACK_RADIO.prepare(packetbuf_hdrptr(), packetbuf_totlen());
 
+#if RPL_ENERGY_MODE
     /* Relaying Tx energy consumption for Data packet JJH */
     original_datalen = packetbuf_totlen();
     original_dataptr = packetbuf_hdrptr();
@@ -197,6 +203,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
     	if(remaining_energy == 1) // A node dies first
     		PRINTF("ENERGY DEPLETION\n");
     }
+#endif
     is_broadcast = packetbuf_holds_broadcast();
 
     if(NETSTACK_RADIO.receiving_packet() ||
@@ -410,10 +417,8 @@ packet_input(void)
  
 #if NULLRDC_SEND_802154_ACK
     {
+#if RPL_ENERGY_MODE
     	// JJH successful receiving data trace
-      //    	uint8_t seq_id1=original_dataptr[original_datalen-12];
-      //    	uint8_t seq_id2=original_dataptr[original_datalen-11];
-      //    	uint8_t seq_id3=original_dataptr[original_datalen-10];
     	uint8_t src_addr1=original_dataptr[original_datalen-4];
     	uint8_t src_addr2=original_dataptr[original_datalen-3];
     	uint8_t src_addr3=original_dataptr[original_datalen-2];
@@ -448,7 +453,7 @@ packet_input(void)
     				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
 #endif
     	}
-
+#endif
 			/* JOONKI
 			 * Is the retransmission comming from this part?? */
       frame802154_t info154;
