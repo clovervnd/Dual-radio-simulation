@@ -554,34 +554,40 @@ dio_input(void)
 #if RPL_LIFETIME_MAX_MODE
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
+  uip_ds6_addr_t *lladdr;
+  uip_ds6_addr_t *long_lladdr;
+
   PRINTF("before child cmp\n");
   c = rpl_find_child(&from);
   if(c != NULL)
   {
 	  PRINTF("after child cmp\n");
+	  //	  lladdr = uip_ds6_long_get_link_local(ADDR_TENTATIVE);
+	  //	  long_lladdr = uip_ds6_long_get_link_local(ADDR_TENTATIVE);
 	  PRINT6ADDR(&dio.parent_addr);
 	  PRINTF("\n");
-	  PRINT6ADDR(uip_ds6_long_get_link_local(ADDR_PREFERRED));
+	  //	  PRINTLLADDR(lladdr);
 	  PRINTF("\n");
-	  PRINT6ADDR(uip_ds6_get_link_local(ADDR_PREFERRED));
+	  //	  PRINTLLADDR(long_lladdr);
 	  PRINTF("\n");
-	  if(uip_ipaddr_cmp(&dio.parent_addr,uip_ds6_long_get_link_local(ADDR_PREFERRED)) ||
-			  uip_ipaddr_cmp(&dio.parent_addr,uip_ds6_get_link_local(ADDR_PREFERRED)))
-	  {
-		  PRINTF("it's me\n");
+	  
+	  //	  	  if(uip_ipaddr_cmp(&dio.parent_addr, lladdr) ||
+	  //	     uip_ipaddr_cmp(&dio.parent_addr, long_lladdr))
+	  //	  {
+	  //		  PRINTF("it's me\n");
 		  /* weight update */
-		  if(c->weight != dio.parent_weight)
-		  {
-			  my_weight -= c->weight;
-			  c->weight = dio.parent_weight;
-			  my_weight += c->weight;
-		  }
-	  }
-	  else
-	  {
-		  rpl_remove_child(c);
+	  //		  if(c->weight != dio.parent_weight)
+	  //		  {
+	  //			  my_weight -= c->weight;
+	  //			  c->weight = dio.parent_weight;
+	  //			  my_weight += c->weight;
+	  //		  }
+	  //	  }
+	  //	  else
+	  //	  {
+	  //		  rpl_remove_child(c);
 		  /* In my child list but I'm not the parent any more, so remove child */
-	  }
+	  //	  } 
   }
 
 #endif
@@ -857,15 +863,12 @@ dio_ack_input(void)
 
 	/* child info list add
 	   Compare it with previous info */
-  discard:
-	uip_clear_buf();
 }
 /*---------------------------------------------------------------------------*/
 void
 dio_ack_output(uip_ipaddr_t *dest)
 {
 	unsigned char *buffer;
-	uint8_t is_longrange = 0;
 	uip_ds6_nbr_t *nbr = NULL;
 	nbr = uip_ds6_nbr_lookup(dest);
 	/*JOONKI*/
@@ -880,10 +883,8 @@ dio_ack_output(uip_ipaddr_t *dest)
 		if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
 			if (ds6_lr_addrmap[i].lr == 1){
 				dual_radio_switch(LONG_RADIO);
-				is_longrange = 1;
 			}	else	{
 				dual_radio_switch(SHORT_RADIO);
-				is_longrange = 0;
 			}
 //			PRINTF("SUCCESS!!!\n");
 			break;
@@ -892,10 +893,8 @@ dio_ack_output(uip_ipaddr_t *dest)
 #else /* ADDR_MAP */
 	if (dest->u8[8] == 0x82)	{
 		dual_radio_switch(LONG_RADIO);
-		is_longrange = 1;
 	}	else	{
 		dual_radio_switch(SHORT_RADIO);
-		is_longrange = 0;
 	}
 #endif	/* ADDR_MAP */
 #endif /* DUAL_RADIO */
