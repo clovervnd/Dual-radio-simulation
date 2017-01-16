@@ -300,7 +300,9 @@ uip_ds6_nbr_t *rpl_get_nbr(rpl_parent_t *parent);
 uip_ds6_nbr_t *rpl_get_nbr_child(rpl_child_t *child);
 #endif
 void rpl_print_neighbor_list(void);
-
+#if RPL_LIFETIME_MAX_MODE
+void rpl_print_child_neighbor_list(void);
+#endif
 /* Per-parent RPL information */
 NBR_TABLE_DECLARE(rpl_parents);
 

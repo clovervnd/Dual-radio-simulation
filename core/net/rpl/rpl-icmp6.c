@@ -550,33 +550,61 @@ dio_input(void)
 #if RPL_LIFETIME_MAX_MODE
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
+  uint8_t is_longrange = radio_received_is_longrange();
 
-  PRINTF("before child cmp\n");
+  PRINTF("before child cmp %d\n",is_longrange);
   c = rpl_find_child(&from);
   if(c != NULL)
   {
 	  PRINTF("after child cmp\n");
 	  PRINT6ADDR(&dio.parent_addr);
 	  PRINTF("\n");
-	  
-	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
-		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
+	  if((is_longrange == LONG_RADIO
+			  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
+			  || (is_longrange == SHORT_RADIO
+					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))
+//	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
+//		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
 	    {
-	      PRINTF("it's me\n");
-	      // weight update
-	      if(c->weight != dio.parent_weight)
-		{
-		  my_weight -= c->weight;
-		  c->weight = dio.parent_weight;
-		  my_weight += c->weight;
-		  PRINTF("my_weight update in dio %d\n",my_weight);
-		}
+		  PRINTF("it's me\n");
+		  // weight update
+		  if(c->weight != dio.parent_weight)
+		  {
+			  my_weight -= c->weight;
+			  c->weight = dio.parent_weight;
+			  my_weight += c->weight;
+			  PRINTF("my_weight update in dio %d\n",my_weight);
+		  }
 	    }
 	  else
 	    {
+	      my_weight -= c->weight;
 	      rpl_remove_child(c);
+	      PRINTF("my_weight deduct in dio %d\n",my_weight);
+		  PRINTF("child list in dio input\n");
+		  rpl_print_child_neighbor_list();
 	      // In my child list but I'm not the parent any more, so remove child
 	    }
+  }
+  else
+  {
+	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
+		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
+	  {
+		  c = rpl_add_child(dio.parent_weight, &from);
+		  if(c == NULL)
+		  {
+			  PRINTF("fail to add child\n");
+		  }
+		  else
+		  {
+			  my_weight += c->weight;
+			  PRINTF("my_weight add child in dio %d\n",my_weight);
+		  }
+		  PRINTF("child list in dio input\n");
+		  rpl_print_child_neighbor_list();
+		  // Not included in child list but I'm the parent maybe due to the DIO_ACK loss
+	  }
   }
   
 #endif
@@ -839,6 +867,8 @@ dio_ack_input(void)
 			my_weight += c->weight;
 			PRINTF("my_weight in dio_ack %d\n",my_weight);
 		}
+		PRINTF("child list in dio_ack input\n");
+		rpl_print_child_neighbor_list();
 	}
 	else
 	{
@@ -895,7 +925,7 @@ dio_ack_output(uip_ipaddr_t *dest)
 	p = rpl_find_parent_any_dag(rpl_get_default_instance(),dest);
 	if(p != NULL)
 	{
-		PRINTF("p weight %d\n",p->parent_weight);
+		PRINTF("dio_ack p weight %d\n",p->parent_weight);
 		buffer[0] = p->parent_weight;
 	}
 	else

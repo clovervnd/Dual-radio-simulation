@@ -116,6 +116,31 @@ rpl_print_neighbor_list(void)
     printf("RPL: end of list\n");
   }
 }
+#if RPL_LIFETIME_MAX_MODE
+/*---------------------------------------------------------------------------*/
+void
+rpl_print_child_neighbor_list(void)
+{
+  if(default_instance != NULL && default_instance->current_dag != NULL &&
+      default_instance->of != NULL && default_instance->of->calculate_rank != NULL) {
+    rpl_child_t *c = nbr_table_head(rpl_children);
+
+    while(c != NULL) {
+      uip_ds6_nbr_t *nbr = rpl_get_nbr_child(c);
+//      printf("RPL: nbr %3u %5u, %5u => %5u %c%c (last tx %u min ago)\n",
+      	printf("RPL_child: nbr %3u\n",
+          nbr_table_get_lladdr(rpl_children, c)->u8[7]);
+//          p->rank, nbr ? nbr->link_metric : 0,
+//          default_instance->of->calculate_rank(p, 0),
+//          default_instance->current_dag == p->dag ? 'd' : ' ',
+//          p == default_instance->current_dag->preferred_parent ? '*' : ' ',
+//          (unsigned)((now - p->last_tx_time) / (60 * CLOCK_SECOND)));
+      c = nbr_table_next(rpl_children, c);
+    }
+    printf("RPL: end of list\n");
+  }
+}
+#endif
 /*---------------------------------------------------------------------------*/
 uip_ds6_nbr_t *
 rpl_get_nbr(rpl_parent_t *parent)
