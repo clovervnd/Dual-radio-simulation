@@ -70,10 +70,6 @@
 #include "../platform/zoul/dual_radio.h"
 #endif /* ZOLERTIA_Z1 */
 #endif /* DUAL_RADIO */
-<<<<<<< HEAD
-
-=======
->>>>>>> 73b7ba1c30f38daa0c65196e492f1ca476bbee2b
 
 struct etimer uip_ds6_timer_periodic;                           /**< Timer for maintenance of data structures */
 
