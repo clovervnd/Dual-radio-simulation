@@ -3,7 +3,7 @@ CONTIKI=../
 
 CFLAGS += -DPROJECT_CONF_H=\"project-conf.h\"
 
-TARGET_MEMORY_MODEL = large
+#TARGET_MEMORY_MODEL = large
 #CFLAGS += -mcode-region=any -mdata-region=any
 
 #CFLAGS += -mmemory-model=medium \

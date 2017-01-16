@@ -104,9 +104,11 @@ typedef unsigned long off_t;
 /* In case of using dual radio driver */
 #define NETSTACK_DUAL_RADIO			1
 #define DUAL_RADIO	1
+
+#if DUAL_RADIO
 struct radio_driver NETSTACK_CONF_RADIO;
 struct radio_driver NETSTACK_RADIO;
-
+#endif
 
 
 /*

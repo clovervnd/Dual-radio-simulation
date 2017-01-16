@@ -85,6 +85,7 @@
 #else
 #define PUTS(s)
 #endif
+
 /*---------------------------------------------------------------------------*/
 /** \brief Board specific iniatialisation */
 void board_init(void);

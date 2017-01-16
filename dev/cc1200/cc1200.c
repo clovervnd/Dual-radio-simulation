@@ -52,6 +52,7 @@
 #else	/* ZOLERTIA_Z1 */
 #include	"../platform/cooja/dual_conf.h"
 #endif /* ZOLERTIA_Z1 */
+//#include "../platform/zoul/dual_radio.h"
 #endif /* DUAL_RADIO */
 
 /*---------------------------------------------------------------------------*/
@@ -1753,10 +1754,13 @@ idle(void)
 
   TX_LEDS_OFF();
   RX_LEDS_OFF();
-
+#if DUAL_RADIO
+  ENERGEST_OFF(ENERGEST_TYPE_LISTEN_LR);
+  ENERGEST_OFF(ENERGEST_TYPE_TRANSMIT_LR);
+#else
   ENERGEST_OFF(ENERGEST_TYPE_LISTEN);
   ENERGEST_OFF(ENERGEST_TYPE_TRANSMIT);
-
+#endif
   s = state();
 
   if(s == STATE_IDLE) {
@@ -1791,9 +1795,11 @@ idle_calibrate_rx(void)
   BUSYWAIT_UNTIL_STATE(STATE_RX, RTIMER_SECOND / 100);
 	ERROR("Busywait: idle_calibrate_rx 4\n");
   ENABLE_GPIO_INTERRUPTS();
-
+#if DUAL_RADIO
+  ENERGEST_ON(ENERGEST_TYPE_LISTEN_LR);
+#else
   ENERGEST_ON(ENERGEST_TYPE_LISTEN);
-
+#endif
 }
 /*---------------------------------------------------------------------------*/
 /* Restart RX from within RX interrupt. */
@@ -1933,7 +1939,11 @@ idle_tx_rx(const uint8_t *payload, uint16_t payload_len)
   TX_LEDS_ON();
 
   /* Turned off at the latest in idle() */
-  ENERGEST_ON(ENERGEST_TYPE_TRANSMIT);
+#if DUAL_RADIO 
+ ENERGEST_ON(ENERGEST_TYPE_TRANSMIT_LR);
+#else
+ ENERGEST_ON(ENERGEST_TYPE_TRANSMIT);
+#endif
 
   if((cc1200_arch_gpio0_read_pin() == 0) &&
      (single_read(CC1200_NUM_TXBYTES) != 0)) {
@@ -2039,9 +2049,13 @@ idle_tx_rx(const uint8_t *payload, uint16_t payload_len)
 
   TX_LEDS_OFF();
 
+#if DUAL_RADIO
+  ENERGEST_OFF(ENERGEST_TYPE_TRANSMIT_LR);
+  ENERGEST_ON(ENERGEST_TYPE_LISTEN_LR);
+#else
   ENERGEST_OFF(ENERGEST_TYPE_TRANSMIT);
   ENERGEST_ON(ENERGEST_TYPE_LISTEN);
-
+#endif
   return RADIO_TX_OK;
 
 }

@@ -111,11 +111,14 @@
 
 #if DUAL_RADIO
 #ifdef ZOLERTIA_Z1
-#include "../platform/z1/dual_radio.h"
-#else
-#include "../platform/cooja/dual_conf.h"
-#endif
-#endif
+#include	"../platform/z1/dual_radio.h"
+#elif COOJA /* ZOLERTIA_Z1 */
+#include	"../platform/cooja/dual_conf.h"
+#else /* ZOLERTIA_Z1 */
+#include "../platform/zoul/dual_radio.h"
+#endif /* ZOLERTIA_Z1 */
+#endif /* DUAL_RADIO */
+
 
 /* JOONKI */
 //extern FILE *debugfp;

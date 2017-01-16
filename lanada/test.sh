@@ -1,3 +1,3 @@
 #!/bin/bash
-make clean
-make udp-client
+make clean TARGET=zoul BOARD=firefly
+make udp-client TARGET=zoul BOARD=firefly

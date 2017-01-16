@@ -48,7 +48,11 @@
 //#define NETSTACK_CONF_RDC     contikimac_driver
 #define NETSTACK_CONF_RDC     nullrdc_driver
 // #define NETSTACK_CONF_RDC     cxmac_driver
-// #define NETSTACK_CONF_RADIO   cc2420_driver
+
+#if DUAL_RADIO == 0
+#define NETSTACK_CONF_RADIO   cc2420_driver
+#endif
+
 #define NETSTACK_CONF_FRAMER  framer_802154
 // #define NETSTACK_CONF_FRAMER  contikimac_framer
 
