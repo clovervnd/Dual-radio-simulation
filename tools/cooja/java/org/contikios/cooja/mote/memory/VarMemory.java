@@ -274,7 +274,9 @@ public class VarMemory extends Memory {
    * @param varName Variable name
    * @param value 32 bit integer value to write
    */
-  public void setInt32ValueOf(String varName, byte value)
+
+  /* BUGFIX */
+  public void setInt32ValueOf(String varName, int value)
           throws UnknownVariableException {
     setInt32ValueOf(getVariable(varName).addr, value);
   }
@@ -285,7 +287,8 @@ public class VarMemory extends Memory {
    * @param varName Variable name
    * @param value 64 bit integer value to write
    */
-  public void setInt64ValueOf(String varName, byte value)
+  /* BUGFIX */
+  public void setInt64ValueOf(String varName, long value)
           throws UnknownVariableException {
     setInt64ValueOf(getVariable(varName).addr, value);
   }

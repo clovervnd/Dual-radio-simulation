@@ -108,6 +108,9 @@ public class Simulation extends Observable implements Runnable {
   private ArrayDeque<Runnable> pollRequests = new ArrayDeque<Runnable>();
 
 
+  /* HJ */
+  public MotePowerInfo motepowerinfo = new MotePowerInfo();
+
   /**
    * Request poll from simulation thread.
    * Poll requests are prioritized over simulation events, and are

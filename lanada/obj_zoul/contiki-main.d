@@ -30,6 +30,9 @@ obj_zoul/contiki-main.o: ..//platform/zoul/./contiki-main.c \
  ..//core/./net/mac/framer.h ..//core/./net/queuebuf.h \
  ..//core/./net/packetbuf.h ..//core/./net/mac/tsch/tsch-conf.h \
  ..//cpu/cc2538/./cpu.h ..//cpu/cc2538/./ieee-addr.h \
+<<<<<<< HEAD
+ ..//cpu/cc2538/./lpm.h ..//core/sys/rtimer.h
+=======
  ..//cpu/cc2538/./lpm.h ..//core/sys/rtimer.h \
  ..//platform/zoul/./dual_radio.h ..//platform/zoul/./contiki-conf.h \
  ..//dev/cc1200/cc1200.h ..//core/./net/rime/rimestats.h \
@@ -45,6 +48,7 @@ obj_zoul/contiki-main.o: ..//platform/zoul/./contiki-main.c \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h
+>>>>>>> 73b7ba1c30f38daa0c65196e492f1ca476bbee2b
 ..//platform/zoul/./contiki-main.c :
  ..//core/./contiki.h ..//core/./contiki-version.h :
  ..//platform/zoul/./contiki-conf.h ..//core/./dev/radio.h project-conf.h :
@@ -78,6 +82,8 @@ obj_zoul/contiki-main.o: ..//platform/zoul/./contiki-main.c \
  ..//core/./net/packetbuf.h ..//core/./net/mac/tsch/tsch-conf.h :
  ..//cpu/cc2538/./cpu.h ..//cpu/cc2538/./ieee-addr.h :
  ..//cpu/cc2538/./lpm.h ..//core/sys/rtimer.h :
+<<<<<<< HEAD
+=======
  ..//platform/zoul/./dual_radio.h ..//platform/zoul/./contiki-conf.h :
  ..//dev/cc1200/cc1200.h ..//core/./net/rime/rimestats.h :
  ../cpu/cc2538/dev/cc2538-rf.h ..//core/./net/rpl/rpl-private.h :
@@ -92,3 +98,4 @@ obj_zoul/contiki-main.o: ..//platform/zoul/./contiki-main.c \
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
+>>>>>>> 73b7ba1c30f38daa0c65196e492f1ca476bbee2b

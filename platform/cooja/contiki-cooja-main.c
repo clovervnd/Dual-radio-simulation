@@ -583,3 +583,8 @@ Java_org_contikios_cooja_corecomm_CLASSNAME_setReferenceAddress(JNIEnv *env, job
 {
   referenceVar = (((long)&referenceVar) - ((long)addr));
 }
+
+
+/* HJ : residual energy measuring */ 
+#include "residual.h"
+

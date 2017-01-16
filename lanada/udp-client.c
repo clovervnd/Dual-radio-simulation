@@ -63,6 +63,9 @@
 #define MAX_PAYLOAD_LEN		30
 
 #include "param.h"
+
+#include "core/sys/residual.h"
+
 /* Remaining energy init JJH*/
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy = INITIAL_ENERGY;
@@ -122,6 +125,7 @@ send_packet(void *ptr)
   sprintf(buf,"DATA id:%03d from:%03dX",seq_id,myaddr);
   uip_udp_packet_sendto(client_conn, buf, strlen(buf),
                         &server_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
+	PRINTF("Residual Energy = %d\n", get_residual_energy());
 }
 /*---------------------------------------------------------------------------*/
 static void

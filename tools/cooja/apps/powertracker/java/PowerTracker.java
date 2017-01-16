@@ -97,6 +97,10 @@ public class PowerTracker extends VisPlugin {
     logger.warn("PowerTracker Started");
     this.simulation = simulation;
 
+    /* HJ */
+    /* add PowerTracker Instance to Simulator */
+
+
     /* Automatically add/delete motes */
     simulation.getEventCentral().addMoteCountListener(moteCountListener = new MoteCountListener() {
       public void moteWasAdded(Mote mote) {
@@ -469,6 +473,10 @@ public class PowerTracker extends VisPlugin {
         radioWasOnLong = radioLong.isRadioOn();
       }
       lastUpdateTime = now;
+
+      /* HJ */
+      simulation.motepowerinfo.updateMotePowerEntry(getMote().getID(), radioOn, radioTx, radioRx, radioOnLong, radioTxLong, radioRxLong, duration);
+
     }
 
     protected void accumulateDuration(long t) {
