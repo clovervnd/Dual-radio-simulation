@@ -49,7 +49,7 @@ obj_cooja/tcpip.o: ..//core/net/ip/tcpip.c ..//core/./contiki-net.h \
  ..//core/./net/rime/trickle.h ..//core/./net/netstack.h \
  ..//core/./net/ip/uip-split.h ../platform/cooja/dual_conf.h \
  ../platform/cooja/dev/cooja-radio.h ..//core/./net/rpl/rpl-private.h \
- ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h \
+ ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h ../lanada/param.h \
  ..//core/./net/ipv6/multicast/uip-mcast6.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-engines.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
@@ -109,7 +109,7 @@ obj_cooja/tcpip.o: ..//core/net/ip/tcpip.c ..//core/./contiki-net.h \
  ..//core/./net/rime/trickle.h ..//core/./net/netstack.h :
  ..//core/./net/ip/uip-split.h ../platform/cooja/dual_conf.h :
  ../platform/cooja/dev/cooja-radio.h ..//core/./net/rpl/rpl-private.h :
- ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h :
+ ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h ../lanada/param.h :
  ..//core/./net/ipv6/multicast/uip-mcast6.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-engines.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :

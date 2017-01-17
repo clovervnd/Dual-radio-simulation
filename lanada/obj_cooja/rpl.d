@@ -21,7 +21,8 @@ obj_cooja/rpl.o: ..//core/net/rpl/rpl.c ..//core/./net/ip/uip.h \
  ..//core/./net/ipv6/uip-ds6-nbr.h ..//core/./net/ip/uip-packetqueue.h \
  ..//core/./sys/ctimer.h ..//core/./net/ipv6/uip-icmp6.h \
  ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h \
- ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/multicast/uip-mcast6.h \
+ ..//core/./net/rpl/rpl-conf.h ../lanada/param.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-engines.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
@@ -51,7 +52,8 @@ obj_cooja/rpl.o: ..//core/net/rpl/rpl.c ..//core/./net/ip/uip.h \
  ..//core/./net/ipv6/uip-ds6-nbr.h ..//core/./net/ip/uip-packetqueue.h :
  ..//core/./sys/ctimer.h ..//core/./net/ipv6/uip-icmp6.h :
  ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
- ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/multicast/uip-mcast6.h :
+ ..//core/./net/rpl/rpl-conf.h ../lanada/param.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-engines.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :

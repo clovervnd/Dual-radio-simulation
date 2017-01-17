@@ -23,7 +23,7 @@ obj_cooja/nbr-table.o: ..//core/net/nbr-table.c ..//core/./contiki.h \
  ..//core/./sys/stimer.h ..//core/./net/ipv6/uip-nd6.h \
  ..//core/./net/ipv6/uip-ds6-route.h ..//core/./net/ipv6/uip-ds6-nbr.h \
  ..//core/./net/ip/uip-packetqueue.h ..//core/./sys/ctimer.h \
- ..//core/./net/ipv6/multicast/uip-mcast6.h \
+ ../lanada/param.h ..//core/./net/ipv6/multicast/uip-mcast6.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-engines.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
@@ -54,7 +54,7 @@ obj_cooja/nbr-table.o: ..//core/net/nbr-table.c ..//core/./contiki.h \
  ..//core/./sys/stimer.h ..//core/./net/ipv6/uip-nd6.h :
  ..//core/./net/ipv6/uip-ds6-route.h ..//core/./net/ipv6/uip-ds6-nbr.h :
  ..//core/./net/ip/uip-packetqueue.h ..//core/./sys/ctimer.h :
- ..//core/./net/ipv6/multicast/uip-mcast6.h :
+ ../lanada/param.h ..//core/./net/ipv6/multicast/uip-mcast6.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-engines.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :

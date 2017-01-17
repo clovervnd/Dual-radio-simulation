@@ -45,7 +45,7 @@
 #include "sys/ctimer.h"
 #include "net/ipv6/uip-ds6.h"
 #include "net/ipv6/multicast/uip-mcast6.h"
-
+#include "../lanada/param.h" //JJH
 /*---------------------------------------------------------------------------*/
 /** \brief Is IPv6 address addr the link-local, all-RPL-nodes
     multicast address? */
@@ -71,6 +71,9 @@
 #define RPL_CODE_DIO                   0x01   /* DAG Information Option */
 #define RPL_CODE_DAO                   0x02   /* Destination Advertisement Option */
 #define RPL_CODE_DAO_ACK               0x03   /* DAO acknowledgment */
+#if RPL_LIFETIME_MAX_MODE
+#define RPL_CODE_DIO_ACK               0x04   /* DIO acknowledgment */
+#endif
 #define RPL_CODE_SEC_DIS               0x80   /* Secure DIS */
 #define RPL_CODE_SEC_DIO               0x81   /* Secure DIO */
 #define RPL_CODE_SEC_DAO               0x82   /* Secure DAO */
@@ -249,7 +252,13 @@ struct rpl_dio {
   rpl_prefix_t destination_prefix;
   rpl_prefix_t prefix_info;
   struct rpl_metric_container mc;
+#if RPL_ENERGY_MODE
   uint8_t rem_energy; //dio remaining energy JJH
+#elif RPL_LIFETIME_MAX_MODE
+  uip_ipaddr_t parent_addr;
+  uint8_t parent_weight; /* dio parent's weight info. JJH */
+  uint8_t dio_weight; /* dio sender's total weight JJH */
+#endif
 };
 typedef struct rpl_dio rpl_dio_t;
 
@@ -291,6 +300,9 @@ void dio_output(rpl_instance_t *, uip_ipaddr_t *uc_addr);
 void dao_output(rpl_parent_t *, uint8_t lifetime);
 void dao_output_target(rpl_parent_t *, uip_ipaddr_t *, uint8_t lifetime);
 void dao_ack_output(rpl_instance_t *, uip_ipaddr_t *, uint8_t, uint8_t);
+#if RPL_LIFETIME_MAX_MODE
+void dio_ack_output(uip_ipaddr_t *dest);
+#endif
 void rpl_icmp6_register_handlers(void);
 uip_ds6_nbr_t *rpl_icmp6_update_nbr_table(uip_ipaddr_t *from,
                                           nbr_table_reason_t r, void *data);
@@ -313,8 +325,15 @@ void rpl_purge_dags(void);
 rpl_parent_t *rpl_add_parent(rpl_dag_t *, rpl_dio_t *dio, uip_ipaddr_t *);
 rpl_parent_t *rpl_find_parent(rpl_dag_t *, uip_ipaddr_t *);
 rpl_parent_t *rpl_find_parent_any_dag(rpl_instance_t *instance, uip_ipaddr_t *addr);
+#if RPL_LIFETIME_MAX_MODE
+rpl_child_t *rpl_add_child(uint8_t weight, uip_ipaddr_t *);
+rpl_child_t *rpl_find_child(uip_ipaddr_t *);
+#endif
 void rpl_nullify_parent(rpl_parent_t *);
 void rpl_remove_parent(rpl_parent_t *);
+#if RPL_LIFETIME_MAX_MODE
+void rpl_remove_child(rpl_child_t *);
+#endif
 void rpl_move_parent(rpl_dag_t *dag_src, rpl_dag_t *dag_dst, rpl_parent_t *parent);
 rpl_parent_t *rpl_select_parent(rpl_dag_t *dag);
 rpl_dag_t *rpl_select_dag(rpl_instance_t *instance,rpl_parent_t *parent);

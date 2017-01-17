@@ -52,10 +52,12 @@
 
 #include "param.h"
 /* Remaining energy init JJH*/
-// uint8_t remaining_energy = INITIAL_ENERGY;
-// uint8_t alpha = ALPHA;
+#if RPL_ENERGY_MODE
 uint8_t remaining_energy = INITIAL_ENERGY;
 uint8_t alpha = ALPHA;
+#elif RPL_LIFETIME_MAX_MODE
+uint8_t my_weight = 0;
+#endif
 
 static struct uip_udp_conn *server_conn;
 
