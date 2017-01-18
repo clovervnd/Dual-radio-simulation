@@ -121,7 +121,8 @@ struct rpl_parent {
   uint8_t rem_energy; // JJH
 #endif
 #if RPL_LIFETIME_MAX_MODE
-  uint8_t parent_weight; /* The parent's sum of chilren's weight  JJH */
+  uint8_t parent_weight; /* The parent's weight */
+  uint8_t parent_sum_weight; /* The parent's sum of chilren's weight  JJH */
 #endif
 };
 typedef struct rpl_parent rpl_parent_t;

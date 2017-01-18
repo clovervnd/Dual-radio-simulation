@@ -1614,9 +1614,12 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     uip_ds6_defrt_add(from, RPL_DEFAULT_ROUTE_INFINITE_LIFETIME ? 0 : RPL_LIFETIME(instance, instance->default_lifetime));
   }
   p->dtsn = dio->dtsn;
-#if RPL_ENERGY_MODE
+#if RPL_LIFETIME_MAX_MODE
+  p->parent_sum_weight = dio->dio_weight;
+#elif RPL_ENERGY_MODE
   p->rem_energy = dio->rem_energy; // Copy rem_energy to parent JJH
 #endif
+
 }
 /*---------------------------------------------------------------------------*/
 /** @} */

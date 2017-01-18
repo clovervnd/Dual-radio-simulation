@@ -50,7 +50,7 @@
 #include "net/nbr-table.h"
 
 #include "rpl_debug.h"
-#define DEBUG DEBUG_RPL_JKOF
+#define DEBUG DEBUG_RPL_LTMAX_OF
 #include "net/ip/uip-debug.h"
 
 /* JOONKI */
@@ -65,10 +65,6 @@
 #endif /* DUAL_RADIO */
 /* JJH */
 #include "../lanada/param.h"
-#if RPL_ENERGY_MODE
-extern uint8_t remaining_energy; // My remaining_energy
-extern uint8_t alpha;
-#endif
 
 static void reset(rpl_dag_t *);
 static void neighbor_link_callback(rpl_parent_t *, int, int);
@@ -80,7 +76,7 @@ static rpl_dag_t *best_dag(rpl_dag_t *, rpl_dag_t *);
 static rpl_rank_t calculate_rank(rpl_parent_t *, rpl_rank_t);
 static void update_metric_container(rpl_instance_t *);
 
-rpl_of_t rpl_jkof = {
+rpl_of_t rpl_ltmax_of = {
   reset,
   neighbor_link_callback,
 #if RPL_WITH_DAO_ACK
@@ -125,22 +121,10 @@ calculate_path_metric(rpl_parent_t *p)
   }
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
   {
-	  // JOONKI
-//	  PRINTF("jkof: %c id:%d %d\n",nbr->ipaddr.u8[8]==0x82?'L':'S',nbr->ipaddr.u8[15],p->rank + (uint16_t)nbr->link_metric);
-		/* metric update using remaining_energy JJH */
-#if RPL_ENERGY_MODE
-	  if(p->rem_energy != 0)
-	  {
-//		  PRINTF("test: %d\n",(INITIAL_ENERGY/(p->rem_energy)) * alpha);
-		  ret_metric = p->rank +  (uint16_t)nbr->link_metric * (INITIAL_ENERGY/(p->rem_energy)) * alpha;
-	  }
-	  else
-		  ret_metric = p->rank + (uint16_t)nbr->link_metric;
-#else
-	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
-#endif
-	  //    PRINTF("ret_metric:%d\n",ret_metric);
-    return ret_metric;
+//	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
+	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
+	  PRINTF("ret_metric:%d\n",ret_metric);
+	  return ret_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
   return p->mc.obj.etx + (uint16_t)nbr->link_metric;
@@ -154,7 +138,7 @@ calculate_path_metric(rpl_parent_t *p)
 static void
 reset(rpl_dag_t *dag)
 {
-  PRINTF("RPL_JKOF: Reset MRHOF\n");
+  PRINTF("RPL_LTMAX_OF: Reset MRHOF\n");
 }
 
 #if RPL_WITH_DAO_ACK
@@ -165,7 +149,7 @@ dao_ack_callback(rpl_parent_t *p, int status)
     return;
   }
   /* here we need to handle failed DAO's and other stuff */
-  PRINTF("RPL_JKOF: JKOF - DAO ACK received with status: %d\n", status);
+  PRINTF("RPL_LTMAX_OF: LTMAX_OF - DAO ACK received with status: %d\n", status);
   if(status >= RPL_DAO_ACK_UNABLE_TO_ACCEPT) {
     /* punish the ETX as if this was 10 packets lost */
     neighbor_link_callback(p, MAC_TX_OK, 10);
@@ -197,24 +181,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
   if(status == MAC_TX_OK || status == MAC_TX_NOACK) {
     if(status == MAC_TX_NOACK) {
         packet_ett = MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-//      packet_ett = 5 * RPL_DAG_MC_ETX_DIVISOR;
     }
-#if RPL_ENERGY_MODE
-#if DUAL_RADIO
-		/* Bit rate of CC1200 is 50kbps, bit rate of CC2420 is 250kbps */
-		/* Transmission range of CC1200 is 700 m, transmission range of CC2420 is 100m */
-    	/* packet_ett should be smaller than MAX_LINK_METRIC */
-		PRINTF("CALCULATING THE ETT\n");
-		if (radio_received_is_longrange() == LONG_RADIO){
-			if(packet_ett*LONG_ETX_PENALTY < MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR){
-				packet_ett = packet_ett * LONG_ETX_PENALTY;
-			}	else {
-				packet_ett = MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-			}
-		}
-		PRINTF("PACKET_ETT is %d\n",packet_ett);
-#endif
-#endif
     if(p->flags & RPL_PARENT_FLAG_LINK_METRIC_VALID) {
       /* We already have a valid link metric, use weighted moving average to update it */
       new_ett = ((uint32_t)recorded_ett * ETX_ALPHA +
@@ -226,13 +193,33 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
       p->flags |= RPL_PARENT_FLAG_LINK_METRIC_VALID;
     }
 
-    PRINTF("RPL_JKOF: ETT changed from %u to %u (packet ETT = %u)\n",
+    PRINTF("RPL_LTMAX_OF: ETT changed from %u to %u (packet ETT = %u)\n",
         (unsigned)(recorded_ett / RPL_DAG_MC_ETX_DIVISOR),
         (unsigned)(new_ett  / RPL_DAG_MC_ETX_DIVISOR),
         (unsigned)(packet_ett / RPL_DAG_MC_ETX_DIVISOR));
     /* update the link metric for this nbr */
     nbr->link_metric = new_ett;
+	PRINTF("LTMAX_OF link_metric %d\n",nbr->link_metric);
+#if RPL_LIFETIME_MAX_MODE
+    if(radio_received_is_longrange() == LONG_RADIO)
+    {
+    	is_longrange = 1;
+    }
+    else
+    {
+    	is_longrange = 0;
+    }
+	if(nbr->link_metric == 0)
+	{
+		p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
+	}
+	else
+	{
+		p->parent_weight = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_RX_COST : SHORT_RX_COST); // Tx cost using DIO_ACK
+	}
+	PRINTF("LTMAX_OF %d parent_weight %d\n",is_longrange,p->parent_weight);
   }
+#endif
 }
 
 static rpl_rank_t
@@ -248,15 +235,7 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
     }
     rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
   } else {
-	/* Rank update using remaining_energy JJH */
-#if RPL_ENERGY_MODE
-    if(p->rem_energy != 0)
-    	rank_increase = nbr->link_metric * (INITIAL_ENERGY/(p->rem_energy)) * alpha;
-    else
-    	rank_increase = nbr->link_metric;
-#else
     rank_increase = nbr->link_metric;
-#endif
     if(base_rank == 0) {
       base_rank = p->rank;
     }
@@ -273,10 +252,10 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
     new_rank = base_rank + rank_increase;
   }
  	/* JOONKI */
-	PRINTF("RPL_JKOF: rank calculation with parent");
+	PRINTF("RPL_LTMAX_OF: rank calculation with parent");
 	PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
 	PRINTF("\n");
-	PRINTF("RPL_JKOF: My new_rank is %d\n",new_rank);
+	PRINTF("RPL_LTMAX_OF: My new_rank is %d\n",new_rank);
 	
   return new_rank;
 }
@@ -298,7 +277,7 @@ best_dag(rpl_dag_t *d1, rpl_dag_t *d2)
 static rpl_parent_t *
 best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 {
-  PRINTF("RPL_JKOF: Best parent\n");
+  PRINTF("RPL_LTMAX_OF: Best parent\n");
   rpl_dag_t *dag;
   rpl_path_metric_t min_diff;
   rpl_path_metric_t p1_metric;
@@ -312,15 +291,40 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
 
-  /* Maintain stability of the preferred parent in case of similar ranks. */
+  /* Maintain stability of the preferred parent in case of similar weight. */
   if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-    if(p1_metric < p2_metric + min_diff &&
-       p1_metric > p2_metric - min_diff) {
-      PRINTF("RPL_JKOF: JKOF hysteresis: %u <= %u <= %u\n",
-             p2_metric - min_diff,
-             p1_metric,
-             p2_metric + min_diff);
-      return dag->preferred_parent;
+	  /* When weight is 0, choose it as a parent */
+	  if(p1_metric == 0 || p2_metric == 0)
+	  {
+		  /* If both parent has 0 weight, choose smaller rank one*/
+		  if(!p1_metric && !p2_metric)
+		  {
+			  return p1->rank < p2->rank ? p1 : p2;
+		  }
+		  else
+		  {
+			  return !p1_metric ? p1 : p2;
+		  }
+	  }
+//	  else if(p1_metric < p2_metric + min_diff &&
+//       p1_metric > p2_metric - min_diff) {
+	  else if(p1_metric == p2_metric) {
+//      PRINTF("RPL_LTMAX_OF: LTMAX_OF hysteresis: %u <= %u <= %u\n",
+//             p2_metric - min_diff,
+//             p1_metric,
+//             p2_metric + min_diff);
+      /* When they have similar weight, choose smaller rank parent */
+      /* Maintain stability when rank is also in case of similarity */
+//      if(p1->rank < p2->rank + min_diff &&
+//    		  p1->rank > p2->rank -min_diff)
+//      {
+//    	  return dag->preferred_parent;
+//      }
+//      else
+//      {
+    	  return p1->rank < p2->rank ? p1 : p2;
+//      }
+
     }
   }
 
@@ -351,7 +355,7 @@ update_metric_container(rpl_instance_t *instance)
   dag = instance->current_dag;
 
   if (!dag->joined) {
-    PRINTF("RPL_JKOF: Cannot update the metric container when not joined\n");
+    PRINTF("RPL_LTMAX_OF: Cannot update the metric container when not joined\n");
     return;
   }
 
@@ -365,7 +369,7 @@ update_metric_container(rpl_instance_t *instance)
   instance->mc.length = sizeof(instance->mc.obj.etx);
   instance->mc.obj.etx = path_metric;
 
-  PRINTF("RPL_JKOF: My path ETX to the root is %u.%u\n",
+  PRINTF("RPL_LTMAX_OF: My path ETX to the root is %u.%u\n",
 	instance->mc.obj.etx / RPL_DAG_MC_ETX_DIVISOR,
 	(instance->mc.obj.etx % RPL_DAG_MC_ETX_DIVISOR * 100) /
 	 RPL_DAG_MC_ETX_DIVISOR);
