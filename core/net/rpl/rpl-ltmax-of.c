@@ -297,21 +297,21 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  if(p1_metric == 0 || p2_metric == 0)
 	  {
 		  /* If both parent has 0 weight, choose smaller rank one*/
-		  if(!p1_metric && !p2_metric)
+/*		  if(p1_metric == 0 && p2_metric == 0)
 		  {
 			  return p1->rank < p2->rank ? p1 : p2;
+		  }*/
+		  if(p1_metric == 0 && p2_metric == 0)
+		  {
+			  if(p1->rank == p2->rank)
+			  {
+				  return dag->preferred_parent;
+			  }
+			  else
+			  {
+				  return p1->rank < p2->rank ? p1 : p2;
+			  }
 		  }
-		  /*	  if(!p1_metric && !p2_metric)
-		  	  {
-		  		  if(p1->rank == p2->rank)
-		  		  {
-		  			  return dag->preferred_parent;
-		  		  }
-		  		  else
-		  		  {
-		  			  return p1->rank < p2->rank ? p1 : p2;
-		  		  }
-		  	  }*/
 		  else
 		  {
 			  return !p1_metric ? p1 : p2;
@@ -341,7 +341,18 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
     }
   }
 
-  return p1_metric < p2_metric ? p1 : p2;
+  if(p1_metric == 0 || p2_metric == 0)
+  {
+	  /* If both parent has 0 weight, choose smaller rank one*/
+	  if(p1_metric == 0 && p2_metric == 0)
+	  {
+		  return p1->rank < p2->rank ? p1 : p2;
+	  }
+	  else
+	  {
+		  return !p1_metric ? p1 : p2;
+	  }
+  }
 }
 
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
