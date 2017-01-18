@@ -497,13 +497,19 @@ public class Simulation extends Observable implements Runnable {
     element = new Element("radiomedium");
     element.setText(currentRadioMedium.getClass().getName());
 
-    Collection<Element> radioMediumXML = currentRadioMedium.getConfigXML();
-    if (radioMediumXML != null) {
-      element.addContent(radioMediumXML);
-    }
-    config.add(element);
+		Collection<Element> radioMediumXML = currentRadioMedium.getConfigXML();
+		if (radioMediumXML != null) {
+			element.addContent(radioMediumXML);
+		}
+		if(currentRadioMedium_LR!=null){
+			Collection<Element> radioMediumXML_lr = currentRadioMedium_LR.getConfigXML();
+			if (radioMediumXML_lr != null) {
+				element.addContent(radioMediumXML_lr);
+			}
+		}
+		config.add(element);
 
-    /* Event central */
+		/* Event central */
     element = new Element("events");
     element.addContent(eventCentral.getConfigXML());
     config.add(element);
@@ -648,6 +654,15 @@ public class Simulation extends Observable implements Runnable {
         } else {
           logger.info("Radio Medium changed - ignoring radio medium specific config");
         }
+
+				// Check if radio medium specific config should be applied for LR
+        if(currentRadioMedium_LR != null){
+					if (radioMediumClassName.equals(currentRadioMedium_LR.getClass().getName())) {
+						currentRadioMedium_LR.setConfigXML(element.getChildren(), visAvailable);
+					} else {
+					logger.info("Radio Medium changed(LR) - ignoring radio medium specific config");
+					}
+				}
       }
 
       /* Event central */

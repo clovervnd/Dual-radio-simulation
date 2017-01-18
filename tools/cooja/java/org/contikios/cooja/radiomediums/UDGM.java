@@ -358,29 +358,51 @@ public class UDGM extends AbstractRadioMedium {
 
   public Collection<Element> getConfigXML() {
     Collection<Element> config = super.getConfigXML();
-    Element element;
+		Element element;
+		if (isForLongRange){
+			/* Transmitting range */
+			element = new Element("transmitting_range_lr");
+			element.setText(Double.toString(TRANSMITTING_RANGE));
+			config.add(element);
 
-    /* Transmitting range */
-    element = new Element("transmitting_range");
-    element.setText(Double.toString(TRANSMITTING_RANGE));
-    config.add(element);
+			/* Interference range */
+			element = new Element("interference_range_lr");
+			element.setText(Double.toString(INTERFERENCE_RANGE));
+			config.add(element);
 
-    /* Interference range */
-    element = new Element("interference_range");
-    element.setText(Double.toString(INTERFERENCE_RANGE));
-    config.add(element);
 
-    /* Transmission success probability */
-    element = new Element("success_ratio_tx");
-    element.setText("" + SUCCESS_RATIO_TX);
-    config.add(element);
+			/* Transmission success probability */
+			element = new Element("success_ratio_tx_lr");
+			element.setText("" + SUCCESS_RATIO_TX);
+			config.add(element);
 
-    /* Reception success probability */
-    element = new Element("success_ratio_rx");
-    element.setText("" + SUCCESS_RATIO_RX);
-    config.add(element);
+			/* Reception success probability */
+			element = new Element("success_ratio_rx_lr");
+			element.setText("" + SUCCESS_RATIO_RX);
+			config.add(element);
+		} else {
+			/* Transmitting range */
+			element = new Element("transmitting_range");
+			element.setText(Double.toString(TRANSMITTING_RANGE));
+			config.add(element);
 
-    return config;
+			/* Interference range */
+			element = new Element("interference_range");
+			element.setText(Double.toString(INTERFERENCE_RANGE));
+			config.add(element);
+
+			/* Transmission success probability */
+			element = new Element("success_ratio_tx");
+			element.setText("" + SUCCESS_RATIO_TX);
+			config.add(element);
+
+			/* Reception success probability */
+			element = new Element("success_ratio_rx");
+			element.setText("" + SUCCESS_RATIO_RX);
+			config.add(element);
+		}
+
+		return config;
   }
 
   public boolean setConfigXML(Collection<Element> configXML, boolean visAvailable) {
@@ -400,13 +422,42 @@ public class UDGM extends AbstractRadioMedium {
         logger.warn("Loading old Cooja Config, XML element \"sucess_ratio\" parsed at \"sucess_ratio_tx\"");
       }
 
-      if (element.getName().equals("success_ratio_tx")) {
-        SUCCESS_RATIO_TX = Double.parseDouble(element.getText());
-      }
 
-      if (element.getName().equals("success_ratio_rx")) {
-        SUCCESS_RATIO_RX = Double.parseDouble(element.getText());
-      }
+			if (isForLongRange){
+				if (element.getName().equals("transmitting_range_lr")) {
+					TRANSMITTING_RANGE = Double.parseDouble(element.getText());
+				}
+
+				if (element.getName().equals("interference_range_lr")) {
+					INTERFERENCE_RANGE = Double.parseDouble(element.getText());
+				}
+
+
+				if (element.getName().equals("success_ratio_tx_lr")) {
+					SUCCESS_RATIO_TX = Double.parseDouble(element.getText());
+				}
+
+				if (element.getName().equals("success_ratio_rx_lr")) {
+					SUCCESS_RATIO_RX = Double.parseDouble(element.getText());
+				}
+			} else {
+				if (element.getName().equals("transmitting_range")) {
+					TRANSMITTING_RANGE = Double.parseDouble(element.getText());
+				}
+
+				if (element.getName().equals("interference_range")) {
+					INTERFERENCE_RANGE = Double.parseDouble(element.getText());
+				}
+
+
+				if (element.getName().equals("success_ratio_tx")) {
+					SUCCESS_RATIO_TX = Double.parseDouble(element.getText());
+				}
+
+				if (element.getName().equals("success_ratio_rx")) {
+					SUCCESS_RATIO_RX = Double.parseDouble(element.getText());
+				}
+			}
     }
     return true;
   }

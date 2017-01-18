@@ -75,4 +75,8 @@ public class ContikiPowerTracker extends MoteInterface implements ContikiMoteInt
   public void setConfigXML(Collection<Element> configXML, boolean visAvailable) {
 
   }
+
+	public static String[] getCoreInterfaceDependencies() {
+		return new String[]{"powertracker_interface"};
+	}
 }
