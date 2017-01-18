@@ -123,7 +123,7 @@ calculate_path_metric(rpl_parent_t *p)
   {
 //	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
 	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
-	  PRINTF("ret_metric:%d\n",ret_metric);
+	  PRINTF("ip:%d rank:%d ret_metric:%d\n",nbr->ipaddr.u8[15],p->rank,ret_metric);
 	  return ret_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
@@ -301,11 +301,24 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  {
 			  return p1->rank < p2->rank ? p1 : p2;
 		  }
+		  /*	  if(!p1_metric && !p2_metric)
+		  	  {
+		  		  if(p1->rank == p2->rank)
+		  		  {
+		  			  return dag->preferred_parent;
+		  		  }
+		  		  else
+		  		  {
+		  			  return p1->rank < p2->rank ? p1 : p2;
+		  		  }
+		  	  }*/
 		  else
 		  {
 			  return !p1_metric ? p1 : p2;
 		  }
 	  }
+
+
 //	  else if(p1_metric < p2_metric + min_diff &&
 //       p1_metric > p2_metric - min_diff) {
 	  else if(p1_metric == p2_metric) {
