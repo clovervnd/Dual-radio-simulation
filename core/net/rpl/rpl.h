@@ -269,6 +269,7 @@ struct rpl_instance {
 #endif /* RPL_WITH_DAO_ACK */
 #if RPL_LIFETIME_MAX_MODE
   struct ctimer dio_ack_timer;
+  rpl_parent_t *last_parent;
 #endif
 };
 

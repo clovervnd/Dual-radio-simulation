@@ -61,6 +61,8 @@
 #define DEBUG DEBUG_RPL_DAG
 #include "net/ip/uip-debug.h"
 
+extern FILE *debugfp;
+
 /* A configurable function called after every RPL parent switch */
 #ifdef RPL_CALLBACK_PARENT_SWITCH
 void RPL_CALLBACK_PARENT_SWITCH(rpl_parent_t *old, rpl_parent_t *new);
@@ -263,6 +265,13 @@ rpl_set_preferred_parent(rpl_dag_t *dag, rpl_parent_t *p)
     nbr_table_unlock(rpl_parents, dag->preferred_parent);
     nbr_table_lock(rpl_parents, p);
     dag->preferred_parent = p;
+    uip_ds6_nbr_t *nbr = rpl_get_nbr(dag->preferred_parent);
+    if(dag->preferred_parent != NULL)
+    {
+    	fprintf(debugfp,"rpl-dag set_preferred_p ip:%d weight:%d\n",
+    			nbr->ipaddr.u8[15],dag->preferred_parent->parent_sum_weight);
+    	fflush(debugfp);
+    }
   }
 }
 /*---------------------------------------------------------------------------*/
@@ -720,7 +729,6 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
 #endif
     }
   }
-
   return p;
 }
 /*---------------------------------------------------------------------------*/
@@ -914,12 +922,15 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
     PRINTF("RPL: Preferred parent update, rank changed from %u to %u\n",
   	(unsigned)old_rank, best_dag->rank);
   }
+#if RPL_LIFETIME_MAX_MODE
   if(last_parent != best_dag->preferred_parent)
   {
       /* Tx dio_ack only if parent changes */
+	  instance->last_parent = last_parent;
 	  rpl_schedule_dio_ack(instance);
 //      dio_ack_output(rpl_get_parent_ipaddr(best_dag->preferred_parent)); // JJH for debug
   }
+#endif
   return best_dag;
 }
 /*---------------------------------------------------------------------------*/
@@ -929,9 +940,10 @@ best_parent(rpl_dag_t *dag)
   rpl_parent_t *p, *best;
 
   best = NULL;
-
+  uip_ds6_nbr_t *nbr;
   p = nbr_table_head(rpl_parents);
   while(p != NULL) {
+	  nbr = rpl_get_nbr(p);
     if(p->dag != dag || p->rank == INFINITE_RANK) {
       /* ignore this neighbor */
     } else if(best == NULL) {
@@ -941,7 +953,6 @@ best_parent(rpl_dag_t *dag)
     }
     p = nbr_table_next(rpl_parents, p);
   }
-
   return best;
 }
 /*---------------------------------------------------------------------------*/
@@ -949,8 +960,8 @@ rpl_parent_t *
 rpl_select_parent(rpl_dag_t *dag)
 {
   rpl_parent_t *best = best_parent(dag);
-
   if(best != NULL) {
+
     rpl_set_preferred_parent(dag, best);
     dag->rank = dag->instance->of->calculate_rank(dag->preferred_parent, 0);
   } else {
@@ -1479,7 +1490,10 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     PRINTF("RPL: New instance detected (ID=%u): Joining...\n", dio->instance_id);
     if(add_nbr_from_dio(from, dio)) {
       rpl_join_instance(from, dio);
+#if RPL_LIFETIME_MAX_MODE
+      rpl_get_default_instance()->last_parent = NULL;
       rpl_schedule_dio_ack(rpl_get_default_instance()); // Tx dio_ack when joining new instance
+#endif
 //      dio_ack_output(from); // Tx dio_ack when joining new instance
     } else {
       PRINTF("RPL: Not joining since could not add parent\n");
@@ -1582,7 +1596,9 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     }
   }
   p->rank = dio->rank;
-
+#if RPL_LIFETIME_MAX_MODE
+  p->parent_sum_weight = dio->dio_weight;
+#endif
   /* Parent info has been updated, trigger rank recalculation */
   p->flags |= RPL_PARENT_FLAG_UPDATED;
 
@@ -1614,9 +1630,8 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     uip_ds6_defrt_add(from, RPL_DEFAULT_ROUTE_INFINITE_LIFETIME ? 0 : RPL_LIFETIME(instance, instance->default_lifetime));
   }
   p->dtsn = dio->dtsn;
-#if RPL_LIFETIME_MAX_MODE
-  p->parent_sum_weight = dio->dio_weight;
-#elif RPL_ENERGY_MODE
+
+#if RPL_ENERGY_MODE
   p->rem_energy = dio->rem_energy; // Copy rem_energy to parent JJH
 #endif
 

@@ -103,7 +103,7 @@ rpl_of_t rpl_ltmax_of = {
  * The rank must differ more than 1/PARENT_SWITCH_THRESHOLD_DIV in order
  * to switch preferred parent.
  */
-#define PARENT_SWITCH_THRESHOLD_DIV	2
+#define PARENT_SWITCH_THRESHOLD_DIV	1
 
 typedef uint16_t rpl_path_metric_t;
 
@@ -209,14 +209,15 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
     {
     	is_longrange = 0;
     }
-	if(nbr->link_metric == 0)
+	p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
+/*	if(nbr->link_metric == 0)
 	{
 		p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
 	}
 	else
 	{
 		p->parent_weight = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_RX_COST : SHORT_RX_COST); // Tx cost using DIO_ACK
-	}
+	}*/
 	PRINTF("LTMAX_OF %d parent_weight %d\n",is_longrange,p->parent_weight);
   }
 #endif
@@ -282,7 +283,6 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   rpl_path_metric_t min_diff;
   rpl_path_metric_t p1_metric;
   rpl_path_metric_t p2_metric;
-
   dag = p1->dag; /* Both parents are in the same DAG. */
 
   min_diff = RPL_DAG_MC_ETX_DIVISOR /
@@ -290,17 +290,77 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
+  if(p1 == dag->preferred_parent)
+  {
+	  if(p1_metric - p1->parent_weight < 0)
+	  {
+		  p1_metric = 0;
+	  }
+	  else
+	  {
+		  p1_metric -= p1->parent_weight;
+	  }
+  }
+  else if(p2 == dag->preferred_parent)
+  {
+	  if(p2_metric - p2->parent_weight < 0)
+	  {
+		  p2_metric = 0;
+	  }
+	  else
+	  {
+		  p2_metric -= p2->parent_weight;
+	  }
+  }
 
+  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
+  {
+	  if(p1_metric < p2_metric + min_diff &&
+			  p1_metric > p2_metric - min_diff)
+	  {
+		  if(p1->rank < p2->rank + min_diff &&
+				  p1->rank > p2->rank - min_diff)
+		  {
+			  return dag->preferred_parent;
+		  }
+		  else
+		  {
+			  return p1->rank <= p2->rank ? p1 : p2;
+		  }
+	  }
+	  else
+	  {
+		  return p1_metric <= p2_metric ? p1 : p2;
+	  }
+  }
+  else
+  {
+	  if(p1_metric == p2_metric)
+	  {
+		  if(p1->rank == p2->rank)
+		  {
+			  return p1;
+		  }
+		  else
+		  {
+			  return p1->rank <= p2->rank ? p1 : p2;
+		  }
+	  }
+	  else
+	  {
+		  return p1_metric <= p2_metric ? p1 : p2;
+	  }
+  }
   /* Maintain stability of the preferred parent in case of similar weight. */
-  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-	  /* When weight is 0, choose it as a parent */
+/*  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+//	   When weight is 0, choose it as a parent
 	  if(p1_metric == 0 || p2_metric == 0)
 	  {
-		  /* If both parent has 0 weight, choose smaller rank one*/
-/*		  if(p1_metric == 0 && p2_metric == 0)
+//		   If both parent has 0 weight, choose smaller rank one
+		  if(p1_metric == 0 && p2_metric == 0)
 		  {
 			  return p1->rank < p2->rank ? p1 : p2;
-		  }*/
+		  }
 		  if(p1_metric == 0 && p2_metric == 0)
 		  {
 			  if(p1->rank == p2->rank)
@@ -316,12 +376,12 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  {
 			  return !p1_metric ? p1 : p2;
 		  }
-	  }
+	  }*/
 
 
 //	  else if(p1_metric < p2_metric + min_diff &&
 //       p1_metric > p2_metric - min_diff) {
-	  else if(p1_metric == p2_metric) {
+//	  else if(p1_metric == p2_metric) {
 //      PRINTF("RPL_LTMAX_OF: LTMAX_OF hysteresis: %u <= %u <= %u\n",
 //             p2_metric - min_diff,
 //             p1_metric,
@@ -335,15 +395,15 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 //      }
 //      else
 //      {
-    	  return p1->rank < p2->rank ? p1 : p2;
+//    	  return p1->rank < p2->rank ? p1 : p2;
 //      }
 
-    }
-  }
+//    }
+//  }
 
-  if(p1_metric == 0 || p2_metric == 0)
+/*  if(p1_metric == 0 || p2_metric == 0)
   {
-	  /* If both parent has 0 weight, choose smaller rank one*/
+//	  If both parent has 0 weight, choose smaller rank one
 	  if(p1_metric == 0 && p2_metric == 0)
 	  {
 		  return p1->rank < p2->rank ? p1 : p2;
@@ -352,7 +412,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  {
 		  return !p1_metric ? p1 : p2;
 	  }
-  }
+  }*/
 }
 
 #if RPL_DAG_MC == RPL_DAG_MC_NONE

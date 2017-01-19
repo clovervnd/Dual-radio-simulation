@@ -394,6 +394,10 @@ handle_dio_ack_timer(void *ptr)
     PRINTF("RPL: handle_dio_ack timer - sending DIO_ACK\n");
     /* Set the route lifetime to the default value. */
     dio_ack_output(rpl_get_parent_ipaddr(instance->current_dag->preferred_parent));
+    if(instance->last_parent != NULL)
+    {
+    	dio_ack_output(rpl_get_parent_ipaddr(instance->last_parent));
+    }
   } else {
     PRINTF("RPL: No suitable DIO_ACK parent\n");
   }
