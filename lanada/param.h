@@ -17,7 +17,7 @@ uint8_t my_weight;
 #define SHORT_TX_COST 1
 #define SHORT_RX_COST 1
 #define LONG_TX_COST 9
-#define LONG_RX_COST 6
+#define LONG_RX_COST 3
 
 /* DUAL RADIO */
 //#define LONGRANGE_ENABLE 0

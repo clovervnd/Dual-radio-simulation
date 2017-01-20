@@ -146,6 +146,18 @@ find_route_entry_by_dao_ack(uint8_t seq)
 #endif /* RPL_WITH_DAO_ACK */
 #if RPL_LIFETIME_MAX_MODE
 static int
+add_nbr_from_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
+{
+  /* add this to the neighbor cache if not already there */
+  if(rpl_icmp6_update_nbr_table(from, NBR_TABLE_REASON_RPL_DIO, dio) == NULL) {
+    PRINTF("RPL: Out of memory, dropping DIO from ");
+    PRINT6ADDR(from);
+    PRINTF("\n");
+    return 0;
+  }
+  return 1;
+}
+static int
 add_nbr_from_dio_ack(uip_ipaddr_t *from, uint8_t weight)
 {
   /* add this to the neighbor cache if not already there */
@@ -548,10 +560,14 @@ dio_input(void)
 
   rpl_process_dio(&from, &dio);
 #if RPL_LIFETIME_MAX_MODE
+  if(!add_nbr_from_dio(&from, &dio)) {
+    PRINTF("RPL: Could not add parent based on DIO in icmp6\n");
+    return;
+  }
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
   uint8_t is_longrange = radio_received_is_longrange();
-
+  uint8_t prev_weight = my_weight;
   PRINTF("before child cmp %d\n",is_longrange);
   c = rpl_find_child(&from);
   if(c != NULL)
@@ -608,7 +624,11 @@ dio_input(void)
 		  // Not included in child list but I'm the parent maybe due to the DIO_ACK loss
 	  }
   }
-  
+  // If my_weight changed,
+  if(prev_weight != my_weight)
+  {
+	  dio_broadcast(rpl_get_default_instance());
+  }
 #endif
 
  discard:
@@ -920,6 +940,12 @@ dio_ack_input(void)
 		}
 	}
 
+	uint8_t prev_weight = my_weight;
+	// If my_weight changed,
+	if(prev_weight != my_weight)
+	{
+		dio_broadcast(rpl_get_default_instance());
+	}
 	/* child info list add
 	   Compare it with previous info */
 	uip_clear_buf();

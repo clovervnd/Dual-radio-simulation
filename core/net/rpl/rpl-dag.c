@@ -904,6 +904,8 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
     rpl_set_default_route(instance, rpl_get_parent_ipaddr(best_dag->preferred_parent));
     PRINTF("RPL: Changed preferred parent, rank changed from %u to %u\n",
   	(unsigned)old_rank, best_dag->rank);
+    printf("RPL: Changed preferred parent, rank changed from %u to %u\n",
+  	(unsigned)old_rank, best_dag->rank);
     RPL_STAT(rpl_stats.parent_switch++);
     if(instance->mop != RPL_MOP_NO_DOWNWARD_ROUTES) {
       if(last_parent != NULL) {
@@ -940,10 +942,10 @@ best_parent(rpl_dag_t *dag)
   rpl_parent_t *p, *best;
 
   best = NULL;
-  uip_ds6_nbr_t *nbr;
+//  uip_ds6_nbr_t *nbr;
   p = nbr_table_head(rpl_parents);
   while(p != NULL) {
-	  nbr = rpl_get_nbr(p);
+//	  nbr = rpl_get_nbr(p);
     if(p->dag != dag || p->rank == INFINITE_RANK) {
       /* ignore this neighbor */
     } else if(best == NULL) {

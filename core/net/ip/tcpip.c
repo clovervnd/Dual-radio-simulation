@@ -73,6 +73,8 @@ extern uip_ds6_lr_addrmap_t ds6_lr_addrmap[NBR_TABLE_MAX_NEIGHBORS];
 #define DEBUG DEBUG_TCPIP
 #include "net/ip/uip-debug.h"
 
+extern FILE *debugfp;
+
 #if ANA_TCPIP
 #define ANA(...) PRINTF(__VA_ARGS__)
 #else
@@ -686,12 +688,14 @@ tcpip_ipv6_output(void)
 		int i;
 		PRINTF("At tcpip_ipv6_output :\n");
 		uip_ds6_nbr_t *nbr_2 = NULL;
-		nbr_2 = uip_ds6_nbr_lookup(&foraddr);	
+		nbr_2 = uip_ds6_nbr_lookup(&foraddr);
 		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
 			PRINTLLADDR(uip_ds6_nbr_get_ll(nbr_2));
 			PRINTF("\n");
 			PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
 			PRINTF("\n");
+//	    	fprintf(debugfp,"tcpip ip:%d ll:%d\n",foraddr.u8[15],uip_ds6_nbr_get_ll(nbr)->addr[0]);
+//	    	fflush(debugfp);
 			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr_2))){
 				if (ds6_lr_addrmap[i].lr == 1){
 						dual_radio_switch(LONG_RADIO);

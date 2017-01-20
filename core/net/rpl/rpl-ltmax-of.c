@@ -179,9 +179,9 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 
   /* Do not penalize the ETX when collisions or transmission errors occur. */
   if(status == MAC_TX_OK || status == MAC_TX_NOACK) {
-    if(status == MAC_TX_NOACK) {
+/*    if(status == MAC_TX_NOACK) {
         packet_ett = MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-    }
+    }*/
     if(p->flags & RPL_PARENT_FLAG_LINK_METRIC_VALID) {
       /* We already have a valid link metric, use weighted moving average to update it */
       new_ett = ((uint32_t)recorded_ett * ETX_ALPHA +
@@ -210,7 +210,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
     	is_longrange = 0;
     }
 	p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
-/*	if(nbr->link_metric == 0)
+	/*if(nbr->link_metric == 0)
 	{
 		p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
 	}
@@ -339,7 +339,8 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  {
 		  if(p1->rank == p2->rank)
 		  {
-			  return p1;
+			  // For the same metric and rank case, choose smaller id node
+			  return rpl_get_nbr(p1)->ipaddr.u8[15] < rpl_get_nbr(p2)->ipaddr.u8[15] ? p1 : p2;
 		  }
 		  else
 		  {
