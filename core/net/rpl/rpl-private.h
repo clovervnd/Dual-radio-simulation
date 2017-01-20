@@ -120,6 +120,9 @@
 #else /* RPL_CONF_DAO_DELAY */
 #define RPL_DAO_DELAY                 (CLOCK_SECOND * 4)
 #endif /* RPL_CONF_DAO_DELAY */
+#if RPL_LIFETIME_MAX_MODE
+#define RPL_DIO_ACK_DELAY		      (CLOCK_SECOND * 4)
+#endif
 
 /* Delay between reception of a no-path DAO and actual route removal */
 #ifdef RPL_CONF_NOPATH_REMOVAL_DELAY
@@ -354,6 +357,11 @@ void rpl_schedule_dao(rpl_instance_t *);
 void rpl_schedule_dao_immediately(rpl_instance_t *);
 void rpl_schedule_unicast_dio_immediately(rpl_instance_t *instance);
 void rpl_cancel_dao(rpl_instance_t *instance);
+#if RPL_LIFETIME_MAX_MODE
+void rpl_schedule_dio_ack(rpl_instance_t *);
+void rpl_schedule_dio_ack_immediately(rpl_instance_t *);
+void rpl_cancel_dio_ack(rpl_instance_t *instance);
+#endif
 void rpl_schedule_probing(rpl_instance_t *instance);
 
 void rpl_reset_dio_timer(rpl_instance_t *);

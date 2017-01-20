@@ -690,6 +690,9 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
 #if RPL_DAG_MC != RPL_DAG_MC_NONE
       memcpy(&p->mc, &dio->mc, sizeof(p->mc));
 #endif /* RPL_DAG_MC != RPL_DAG_MC_NONE */
+#if RPL_LIFETIME_MAX_MODE
+      p->parent_weight = dio->parent_weight;
+#endif
     }
   }
 
@@ -889,7 +892,8 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
   if(last_parent != best_dag->preferred_parent)
   {
       /* Tx dio_ack only if parent changes */
-      dio_ack_output(rpl_get_parent_ipaddr(best_dag->preferred_parent)); // JJH for debug
+	  rpl_schedule_dio_ack(instance);
+//      dio_ack_output(rpl_get_parent_ipaddr(best_dag->preferred_parent)); // JJH for debug
   }
   return best_dag;
 }
@@ -1450,7 +1454,8 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     PRINTF("RPL: New instance detected (ID=%u): Joining...\n", dio->instance_id);
     if(add_nbr_from_dio(from, dio)) {
       rpl_join_instance(from, dio);
-      dio_ack_output(from); // Tx dio_ack when joining new instance
+      rpl_schedule_dio_ack(rpl_get_default_instance()); // Tx dio_ack when joining new instance
+//      dio_ack_output(from); // Tx dio_ack when joining new instance
     } else {
       PRINTF("RPL: Not joining since could not add parent\n");
     }

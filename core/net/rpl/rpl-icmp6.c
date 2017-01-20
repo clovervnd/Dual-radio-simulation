@@ -546,33 +546,21 @@ dio_input(void)
   RPL_DEBUG_DIO_INPUT(&from, &dio);
 #endif
 
-#if RPL_LIFETIME_MAX_MODE
-  if(rpl_get_parent(&from) != NULL)
-	  rpl_get_parent(&from)->parent_weight = dio.dio_weight;
-#endif
   rpl_process_dio(&from, &dio);
 #if RPL_LIFETIME_MAX_MODE
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
-  uip_ds6_addr_t *lladdr;
-  uip_ds6_addr_t *long_lladdr;
 
   PRINTF("before child cmp\n");
   c = rpl_find_child(&from);
   if(c != NULL)
   {
 	  PRINTF("after child cmp\n");
-	  uip_ipaddr_copy(lladdr,uip_ds6_get_link_local(-1));
-	  uip_ipaddr_copy(long_lladdr,uip_ds6_long_get_link_local(-1));
 	  PRINT6ADDR(&dio.parent_addr);
 	  PRINTF("\n");
-	  PRINT6ADDR(&lladdr->ipaddr);
-	  PRINTF("\n");
-	  PRINT6ADDR(&long_lladdr->ipaddr);
-	  PRINTF("\n");
 	  
-	  if(uip_ipaddr_cmp(&dio.parent_addr, &lladdr->ipaddr) ||
-	     uip_ipaddr_cmp(&dio.parent_addr, &long_lladdr->ipaddr))
+	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
+		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
 	    {
 	      PRINTF("it's me\n");
 	      // weight update
@@ -581,6 +569,7 @@ dio_input(void)
 		  my_weight -= c->weight;
 		  c->weight = dio.parent_weight;
 		  my_weight += c->weight;
+		  PRINTF("my_weight update in dio %d\n",my_weight);
 		}
 	    }
 	  else
@@ -662,6 +651,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	  buffer[pos++] = 0;
   }
 //  buffer[pos++] = 0; /* reserved */
+  PRINTF("send my weight %d\n",my_weight);
   buffer[pos++] = my_weight;
 #else
   /* reserved 2 bytes */
@@ -847,7 +837,7 @@ dio_ack_input(void)
 		else
 		{
 			my_weight += c->weight;
-			PRINTF("my_weight %d\n",my_weight);
+			PRINTF("my_weight in dio_ack %d\n",my_weight);
 		}
 	}
 	else
@@ -856,8 +846,8 @@ dio_ack_input(void)
 		{
 			my_weight -= c->weight;
 			c->weight = weight;
-			my_weight += weight;
-			PRINTF("my_weight update %d\n",my_weight);
+			my_weight += c->weight;
+			PRINTF("my_weight update in dio_ack %d\n",my_weight);
 		}
 	}
 
@@ -871,6 +861,7 @@ dio_ack_output(uip_ipaddr_t *dest)
 {
 	unsigned char *buffer;
 	uip_ds6_nbr_t *nbr = NULL;
+	rpl_parent_t *p;
 	nbr = uip_ds6_nbr_lookup(dest);
 	/*JOONKI*/
 #if DUAL_RADIO
@@ -901,9 +892,11 @@ dio_ack_output(uip_ipaddr_t *dest)
 #endif /* DUAL_RADIO */
 
 	buffer = UIP_ICMP_PAYLOAD;
-	if(rpl_get_parent(dest) != NULL)
+	p = rpl_find_parent_any_dag(rpl_get_default_instance(),dest);
+	if(p != NULL)
 	{
-		buffer[0] = rpl_get_parent(dest)->parent_weight;
+		PRINTF("p weight %d\n",p->parent_weight);
+		buffer[0] = p->parent_weight;
 	}
 	else
 	{
