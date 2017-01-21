@@ -8,14 +8,16 @@
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
-#define MODE_DAP_WEIGHT	0 // DAP (DODAG Ask Parent's weight)
-#define MODE_PARENT_UPDATE_IN_ROUND 0 // Update parent only when round is synchronized
+#define MODE_LAST_PARENT	1 // Tx Last parent info. in dio_ack
+#define MODE_PARENT_UPDATE_IN_ROUND 0 // Update parent only when round is synchronized // Not implemented yet
 
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;
 uint8_t alpha;
 #define LONG_ETX_PENALTY 5
+
 #elif RPL_LIFETIME_MAX_MODE
+#define RPL_ETX_WEIGHT 	0
 uint8_t my_weight;
 #define DATA_PKT_SIZE 10 // 'B' in theory
 #define SHORT_TX_COST 1
@@ -23,4 +25,3 @@ uint8_t my_weight;
 #define LONG_TX_COST 9
 #define LONG_RX_COST 3
 #endif
-

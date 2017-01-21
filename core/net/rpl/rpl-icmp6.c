@@ -886,26 +886,45 @@ dio_ack_input(void)
 	PRINTF("dio_ack_input!\n");
 	unsigned char *buffer;
 	uip_ipaddr_t from, parent;
-	rpl_child_t *c;
-	uint8_t weight, buffer_length;
+	rpl_child_t *c = NULL;
+	uint8_t weight, pos, buffer_length;
+#if MODE_LAST_PARENT
+	uip_ipaddr_t last_parent;
+	uint8_t last_weight;
+#endif
+
+	pos = 0;
 
 	buffer = UIP_ICMP_PAYLOAD;
 	uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
 	buffer_length = uip_len - uip_l3_icmp_hdr_len;
 	PRINTF("bufferlen %d\n",buffer_length);
-	if(buffer_length == 1)
+	if(buffer_length == 1) // NULL parent
 	{
 		PRINTF("dio_ack NULL parent\n");
-		weight = buffer[0];
+		weight = buffer[pos++];
 	}
-	else
+	else if(buffer_length == 17) // Only preferred parent
 	{
-		memcpy(&parent,&buffer[0],16);
+		memcpy(&parent,&buffer[pos],16);
+		pos += 16;
 		PRINTF("recv dio_ack addr: ");
 		PRINT6ADDR(&parent);
     	PRINTF("\n");
-		weight = buffer[16];
+		weight = buffer[pos++];
 	}
+#if MODE_LAST_PARENT
+	else if(buffer_length == 34) //Last parent case
+	{
+		memcpy(&last_parent,&buffer[pos],16);
+		pos += 16;
+		PRINTF("recv dio_ack lp addr: ");
+		PRINT6ADDR(&last_parent);
+    	PRINTF("\n");
+		last_weight = buffer[pos++];
+	}
+#endif
+
 	if(!add_nbr_from_dio_ack(&from, weight)) // Should I add nbr for all dio_ack sender? JJH
 	{
 		PRINTF("fail to add nbr with dio_ack\n");
@@ -943,7 +962,33 @@ dio_ack_input(void)
 			}
 		}
 	}
-	// If I'm not a target parent
+	// If I'm a last parent
+#if MODE_LAST_PARENT
+	else if((is_longrange == LONG_RADIO
+			&& uip_ipaddr_cmp(&last_parent, &uip_ds6_long_get_link_local(-1)->ipaddr))
+			|| (is_longrange == SHORT_RADIO
+					&& uip_ipaddr_cmp(&last_parent, &uip_ds6_get_link_local(-1)->ipaddr)))
+	{
+		if (c != NULL)
+		{
+			my_weight -= c->weight;
+			PRINTF("my_weight update deduct in dio_ack %d\n",my_weight);
+			rpl_remove_child(c);
+		}
+		rpl_parent_t *p = NULL;
+		if(rpl_get_default_instance() == NULL)
+		{
+			PRINTF("rpl-icmp6 before joining instance\n");
+			return;
+		}
+		p = rpl_find_parent(rpl_get_default_instance()->current_dag,&parent);
+		if(p != NULL )
+		{
+			p->parent_sum_weight += weight;
+		}
+	}
+#endif
+	// Just third party
 	else
 	{
 		if (c != NULL)
@@ -952,13 +997,24 @@ dio_ack_input(void)
 			PRINTF("my_weight update deduct in dio_ack %d\n",my_weight);
 			rpl_remove_child(c);
 		}
-		rpl_parent_t *p;
-		p = rpl_find_parent(rpl_get_default_instance()->current_dag,&parent);
-		if(p != NULL)
+		rpl_parent_t *p = NULL, *lp = NULL;
+		if(rpl_get_default_instance() == NULL)
+		{
+			PRINTF("rpl-icmp6 before joining instance\n");
+			return;
+		}
+//		p = rpl_find_parent(rpl_get_default_instance()->current_dag,&parent);
+		if(p != NULL )
 		{
 			p->parent_sum_weight += weight;
-			// Update the parent's weight by dio_ack
 		}
+#if MODE_LAST_PARENT
+//		lp = rpl_find_parent(rpl_get_default_instance()->current_dag,&last_parent);
+		if(lp != NULL )
+		{
+			lp->parent_sum_weight -= last_weight;
+		}
+#endif
 	}
 #if MODE_DIO_WEIGHT_UPDATED
 	uint8_t prev_weight = my_weight;
@@ -995,13 +1051,26 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 		memcpy(&buffer[pos],rpl_get_parent_ipaddr(p),16);
 		pos += 16;
 		PRINTF("dio_ack p weight %d\n",p->parent_weight);
-		buffer[16] = p->parent_weight;
+		buffer[pos++] = p->parent_weight;
 	}
 	else
 	{
 		PRINTF("send dio_ack parent NULL\n");
 		buffer[pos++] = 1;
 	}
+#if MODE_LAST_PARENT
+	if(instance->last_parent != NULL)
+	{
+		PRINTF("send dio_ack lp addr: ");
+		PRINT6ADDR(rpl_get_parent_ipaddr(instance->last_parent));
+		PRINTF("\n");
+
+		memcpy(&buffer[pos],rpl_get_parent_ipaddr(instance->last_parent),16);
+		pos += 16;
+		PRINTF("dio_ack lp weight %d\n",instance->last_parent_weight);
+		buffer[pos++] = instance->last_parent_weight;
+	}
+#endif
 
 	if (uc_addr == NULL)
 	{

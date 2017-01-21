@@ -928,7 +928,13 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
   if(last_parent != best_dag->preferred_parent)
   {
       /* Tx dio_ack only if parent changes */
+#if MODE_LAST_PARENT
 	  instance->last_parent = last_parent;
+	  if(last_parent != NULL)
+	  {
+		  instance->last_parent_weight = last_parent->parent_weight;
+	  }
+#endif
 	  rpl_schedule_dio_ack(instance);
 //      dio_ack_output(rpl_get_parent_ipaddr(best_dag->preferred_parent)); // JJH for debug
   }
@@ -1493,7 +1499,9 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     if(add_nbr_from_dio(from, dio)) {
       rpl_join_instance(from, dio);
 #if RPL_LIFETIME_MAX_MODE
+#if MODE_LAST_PARENT
       rpl_get_default_instance()->last_parent = NULL;
+#endif
       rpl_schedule_dio_ack(rpl_get_default_instance()); // Tx dio_ack when joining new instance
 #endif
 //      dio_ack_output(from); // Tx dio_ack when joining new instance

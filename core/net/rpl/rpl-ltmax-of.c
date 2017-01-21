@@ -209,15 +209,20 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
     {
     	is_longrange = 0;
     }
-	p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
-	/*if(nbr->link_metric == 0)
+#if RPL_ETX_WEIGHT
+	if(nbr->link_metric == 0)
 	{
 		p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
 	}
 	else
 	{
 		p->parent_weight = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_RX_COST : SHORT_RX_COST); // Tx cost using DIO_ACK
-	}*/
+	}
+#else
+	p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
+
+#endif
+
 	PRINTF("LTMAX_OF %d parent_weight %d\n",is_longrange,p->parent_weight);
   }
 #endif
