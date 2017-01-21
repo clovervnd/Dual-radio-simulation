@@ -389,15 +389,15 @@ handle_dio_ack_timer(void *ptr)
     return;
   }
 
-  /* Send the DAO to the DAO parent set -- the preferred parent in our case. */
+  /* Send the DIO_ACK to the DIO_ACK parent set -- the preferred parent in our case. */
   if(instance->current_dag->preferred_parent != NULL) {
     PRINTF("RPL: handle_dio_ack timer - sending DIO_ACK\n");
     /* Set the route lifetime to the default value. */
-    dio_ack_output(rpl_get_parent_ipaddr(instance->current_dag->preferred_parent));
-    if(instance->last_parent != NULL)
+    dio_ack_broadcast(instance);
+/*    if(instance->last_parent != NULL)
     {
     	dio_ack_output(rpl_get_parent_ipaddr(instance->last_parent));
-    }
+    }*/
   } else {
     PRINTF("RPL: No suitable DIO_ACK parent\n");
   }

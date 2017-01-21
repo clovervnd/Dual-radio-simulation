@@ -567,7 +567,9 @@ dio_input(void)
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
   uint8_t is_longrange = radio_received_is_longrange();
+#if MODE_DIO_WEIGHT_UPDATED
   uint8_t prev_weight = my_weight;
+#endif
   PRINTF("before child cmp %d\n",is_longrange);
   c = rpl_find_child(&from);
   if(c != NULL)
@@ -624,11 +626,13 @@ dio_input(void)
 		  // Not included in child list but I'm the parent maybe due to the DIO_ACK loss
 	  }
   }
+#if MODE_DIO_WEIGHT_UPDATED
   // If my_weight changed,
   if(prev_weight != my_weight)
   {
 	  dio_broadcast(rpl_get_default_instance());
   }
+#endif
 #endif
 
  discard:
@@ -883,16 +887,26 @@ dio_ack_input(void)
 	unsigned char *buffer;
 	uip_ipaddr_t from, parent;
 	rpl_child_t *c;
-	uint8_t weight;
+	uint8_t weight, buffer_length;
+
 	buffer = UIP_ICMP_PAYLOAD;
 	uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
-    memcpy(&parent,&buffer[0],16);
-    PRINTF("recv dio_ack addr: ");
-    PRINT6ADDR(&parent);
-    PRINTF("\n");
-	weight = buffer[16];
-
-	if(!add_nbr_from_dio_ack(&from, weight))
+	buffer_length = uip_len - uip_l3_icmp_hdr_len;
+	PRINTF("bufferlen %d\n",buffer_length);
+	if(buffer_length == 1)
+	{
+		PRINTF("dio_ack NULL parent\n");
+		weight = buffer[0];
+	}
+	else
+	{
+		memcpy(&parent,&buffer[0],16);
+		PRINTF("recv dio_ack addr: ");
+		PRINT6ADDR(&parent);
+    	PRINTF("\n");
+		weight = buffer[16];
+	}
+	if(!add_nbr_from_dio_ack(&from, weight)) // Should I add nbr for all dio_ack sender? JJH
 	{
 		PRINTF("fail to add nbr with dio_ack\n");
 	}
@@ -929,7 +943,7 @@ dio_ack_input(void)
 			}
 		}
 	}
-	// If I'm a last parent
+	// If I'm not a target parent
 	else
 	{
 		if (c != NULL)
@@ -938,102 +952,127 @@ dio_ack_input(void)
 			PRINTF("my_weight update deduct in dio_ack %d\n",my_weight);
 			rpl_remove_child(c);
 		}
+		rpl_parent_t *p;
+		p = rpl_find_parent(rpl_get_default_instance()->current_dag,&parent);
+		if(p != NULL)
+		{
+			p->parent_sum_weight += weight;
+			// Update the parent's weight by dio_ack
+		}
 	}
-
+#if MODE_DIO_WEIGHT_UPDATED
 	uint8_t prev_weight = my_weight;
 	// If my_weight changed,
 	if(prev_weight != my_weight)
 	{
 		dio_broadcast(rpl_get_default_instance());
 	}
+#endif
 	/* child info list add
 	   Compare it with previous info */
 	uip_clear_buf();
 }
 /*---------------------------------------------------------------------------*/
 void
-dio_ack_output(uip_ipaddr_t *dest)
+dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 {
 	unsigned char *buffer;
-	uip_ds6_nbr_t *nbr = NULL;
-	rpl_parent_t *p;
-	rpl_dag_t *dag = rpl_get_default_instance()->current_dag;
-	nbr = uip_ds6_nbr_lookup(dest);
-	/*JOONKI*/
-#if DUAL_RADIO
-#if ADDR_MAP
-	int i;
-	for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
-/*		 PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
-				PRINTF("\n");
-				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
-				PRINTF("\n");*/
-		if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
-			if (ds6_lr_addrmap[i].lr == 1){
-				dual_radio_switch(LONG_RADIO);
-			}	else	{
-				dual_radio_switch(SHORT_RADIO);
-			}
-//			PRINTF("SUCCESS!!!\n");
-			break;
-		}
-	}
-#else /* ADDR_MAP */
-	if (dest->u8[8] == 0x82)	{
-		dual_radio_switch(LONG_RADIO);
-	}	else	{
-		dual_radio_switch(SHORT_RADIO);
-	}
-#endif	/* ADDR_MAP */
-#endif /* DUAL_RADIO */
+	int pos;
+	uip_ipaddr_t addr;
+	rpl_dag_t *dag = instance->current_dag;
+	rpl_parent_t *p = dag->preferred_parent;
+
+	pos = 0;
 
 	buffer = UIP_ICMP_PAYLOAD;
 
-	PRINTF("send dio_ack addr: ");
-	PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
-	PRINTF("\n");
-	memcpy(&buffer[0],rpl_get_parent_ipaddr(dag->preferred_parent),16);
-	p = rpl_find_parent_any_dag(rpl_get_default_instance(),dest);
 	if(p != NULL)
 	{
+		PRINTF("send dio_ack addr: ");
+		PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
+		PRINTF("\n");
+
+		memcpy(&buffer[pos],rpl_get_parent_ipaddr(p),16);
+		pos += 16;
 		PRINTF("dio_ack p weight %d\n",p->parent_weight);
 		buffer[16] = p->parent_weight;
 	}
 	else
 	{
-		buffer[16] = 1;
+		PRINTF("send dio_ack parent NULL\n");
+		buffer[pos++] = 1;
 	}
-	uip_icmp6_send(dest, ICMP6_RPL, RPL_CODE_DIO_ACK, 17);
+
+	if (uc_addr == NULL)
+	{
+		PRINTF("RPL: Sending a multicast-DIO_ACK\n");
+		uip_create_linklocal_rplnodes_mcast(&addr);
+		uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_DIO_ACK, pos);
+	}
+	else
+	{
+		uip_ds6_nbr_t *nbr = NULL;
+		nbr = uip_ds6_nbr_lookup(uc_addr);
+
+		/*JOONKI*/
+#if DUAL_RADIO
+#if ADDR_MAP
+		int i;
+		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+			/*		 PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
+				PRINTF("\n");
+				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
+				PRINTF("\n");*/
+			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+				if (ds6_lr_addrmap[i].lr == 1){
+					dual_radio_switch(LONG_RADIO);
+				}	else	{
+					dual_radio_switch(SHORT_RADIO);
+				}
+				//			PRINTF("SUCCESS!!!\n");
+				break;
+			}
+		}
+#else /* ADDR_MAP */
+		if (dest->u8[8] == 0x82)	{
+			dual_radio_switch(LONG_RADIO);
+		}	else	{
+			dual_radio_switch(SHORT_RADIO);
+		}
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
+	uip_icmp6_send(uc_addr, ICMP6_RPL, RPL_CODE_DIO_ACK, pos);
+	}
 }
 #endif
 /*---------------------------------------------------------------------------*/
 static void
 dao_input(void)
 {
-  uip_ipaddr_t dao_sender_addr;
-  rpl_dag_t *dag;
-  rpl_instance_t *instance;
-  unsigned char *buffer;
-  uint16_t sequence;
-  uint8_t instance_id;
-  uint8_t lifetime;
-  uint8_t prefixlen;
-  uint8_t flags;
-  uint8_t subopt_type;
-  /*
+	uip_ipaddr_t dao_sender_addr;
+	rpl_dag_t *dag;
+	rpl_instance_t *instance;
+	unsigned char *buffer;
+	uint16_t sequence;
+	uint8_t instance_id;
+	uint8_t lifetime;
+	uint8_t prefixlen;
+	uint8_t flags;
+	uint8_t subopt_type;
+	/*
   uint8_t pathcontrol;
   uint8_t pathsequence;
-  */
-  uip_ipaddr_t prefix;
-  uip_ds6_route_t *rep;
-  uint8_t buffer_length;
-  int pos;
-  int len;
-  int i;
-  int learned_from;
-  rpl_parent_t *parent;
-  uip_ds6_nbr_t *nbr;
-  int is_root;
+	 */
+	uip_ipaddr_t prefix;
+	uip_ds6_route_t *rep;
+	uint8_t buffer_length;
+	int pos;
+	int len;
+	int i;
+	int learned_from;
+	rpl_parent_t *parent;
+	uip_ds6_nbr_t *nbr;
+	int is_root;
 	uip_ipaddr_t tmp_addr;
 	uip_ipaddr_t tmp_addr_2;
 

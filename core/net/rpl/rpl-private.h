@@ -304,7 +304,7 @@ void dao_output(rpl_parent_t *, uint8_t lifetime);
 void dao_output_target(rpl_parent_t *, uip_ipaddr_t *, uint8_t lifetime);
 void dao_ack_output(rpl_instance_t *, uip_ipaddr_t *, uint8_t, uint8_t);
 #if RPL_LIFETIME_MAX_MODE
-void dio_ack_output(uip_ipaddr_t *dest);
+void dio_ack_output(rpl_instance_t *, uip_ipaddr_t *uc_addr);
 #endif
 void rpl_icmp6_register_handlers(void);
 uip_ds6_nbr_t *rpl_icmp6_update_nbr_table(uip_ipaddr_t *from,

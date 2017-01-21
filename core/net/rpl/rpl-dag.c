@@ -61,7 +61,7 @@
 #define DEBUG DEBUG_RPL_DAG
 #include "net/ip/uip-debug.h"
 
-extern FILE *debugfp;
+//extern FILE *debugfp;
 
 /* A configurable function called after every RPL parent switch */
 #ifdef RPL_CALLBACK_PARENT_SWITCH
@@ -268,9 +268,9 @@ rpl_set_preferred_parent(rpl_dag_t *dag, rpl_parent_t *p)
     uip_ds6_nbr_t *nbr = rpl_get_nbr(dag->preferred_parent);
     if(dag->preferred_parent != NULL)
     {
-    	fprintf(debugfp,"rpl-dag set_preferred_p ip:%d weight:%d\n",
-    			nbr->ipaddr.u8[15],dag->preferred_parent->parent_sum_weight);
-    	fflush(debugfp);
+//    	fprintf(debugfp,"rpl-dag set_preferred_p ip:%d weight:%d\n",
+//    			nbr->ipaddr.u8[15],dag->preferred_parent->parent_sum_weight);
+//    	fflush(debugfp);
     }
   }
 }
