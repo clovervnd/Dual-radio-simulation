@@ -550,33 +550,63 @@ dio_input(void)
 #if RPL_LIFETIME_MAX_MODE
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
+  uint8_t is_longrange = radio_received_is_longrange();
 
-  PRINTF("before child cmp\n");
+  PRINTF("before child cmp %d\n",is_longrange);
   c = rpl_find_child(&from);
   if(c != NULL)
   {
 	  PRINTF("after child cmp\n");
 	  PRINT6ADDR(&dio.parent_addr);
 	  PRINTF("\n");
-	  
-	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
-		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
+	  if((is_longrange == LONG_RADIO
+			  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
+			  || (is_longrange == SHORT_RADIO
+					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))
+//	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
+//		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
 	    {
-	      PRINTF("it's me\n");
-	      // weight update
-	      if(c->weight != dio.parent_weight)
-		{
-		  my_weight -= c->weight;
-		  c->weight = dio.parent_weight;
-		  my_weight += c->weight;
-		  PRINTF("my_weight update in dio %d\n",my_weight);
-		}
+		  PRINTF("it's me\n");
+		  // weight update
+		  if(c->weight != dio.parent_weight)
+		  {
+			  my_weight -= c->weight;
+			  c->weight = dio.parent_weight;
+			  my_weight += c->weight;
+			  PRINTF("my_weight update in dio %d\n",my_weight);
+		  }
 	    }
 	  else
 	    {
+	      my_weight -= c->weight;
 	      rpl_remove_child(c);
+	      PRINTF("my_weight deduct in dio %d\n",my_weight);
+		  PRINTF("child list in dio input\n");
+		  rpl_print_child_neighbor_list();
 	      // In my child list but I'm not the parent any more, so remove child
 	    }
+  }
+  else
+  {
+	  if((is_longrange == LONG_RADIO
+			  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
+			  || (is_longrange == SHORT_RADIO
+					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))
+	  {
+		  c = rpl_add_child(dio.parent_weight, &from);
+		  if(c == NULL)
+		  {
+			  PRINTF("fail to add child\n");
+		  }
+		  else
+		  {
+			  my_weight += c->weight;
+			  PRINTF("my_weight add child in dio %d\n",my_weight);
+		  }
+		  PRINTF("child list in dio input\n");
+		  rpl_print_child_neighbor_list();
+		  // Not included in child list but I'm the parent maybe due to the DIO_ACK loss
+	  }
   }
   
 #endif
@@ -643,16 +673,33 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 #elif RPL_LIFETIME_MAX_MODE
   if(dag->preferred_parent != NULL)
   {
-	  PRINTF("send dio weight %d\n",dag->preferred_parent->parent_weight);
-	  buffer[pos++] = dag->preferred_parent->parent_weight; /* parent's weight  */
+	  if(dag->preferred_parent->parent_weight == 0)
+	  {
+		  PRINTF("send dio weight %d default\n",1);
+		  buffer[pos++] = 1; /* parent's weight default */
+	  }
+	  else
+	  {
+		  PRINTF("send dio weight %d\n",dag->preferred_parent->parent_weight);
+		  buffer[pos++] = dag->preferred_parent->parent_weight; /* parent's weight  */
+	  }
   }
   else
   {
 	  buffer[pos++] = 0;
   }
 //  buffer[pos++] = 0; /* reserved */
-  PRINTF("send my weight %d\n",my_weight);
-  buffer[pos++] = my_weight;
+  /* For sink node, set weight 0 */
+  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15]==1)
+  {
+	  PRINTF("send my weight sink %d but 0\n",my_weight);
+	  buffer[pos++] = 0;
+  }
+  else
+  {
+	  PRINTF("send my weight %d\n",my_weight);
+	  buffer[pos++] = my_weight;
+  }
 #else
   /* reserved 2 bytes */
   buffer[pos++] = 0; /* flags */
@@ -814,40 +861,62 @@ dio_ack_input(void)
 {
 	PRINTF("dio_ack_input!\n");
 	unsigned char *buffer;
-	uip_ipaddr_t from;
+	uip_ipaddr_t from, parent;
 	rpl_child_t *c;
 	uint8_t weight;
 	buffer = UIP_ICMP_PAYLOAD;
 	uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
-	weight = buffer[0];
+    memcpy(&parent,&buffer[0],16);
+    PRINTF("recv dio_ack addr: ");
+    PRINT6ADDR(&parent);
+    PRINTF("\n");
+	weight = buffer[16];
 
 	if(!add_nbr_from_dio_ack(&from, weight))
 	{
 		PRINTF("fail to add nbr with dio_ack\n");
 	}
-
+	uint8_t is_longrange = radio_received_is_longrange();
 	c = rpl_find_child(&from);
-	if (c == NULL)
+	if((is_longrange == LONG_RADIO
+			&& uip_ipaddr_cmp(&parent, &uip_ds6_long_get_link_local(-1)->ipaddr))
+			|| (is_longrange == SHORT_RADIO
+					&& uip_ipaddr_cmp(&parent, &uip_ds6_get_link_local(-1)->ipaddr)))
 	{
-		c = rpl_add_child(weight,&from);
-		if(c == NULL)
+		if (c == NULL)
 		{
-			PRINTF("fail to add child\n");
+			c = rpl_add_child(weight,&from);
+			if(c == NULL)
+			{
+				PRINTF("fail to add child\n");
+			}
+			else
+			{
+				my_weight += c->weight;
+				PRINTF("my_weight in dio_ack %d\n",my_weight);
+			}
+			PRINTF("child list in dio_ack input\n");
+			rpl_print_child_neighbor_list();
 		}
 		else
 		{
-			my_weight += c->weight;
-			PRINTF("my_weight in dio_ack %d\n",my_weight);
+			if(c->weight != weight)
+			{
+				my_weight -= c->weight;
+				c->weight = weight;
+				my_weight += c->weight;
+				PRINTF("my_weight update in dio_ack %d\n",my_weight);
+			}
 		}
 	}
+	// If I'm a last parent
 	else
 	{
-		if(c->weight != weight)
+		if (c != NULL)
 		{
 			my_weight -= c->weight;
-			c->weight = weight;
-			my_weight += c->weight;
-			PRINTF("my_weight update in dio_ack %d\n",my_weight);
+			PRINTF("my_weight update deduct in dio_ack %d\n",my_weight);
+			rpl_remove_child(c);
 		}
 	}
 
@@ -862,6 +931,7 @@ dio_ack_output(uip_ipaddr_t *dest)
 	unsigned char *buffer;
 	uip_ds6_nbr_t *nbr = NULL;
 	rpl_parent_t *p;
+	rpl_dag_t *dag = rpl_get_default_instance()->current_dag;
 	nbr = uip_ds6_nbr_lookup(dest);
 	/*JOONKI*/
 #if DUAL_RADIO
@@ -892,17 +962,22 @@ dio_ack_output(uip_ipaddr_t *dest)
 #endif /* DUAL_RADIO */
 
 	buffer = UIP_ICMP_PAYLOAD;
+
+	PRINTF("send dio_ack addr: ");
+	PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
+	PRINTF("\n");
+	memcpy(&buffer[0],rpl_get_parent_ipaddr(dag->preferred_parent),16);
 	p = rpl_find_parent_any_dag(rpl_get_default_instance(),dest);
 	if(p != NULL)
 	{
-		PRINTF("p weight %d\n",p->parent_weight);
-		buffer[0] = p->parent_weight;
+		PRINTF("dio_ack p weight %d\n",p->parent_weight);
+		buffer[16] = p->parent_weight;
 	}
 	else
 	{
-		buffer[0] = 1;
+		buffer[16] = 1;
 	}
-	uip_icmp6_send(dest, ICMP6_RPL, RPL_CODE_DIO_ACK, 1);
+	uip_icmp6_send(dest, ICMP6_RPL, RPL_CODE_DIO_ACK, 17);
 }
 #endif
 /*---------------------------------------------------------------------------*/

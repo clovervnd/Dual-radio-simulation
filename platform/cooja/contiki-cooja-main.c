@@ -137,7 +137,7 @@ static struct cooja_mt_thread rtimer_thread;
 static struct cooja_mt_thread process_run_thread;
 
 /* JOONKI */
-// FILE *debugfp;
+ FILE *debugfp;
 // FILE *debugfp_2;
 
 // #include "net/mac/mac.h"
@@ -260,9 +260,9 @@ contiki_init()
   queuebuf_init();
 
 	/* JOONKI */
-	// char filename[100];
-	// sprintf(filename, "/home/user/Desktop/Debug_log/Debug%d.txt",linkaddr_node_addr.u8[1]);
-	// debugfp = fopen(filename,"w");
+	 char filename[100];
+	 sprintf(filename, "/home/user/Desktop/Debug_log/Debug%d.txt",linkaddr_node_addr.u8[1]);
+	 debugfp = fopen(filename,"w");
 	
   /* Initialize communication stack */
   netstack_init();

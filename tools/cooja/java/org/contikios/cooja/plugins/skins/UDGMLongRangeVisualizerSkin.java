@@ -186,19 +186,19 @@ public class UDGMLongRangeVisualizerSkin implements VisualizerSkin {
     main.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
     rangeTX = Box.createHorizontalBox();
-    rangeTX.add(new JLabel("TX range:"));
+    rangeTX.add(new JLabel("LR TX range:"));
     rangeTX.add(Box.createHorizontalStrut(5));
     rangeTX.add(txRangeSpinner);
     rangeINT = Box.createHorizontalBox();
-    rangeINT.add(new JLabel("INT range:"));
+    rangeINT.add(new JLabel("LR INT range:"));
     rangeINT.add(Box.createHorizontalStrut(5));
     rangeINT.add(interferenceRangeSpinner);
     ratioTX = Box.createHorizontalBox();
-    ratioTX.add(new JLabel("TX ratio:"));
+    ratioTX.add(new JLabel("LR TX ratio:"));
     ratioTX.add(Box.createHorizontalStrut(5));
     ratioTX.add(successRatioTxSpinner);
     ratioRX = Box.createHorizontalBox();
-    ratioRX.add(new JLabel("RX ratio:"));
+    ratioRX.add(new JLabel("LR RX ratio:"));
     ratioRX.add(Box.createHorizontalStrut(5));
     ratioRX.add(successRatioRxSpinner);
 
@@ -212,7 +212,7 @@ public class UDGMLongRangeVisualizerSkin implements VisualizerSkin {
     main.add(ratioTX);
     main.add(ratioRX);
 
-    rrFrame = new JInternalFrame("UDGM", false, true);
+    rrFrame = new JInternalFrame("UDGM (LR)", false, true);
     rrFrame.setVisible(false);
     rrFrame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     rrFrame.addInternalFrameListener(new InternalFrameAdapter() {

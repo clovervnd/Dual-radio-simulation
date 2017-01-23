@@ -121,7 +121,8 @@ struct rpl_parent {
   uint8_t rem_energy; // JJH
 #endif
 #if RPL_LIFETIME_MAX_MODE
-  uint8_t parent_weight; /* The parent's sum of chilren's weight  JJH */
+  uint8_t parent_weight; /* The parent's weight */
+  uint8_t parent_sum_weight; /* The parent's sum of chilren's weight  JJH */
 #endif
 };
 typedef struct rpl_parent rpl_parent_t;
@@ -268,6 +269,7 @@ struct rpl_instance {
 #endif /* RPL_WITH_DAO_ACK */
 #if RPL_LIFETIME_MAX_MODE
   struct ctimer dio_ack_timer;
+  rpl_parent_t *last_parent;
 #endif
 };
 
@@ -300,7 +302,9 @@ uip_ds6_nbr_t *rpl_get_nbr(rpl_parent_t *parent);
 uip_ds6_nbr_t *rpl_get_nbr_child(rpl_child_t *child);
 #endif
 void rpl_print_neighbor_list(void);
-
+#if RPL_LIFETIME_MAX_MODE
+void rpl_print_child_neighbor_list(void);
+#endif
 /* Per-parent RPL information */
 NBR_TABLE_DECLARE(rpl_parents);
 

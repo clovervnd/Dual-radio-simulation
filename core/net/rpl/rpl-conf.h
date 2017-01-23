@@ -68,7 +68,8 @@
 #else
 /* ETX is the default objective function. */
 // #define RPL_OF rpl_mrhof
-#define RPL_OF rpl_jkof
+//#define RPL_OF rpl_jkof
+#define RPL_OF rpl_ltmax_of
 // #define RPL_OF rpl_of0
 #endif /* RPL_CONF_OF */
 
@@ -172,7 +173,7 @@
 #ifdef RPL_CONF_DIO_INTERVAL_DOUBLINGS
 #define RPL_DIO_INTERVAL_DOUBLINGS  RPL_CONF_DIO_INTERVAL_DOUBLINGS
 #else
-#define RPL_DIO_INTERVAL_DOUBLINGS  4
+#define RPL_DIO_INTERVAL_DOUBLINGS  8
 #endif
 
 /*
