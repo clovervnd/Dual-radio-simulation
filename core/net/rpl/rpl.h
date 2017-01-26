@@ -269,7 +269,10 @@ struct rpl_instance {
 #endif /* RPL_WITH_DAO_ACK */
 #if RPL_LIFETIME_MAX_MODE
   struct ctimer dio_ack_timer;
+#if MODE_LAST_PARENT
   rpl_parent_t *last_parent;
+  uint8_t last_parent_weight;
+#endif
 #endif
 };
 
