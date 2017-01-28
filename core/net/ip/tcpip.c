@@ -73,7 +73,7 @@ extern uip_ds6_lr_addrmap_t ds6_lr_addrmap[NBR_TABLE_MAX_NEIGHBORS];
 #define DEBUG DEBUG_TCPIP
 #include "net/ip/uip-debug.h"
 
- extern FILE *debugfp;
+// extern FILE *debugfp;
 
 #if ANA_TCPIP
 #define ANA(...) PRINTF(__VA_ARGS__)
@@ -692,8 +692,7 @@ tcpip_ipv6_output(void)
 		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
 			if(nbr_2 == NULL)
 			{
-				fprintf(debugfp,"nbr_2 is null\n");
-				fflush(debugfp);
+				PRINTF("nbr_2 is null\n");
 				break;
 			}
 			PRINTLLADDR(uip_ds6_nbr_get_ll(nbr_2));
