@@ -117,6 +117,7 @@ struct rpl_parent {
   clock_time_t last_tx_time;
   uint8_t dtsn;
   uint8_t flags;
+  uint8_t sink_reachability; /* Through this parent, the sink is reachable */
 #if RPL_ENERGY_MODE
   uint8_t rem_energy; // JJH
 #endif

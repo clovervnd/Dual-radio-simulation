@@ -519,6 +519,8 @@ dio_input(void)
       dio.dag_min_hoprankinc = get16(buffer, i + 8);
       dio.ocp = get16(buffer, i + 10);
       /* buffer + 12 is reserved */
+      /* Using buffer + 12 temporally for reachability */
+      dio.reachability = buffer[i + 12]; // JJH
       dio.default_lifetime = buffer[i + 13];
       dio.lifetime_unit = get16(buffer, i + 14);
       PRINTF("RPL: DAG conf:dbl=%d, min=%d red=%d maxinc=%d mininc=%d ocp=%d d_l=%u l_u=%u\n",
@@ -776,7 +778,15 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   /* OCP is in the DAG_CONF option */
   set16(buffer, pos, instance->of->ocp);
   pos += 2;
-  buffer[pos++] = 0; /* reserved */
+//  buffer[pos++] = 0; /* reserved */
+  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15]==1)
+  {
+	  buffer[pos++] = 1; /* Sink reachability always 1  */
+  }
+  else
+  {
+	  buffer[pos++] = my_sink_reachability; /* Temporally for reachability */
+  }
   buffer[pos++] = instance->default_lifetime;
   set16(buffer, pos, instance->lifetime_unit);
   pos += 2;
