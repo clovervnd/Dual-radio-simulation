@@ -906,6 +906,12 @@ dio_ack_input(void)
 	uint8_t last_weight;
 #endif
 
+	if(rpl_get_default_instance() == NULL)
+	{
+		PRINTF("rpl-icmp6 before joining instance\n");
+		return;
+	}
+
 	pos = 0;
 
 	buffer = UIP_ICMP_PAYLOAD;
@@ -989,11 +995,7 @@ dio_ack_input(void)
 			rpl_remove_child(c);
 		}
 		rpl_parent_t *p = NULL;
-		if(rpl_get_default_instance() == NULL)
-		{
-			PRINTF("rpl-icmp6 before joining instance\n");
-			return;
-		}
+
 		p = rpl_find_parent(rpl_get_default_instance()->current_dag,&parent);
 		if(p != NULL )
 		{
