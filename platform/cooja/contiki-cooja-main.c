@@ -137,6 +137,7 @@ static struct cooja_mt_thread rtimer_thread;
 static struct cooja_mt_thread process_run_thread;
 
 /* JOONKI */
+#include "../../core/sys/log_message.h"
 // FILE *debugfp;
 // FILE *debugfp_2;
 
@@ -233,7 +234,10 @@ contiki_init()
   process_init();
 
   /* Start Contiki processes */
+	log_initialization();
+	LOG_MESSAGE("HELLO");
 
+	// log_finisher();
   process_start(&etimer_process, NULL);
   process_start(&sensors_process, NULL);
   ctimer_init();

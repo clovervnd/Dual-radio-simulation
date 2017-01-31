@@ -11,7 +11,7 @@ static int log_file;
 void log_initialization(void);
 void log_finisher(void);
 
-#define LOG_LEVEL		1
+#define LOG_LEVEL		2
 
 #if LOG_LEVEL == 0
 #define LOG_MESSAGE(...) printf(__VA_ARGS__)
