@@ -785,7 +785,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   }
   else
   {
-	  buffer[pos++] = my_sink_reachability; /* Temporally for reachability */
+	  buffer[pos++] = my_sink_reachability-my_child_number; /* Temporally for reachability */
   }
   buffer[pos++] = instance->default_lifetime;
   set16(buffer, pos, instance->lifetime_unit);

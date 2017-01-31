@@ -20,6 +20,7 @@ uint8_t alpha;
 #define RPL_ETX_WEIGHT 	0
 uint8_t my_weight;
 uint8_t my_sink_reachability;
+uint8_t my_child_number;
 #define DATA_PKT_SIZE 10 // 'B' in theory
 #define SHORT_TX_COST 1
 #define SHORT_RX_COST 1
