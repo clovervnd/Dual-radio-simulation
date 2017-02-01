@@ -126,6 +126,7 @@ send_packet(void *ptr)
 	
 	char *log_buf = (char*) malloc(sizeof(char)*100);
 	sprintf(log_buf,"DATA_PACKET, Energy: %d, Number: %d\n",get_residual_energy(), seq_id); 
+	data_message_count = seq_id;
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
 
@@ -133,6 +134,8 @@ send_packet(void *ptr)
 		if (get_residual_energy() == 0) {
 			LOG_MESSAGE("Lifetime of this node ended here!!!\n");
 			LOG_MESSAGE("Transmission: %d, Collision: %d\n", transmission_count, collision_count); 
+			LOG_MESSAGE("DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, dio_count+dao_count+dis_count+dio_ack_count);
+			LOG_MESSAGE("Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count); 
 		}
 	}
 	lifetime = get_residual_energy();
@@ -142,7 +145,7 @@ send_packet(void *ptr)
   sprintf(buf,"DATA id:%03d from:%03dX",seq_id,myaddr);
   uip_udp_packet_sendto(client_conn, buf, strlen(buf),
                         &server_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
-	PRINTF("Residual Energy = %d\n", get_residual_energy());
+	// PRINTF("Residual Energy = %d\n", get_residual_energy());
 }
 /*---------------------------------------------------------------------------*/
 static void

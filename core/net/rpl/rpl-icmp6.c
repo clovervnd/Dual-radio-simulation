@@ -339,6 +339,7 @@ dis_output(uip_ipaddr_t *addr)
    */
 	char *log_buf = (char*) malloc(sizeof(char)*100);
 	sprintf(log_buf,"DIS_OUTPUT, Energy: %d\n",get_residual_energy()); 
+	dis_count ++;
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
 
@@ -665,6 +666,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 
 	char *log_buf = (char*) malloc(sizeof(char)*100);
 	sprintf(log_buf,"DIO_OUTPUT, Energy: %d\n",get_residual_energy()); 
+	dio_count ++;
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
 
@@ -1074,6 +1076,7 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 
 	char *log_buf = (char*) malloc(sizeof(char)*100);
 	sprintf(log_buf,"DIO_ACK_OUTPUT, Energy: %d\n",get_residual_energy()); 
+	dio_ack_count ++;
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
 
@@ -1561,6 +1564,7 @@ dao_output(rpl_parent_t *parent, uint8_t lifetime)
 
 	char *log_buf = (char*) malloc(sizeof(char)*100);
 	sprintf(log_buf,"DAO_OUTPUT, Energy: %d\n",get_residual_energy()); 
+	dao_count ++;
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
 
