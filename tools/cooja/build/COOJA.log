@@ -1,45 +1,494 @@
-[05:48:38 - AWT-EventQueue-0] [Cooja.java:2865] [INFO] - External tools default settings: /external_tools_linux.config
-[05:48:38 - AWT-EventQueue-0] [Cooja.java:2895] [INFO] - External tools user settings: /home/user/.cooja.user.properties
-[05:58:54 - AWT-EventQueue-0] [Cooja.java:2324] [INFO] - Load command cancelled by user...
-[05:58:56 - AWT-EventQueue-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
-[05:58:56 - AWT-EventQueue-0] [Simulation.java:1126] [WARN] - Changed RadioMedium
-[05:58:56 - AWT-EventQueue-0] [Simulation.java:1128] [WARN] - Trying to Load currentRadioMedium : Class = org.contikios.cooja.radiomediums.UDGM
-[05:58:56 - AWT-EventQueue-0] [Simulation.java:1131] [WARN] - Trying to Load currentRadioMedium_LR
-[05:58:56 - AWT-EventQueue-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
-[05:58:56 - AWT-EventQueue-0] [UDGM.java:95] [WARN] - UDGM setting...
-[05:58:56 - AWT-EventQueue-0] [UDGM.java:99] [WARN] - UDGM set for Long Range
-[05:58:56 - AWT-EventQueue-0] [Simulation.java:1137] [WARN] - Successfully Loaded Two Radio Medium, one for SR and one for LR
-[05:58:56 - AWT-EventQueue-0] [Simulation.java:419] [INFO] - Simulation random seed: 123456
-[05:58:56 - AWT-EventQueue-0] [Visualizer.java:256] [INFO] - Registered external visualizer: org.contikios.cooja.plugins.skins.DGRMVisualizerSkin
-[05:59:05 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make log_test.cooja TARGET=cooja 
-[05:59:06 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
-[05:59:06 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib1 and Contiki library '/home/user/Desktop/Dual-radio-simulation/lanada/log_test/obj_cooja/mtype182.cooja
-[05:59:06 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2d020 ( 602 == 0x25a bytes)
-[05:59:06 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2d280 ( 69032 == 0x10da8 bytes)
-[05:59:06 - AWT-EventQueue-0] [ContikiMoteType.java:502] [INFO] - mtype182.cooja: offsetting Cooja mote address space: 0xb285d000
-[05:59:06 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb288a020 ( 602 == 0x25a bytes)
-[05:59:06 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb288a280 ( 69032 == 0x10da8 bytes)
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
-[05:59:08 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
-[05:59:08 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
-[05:59:08 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
-[05:59:08 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@1feba51
-[05:59:08 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@f711d0
-[05:59:09 - Thread-4] [Simulation.java:251] [INFO] - Simulation main loop started, system time: 1485406749047
+[05:39:38 - AWT-EventQueue-0] [Cooja.java:2865] [INFO] - External tools default settings: /external_tools_linux.config
+[05:39:38 - AWT-EventQueue-0] [Cooja.java:2895] [INFO] - External tools user settings: /home/user/.cooja.user.properties
+[05:39:43 - AWT-EventQueue-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[05:39:43 - AWT-EventQueue-0] [Simulation.java:1126] [WARN] - Changed RadioMedium
+[05:39:43 - AWT-EventQueue-0] [Simulation.java:1128] [WARN] - Trying to Load currentRadioMedium : Class = org.contikios.cooja.radiomediums.UDGM
+[05:39:43 - AWT-EventQueue-0] [Simulation.java:1131] [WARN] - Trying to Load currentRadioMedium_LR
+[05:39:43 - AWT-EventQueue-0] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[05:39:43 - AWT-EventQueue-0] [UDGM.java:95] [WARN] - UDGM setting...
+[05:39:43 - AWT-EventQueue-0] [UDGM.java:99] [WARN] - UDGM set for Long Range
+[05:39:43 - AWT-EventQueue-0] [Simulation.java:1137] [WARN] - Successfully Loaded Two Radio Medium, one for SR and one for LR
+[05:39:43 - AWT-EventQueue-0] [Simulation.java:419] [INFO] - Simulation random seed: 123456
+[05:39:43 - AWT-EventQueue-0] [Visualizer.java:256] [INFO] - Registered external visualizer: org.contikios.cooja.plugins.skins.DGRMVisualizerSkin
+[05:40:11 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[05:40:13 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[05:41:51 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[05:41:52 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[05:44:35 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[05:44:36 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
+[05:44:36 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib1 and Contiki library '/home/user/Desktop/Dual-radio-simulation/lanada/obj_cooja/mtype388.cooja
+[05:44:36 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2e020 ( 602 == 0x25a bytes)
+[05:44:37 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2e280 ( 33736 == 0x83c8 bytes)
+[05:44:37 - AWT-EventQueue-0] [ContikiMoteType.java:502] [INFO] - mtype388.cooja: offsetting Cooja mote address space: 0xb2880000
+[05:44:37 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb28ae020 ( 602 == 0x25a bytes)
+[05:44:37 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb28ae280 ( 33736 == 0x83c8 bytes)
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:38 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:38 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:38 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:38 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:38 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:50 - AWT-EventQueue-0] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
+[05:44:52 - AWT-EventQueue-0] [ContikiMoteType.java:1049] [WARN] - Setting Mote Interfaces!!!!!!!!!!!! 
+[05:44:52 - AWT-EventQueue-0] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib2 and Contiki library '/home/user/Desktop/Dual-radio-simulation/lanada/obj_cooja/mtype265.cooja
+[05:44:52 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2e020 ( 602 == 0x25a bytes)
+[05:44:52 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x2e280 ( 33864 == 0x8448 bytes)
+[05:44:52 - AWT-EventQueue-0] [ContikiMoteType.java:502] [INFO] - mtype265.cooja: offsetting Cooja mote address space: 0xb27a7000
+[05:44:52 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb27d5020 ( 602 == 0x25a bytes)
+[05:44:53 - AWT-EventQueue-0] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb27d5280 ( 33864 == 0x8448 bytes)
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[05:44:56 - AWT-EventQueue-0] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[05:44:56 - AWT-EventQueue-0] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[05:44:56 - AWT-EventQueue-0] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@10aff2c
+[05:44:56 - AWT-EventQueue-0] [AbstractRadioMedium.java:453] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@186ac64
+[05:45:48 - Thread-6] [Simulation.java:251] [INFO] - Simulation main loop started, system time: 1485924348356
+[05:46:05 - Thread-6] [Simulation.java:310] [INFO] - Simulation main loop stopped, system time: 1485924365056	Duration: 16700 ms	Simulated time 475450 ms	Ratio 28.47005988023952

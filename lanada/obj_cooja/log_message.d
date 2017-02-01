@@ -10,7 +10,8 @@ obj_cooja/log_message.o: ..//core/sys/log_message.c \
  ..//core/./sys/rtimer.h ..//platform/cooja/./rtimer-arch.h \
  ..//platform/cooja/./contiki-conf.h ..//core/./sys/pt.h \
  ..//core/./sys/procinit.h ..//core/./sys/loader.h ..//core/./sys/clock.h \
- ..//core/./sys/energest.h ..//core/./sys/rtimer.h
+ ..//core/./sys/energest.h ..//core/./sys/rtimer.h \
+ ..//core/./net/linkaddr.h
 ..//core/sys/log_message.c :
  ..//core/sys/log_message.h ..//core/./cfs/cfs.h ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//platform/cooja/./contiki-conf.h :
@@ -24,3 +25,4 @@ obj_cooja/log_message.o: ..//core/sys/log_message.c \
  ..//platform/cooja/./contiki-conf.h ..//core/./sys/pt.h :
  ..//core/./sys/procinit.h ..//core/./sys/loader.h ..//core/./sys/clock.h :
  ..//core/./sys/energest.h ..//core/./sys/rtimer.h :
+ ..//core/./net/linkaddr.h :

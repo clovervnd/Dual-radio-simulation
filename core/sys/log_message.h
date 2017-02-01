@@ -3,9 +3,9 @@
 #include "cfs/cfs.h"
 
 #ifdef COOJA
-static FILE *log_fp;
+extern FILE *log_fp;
 #else	/* COOJA */
-static int log_file;
+extern int log_file;
 #endif	/* COOJA */
 
 void log_initialization(void);
@@ -18,22 +18,24 @@ void log_finisher(void);
 
 #elif	LOG_LEVEL == 1
 #ifdef COOJA
-#define LOG_MESSAGE(...) fprintf(log_fp, __VA_ARGS__)
+#define LOG_MESSAGE(...) do{\
+	fprintf(log_fp, __VA_ARGS__);\
+	fflush(log_fp);\
+}while(0)
 #else	/* COOJA */
 #define LOG_MESSAGE(...) cfs_write(log_file, __VA_ARGS__, 30)
 #endif	/* COOJA */
 
 #elif LOG_LEVEL == 2
 #ifdef COOJA
-#define LOG_MESSAGE(...) \
-	do{\
+#define LOG_MESSAGE(...) do{\
 		printf(__VA_ARGS__);\
 		fprintf(log_fp, __VA_ARGS__);\
+		fflush(log_fp);\
 	}while(0)
 
 #else /* COOJA */
-#define LOG_MESSAGE(...) \
-	do{\
+#define LOG_MESSAGE(...) do{\
 		printf(__VA_ARGS__);\
 		cfs_write(log_file, __VA_ARGS__,30);\
 	}while(0)

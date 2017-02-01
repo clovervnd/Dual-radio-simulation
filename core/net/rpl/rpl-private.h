@@ -261,6 +261,7 @@ struct rpl_dio {
   uip_ipaddr_t parent_addr;
   uint8_t parent_weight; /* dio parent's weight info. JJH */
   uint8_t dio_weight; /* dio sender's total weight JJH */
+  uint8_t reachability;
 #endif
 };
 typedef struct rpl_dio rpl_dio_t;

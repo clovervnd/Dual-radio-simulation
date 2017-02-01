@@ -8,7 +8,7 @@
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
-#define MODE_LAST_PARENT	1 // Tx Last parent info. in dio_ack
+#define MODE_LAST_PARENT	0 // Tx Last parent info. in dio_ack
 #define MODE_PARENT_UPDATE_IN_ROUND 0 // Update parent only when round is synchronized // Not implemented yet
 
 #if RPL_ENERGY_MODE
@@ -19,6 +19,7 @@ uint8_t alpha;
 #elif RPL_LIFETIME_MAX_MODE
 #define RPL_ETX_WEIGHT 	0
 uint8_t my_weight;
+uint8_t my_sink_reachability;
 #define DATA_PKT_SIZE 10 // 'B' in theory
 #define SHORT_TX_COST 1
 #define SHORT_RX_COST 1
