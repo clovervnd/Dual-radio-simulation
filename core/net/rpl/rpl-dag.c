@@ -726,6 +726,8 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
 #endif /* RPL_DAG_MC != RPL_DAG_MC_NONE */
 #if RPL_LIFETIME_MAX_MODE
       p->parent_weight = dio->parent_weight;
+      p->sink_reachability = dio->reachability;
+      my_sink_reachability++; // Increase sink_reachability by 1 for each parent
 #endif
     }
   }
@@ -777,6 +779,7 @@ rpl_add_child(uint8_t weight, uip_ipaddr_t *addr)
 //      uip_ds6_nbr_t *nbr;
 //      nbr = rpl_get_nbr_child(c);
       c->weight = weight;
+      my_child_number++;
 /*       Check whether we have a neighbor that has not gotten a link metric yet
       if(nbr != NULL && nbr->link_metric == 0) {
 	nbr->link_metric = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
@@ -948,11 +951,11 @@ best_parent(rpl_dag_t *dag)
   rpl_parent_t *p, *best;
 
   best = NULL;
-//  uip_ds6_nbr_t *nbr;
+  uip_ds6_nbr_t *nbr;
   p = nbr_table_head(rpl_parents);
   while(p != NULL) {
-//	  nbr = rpl_get_nbr(p);
-    if(p->dag != dag || p->rank == INFINITE_RANK || !(p->sink_reachability)) {
+	  nbr = rpl_get_nbr(p);
+    if(p->dag != dag || p->rank == INFINITE_RANK || (p->sink_reachability == 1 && rpl_find_child(&(nbr->ipaddr)) != NULL)) {
       /* ignore this neighbor */
     } else if(best == NULL) {
       best = p;
@@ -1002,6 +1005,7 @@ rpl_remove_child(rpl_child_t *child)
 //  rpl_nullify_parent(parent);
 
   nbr_table_remove(rpl_children, child);
+  my_child_number--;
 }
 #endif
 /*---------------------------------------------------------------------------*/
@@ -1608,8 +1612,8 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   p->rank = dio->rank;
 #if RPL_LIFETIME_MAX_MODE
   p->parent_sum_weight = dio->dio_weight;
-  p->sink_reachability = dio->reachability;
-  my_sink_reachability |= dio->reachability;
+//  p->sink_reachability = dio->reachability;
+//  my_sink_reachability |= dio->reachability;
   printf("my_sink_reachability %d\n",my_sink_reachability);
 #endif
   /* Parent info has been updated, trigger rank recalculation */

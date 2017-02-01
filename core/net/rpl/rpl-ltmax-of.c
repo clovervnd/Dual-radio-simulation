@@ -122,7 +122,7 @@ calculate_path_metric(rpl_parent_t *p)
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
   {
 //	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
-	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
+	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR + ALPHA * p->rank;
 	  PRINTF("ip:%d rank:%d ret_metric:%d\n",nbr->ipaddr.u8[15],p->rank,ret_metric);
 	  return ret_metric;
   }
