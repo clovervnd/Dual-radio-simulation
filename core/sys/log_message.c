@@ -12,6 +12,12 @@ int log_file;
 void log_initialization(void){
 	collision_count = 0;
 	transmission_count = 0;
+	control_message_count = 0;
+	data_message_count = 0;
+	dio_count = 0;
+	dis_count = 0;
+	dao_count = 0;
+	dio_ack_count = 0;
 
 #ifdef COOJA
 	char filename[100];
