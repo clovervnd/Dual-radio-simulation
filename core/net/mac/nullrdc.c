@@ -51,7 +51,7 @@
 #include "sys/cooja_mt.h"
 #endif /* CONTIKI_TARGET_COOJA */
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -126,6 +126,9 @@
 
 /* remaining energy JJH */
 #include "../lanada/param.h"
+#include "sys/log_message.h"
+extern int collision_count, transmission_count;
+
 #if RPL_ENERGY_MODE
 extern uint8_t remaining_energy;
 #endif
@@ -144,6 +147,9 @@ send_one_packet(mac_callback_t sent, void *ptr)
 
 	// fprintf(debugfp,"nullrdc/send_one_packet/sent : %x\n\n",sent);
 	// fflush(debugfp); 
+	
+	transmission_count ++;
+	// LOG_MESSAGE("Transmission\n");
 
 	/* JOONKI */
 #if DUAL_RADIO
@@ -287,6 +293,8 @@ send_one_packet(mac_callback_t sent, void *ptr)
 
           } else {
 	    PRINTF("nullrdc tx noack\n");
+			// LOG_MESSAGE("TX noack\n");
+			collision_count ++;
 	  }
         }
         break;

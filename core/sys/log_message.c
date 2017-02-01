@@ -10,6 +10,9 @@ int log_file;
 
 
 void log_initialization(void){
+	collision_count = 0;
+	transmission_count = 0;
+
 #ifdef COOJA
 	char filename[100];
 	sprintf(filename, "/home/user/Desktop/Debug_log/log_message%d.txt",linkaddr_node_addr.u8[1]);

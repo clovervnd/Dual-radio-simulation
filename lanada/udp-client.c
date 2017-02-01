@@ -65,6 +65,9 @@
 #include "param.h"
 
 #include "core/sys/residual.h"
+#include "core/sys/log_message.h"
+
+static int lifetime;
 
 /* Remaining energy init JJH*/
 #if RPL_ENERGY_MODE
@@ -106,7 +109,7 @@ send_packet(void *ptr)
 #ifdef SERVER_REPLY
   uint8_t num_used = 0;
   uip_ds6_nbr_t *nbr;
-
+	
   nbr = nbr_table_head(ds6_neighbors);
   while(nbr != NULL) {
     nbr = nbr_table_next(ds6_neighbors, nbr);
@@ -120,6 +123,20 @@ send_packet(void *ptr)
 #endif /* SERVER_REPLY */
 
   seq_id++;
+	
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"DATA_PACKET, Energy: %d, Number: %d\n",get_residual_energy(), seq_id); 
+	LOG_MESSAGE(log_buf); 
+	free(log_buf);
+
+	if (lifetime > 0) {
+		if (get_residual_energy() == 0) {
+			LOG_MESSAGE("Lifetime of this node ended here!!!\n");
+			LOG_MESSAGE("Transmission: %d, Collision: %d\n", transmission_count, collision_count); 
+		}
+	}
+	lifetime = get_residual_energy();
+
   PRINTF("app: DATA id:%03d from:%03d\n",
          seq_id,myaddr);
   sprintf(buf,"DATA id:%03d from:%03dX",seq_id,myaddr);

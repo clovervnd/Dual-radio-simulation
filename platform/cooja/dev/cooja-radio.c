@@ -44,8 +44,13 @@
 #include "dev/cooja-radio.h"
 
 /* JOONKI */
-#include <stdio.h>
 
+#define DEBUG 0
+#if DEBUG
+#define PRINTF(...) printf(__VA_ARGS__)
+#else
+#define PRINTF(...)
+#endif
 #if DUAL_RADIO
 #include "../dual_conf.h"
 #endif
@@ -283,7 +288,7 @@ radio_send(const void *payload, unsigned short payload_len)
   if(payload_len == 0) {
     return RADIO_TX_ERR;
   }
-	printf("COOJA RADIO: Sending packet in cooja driver\n");
+	PRINTF("COOJA RADIO: Sending packet in cooja driver\n");
 
 #if DUAL_RADIO
 /* IN CASE OF LONG RADIO */
@@ -291,8 +296,8 @@ radio_send(const void *payload, unsigned short payload_len)
 	  if(simOutSizeLR > 0) {
 	    return RADIO_TX_ERR;
 	  }
-		printf("$$$$$$$$$$$$$$$ Sending in LR ------------------------>\n");
-		// printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
+		PRINTF("$$$$$$$$$$$$$$$ Sending in LR ------------------------>\n");
+		PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit); 
   	/* Transmit on CCA */
 #if WITH_SEND_CCA
 	  if(!channel_clear()) {
@@ -306,8 +311,8 @@ radio_send(const void *payload, unsigned short payload_len)
 /* IN CASE OF SHORT RADIO */
 	else {	
 #endif /* DUAL_RADIO */
-		printf("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
-		// printf("LongRangeTransmit : %d\n",LongRangeTransmit); 
+		PRINTF("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
+		PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit); 
 	  if(simOutSize > 0) {
 	    return RADIO_TX_ERR;
 	  }

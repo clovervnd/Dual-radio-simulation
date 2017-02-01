@@ -103,10 +103,10 @@ rpl_print_neighbor_list(void)
     rpl_parent_t *p = nbr_table_head(rpl_parents);
     clock_time_t now = clock_time();
 
-    printf("RPL: rank %u dioint %u, %u nbr(s)\n", curr_rank, curr_dio_interval, uip_ds6_nbr_num());
+    PRINTF("RPL: rank %u dioint %u, %u nbr(s)\n", curr_rank, curr_dio_interval, uip_ds6_nbr_num());
     while(p != NULL) {
       uip_ds6_nbr_t *nbr = rpl_get_nbr(p);
-      printf("RPL: nbr %3u %5u, %5u => %5u %c%c (last tx %u min ago)\n",
+      PRINTF("RPL: nbr %3u %5u, %5u => %5u %c%c (last tx %u min ago)\n",
           nbr_table_get_lladdr(rpl_parents, p)->u8[7],
           p->rank, nbr ? nbr->link_metric : 0,
           default_instance->of->calculate_rank(p, 0),
@@ -115,7 +115,7 @@ rpl_print_neighbor_list(void)
           (unsigned)((now - p->last_tx_time) / (60 * CLOCK_SECOND)));
       p = nbr_table_next(rpl_parents, p);
     }
-    printf("RPL: end of list\n");
+    PRINTF("RPL: end of list\n");
   }
 }
 #if RPL_LIFETIME_MAX_MODE
@@ -130,7 +130,7 @@ rpl_print_child_neighbor_list(void)
     while(c != NULL) {
       uip_ds6_nbr_t *nbr = rpl_get_nbr_child(c);
 //      printf("RPL: nbr %3u %5u, %5u => %5u %c%c (last tx %u min ago)\n",
-      	printf("RPL_child: nbr %3u\n",
+      	PRINTF("RPL_child: nbr %3u\n",
           nbr_table_get_lladdr(rpl_children, c)->u8[7]);
 //          p->rank, nbr ? nbr->link_metric : 0,
 //          default_instance->of->calculate_rank(p, 0),
@@ -139,7 +139,7 @@ rpl_print_child_neighbor_list(void)
 //          (unsigned)((now - p->last_tx_time) / (60 * CLOCK_SECOND)));
       c = nbr_table_next(rpl_children, c);
     }
-    printf("RPL: end of list\n");
+    PRINTF("RPL: end of list\n");
   }
 }
 #endif
@@ -907,7 +907,7 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
     rpl_set_default_route(instance, rpl_get_parent_ipaddr(best_dag->preferred_parent));
     PRINTF("RPL: Changed preferred parent, rank changed from %u to %u\n",
   	(unsigned)old_rank, best_dag->rank);
-    printf("RPL: Changed preferred parent, rank changed from %u to %u\n",
+    PRINTF("RPL: Changed preferred parent, rank changed from %u to %u\n",
   	(unsigned)old_rank, best_dag->rank);
     RPL_STAT(rpl_stats.parent_switch++);
     if(instance->mop != RPL_MOP_NO_DOWNWARD_ROUTES) {
@@ -1614,7 +1614,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   p->parent_sum_weight = dio->dio_weight;
 //  p->sink_reachability = dio->reachability;
 //  my_sink_reachability |= dio->reachability;
-  printf("my_sink_reachability %d\n",my_sink_reachability);
+  PRINTF("my_sink_reachability %d\n",my_sink_reachability);
 #endif
   /* Parent info has been updated, trigger rank recalculation */
   p->flags |= RPL_PARENT_FLAG_UPDATED;

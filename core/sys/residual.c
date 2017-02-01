@@ -31,12 +31,12 @@ extern energy_t COOJA_radioTxLong;
 extern energy_t COOJA_radioRxLong;
 extern energy_t COOJA_duration;
 static const energy_t DISSIPATION_RATE[] = {
-    100,  // radioOn
-    400,  // radioTx
-    400,  // radioRx
-    200,  // radioOnLong
-    800,  // radioTxLong
-    800,  // radioRxLong
+    10,  // radioOn
+    40,  // radioTx
+    40,  // radioRx
+    20,  // radioOnLong
+    80,  // radioTxLong
+    80,  // radioRxLong
     1,  // duration
 };
 static const int DISSIPATION_RATE_DIVISOR = 16;
@@ -63,6 +63,5 @@ get_residual_energy(void){
     
     energy = energy < 0 ? 0 : energy;
 #endif
-
     return energy;
 }

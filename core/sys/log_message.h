@@ -8,6 +8,9 @@ extern FILE *log_fp;
 extern int log_file;
 #endif	/* COOJA */
 
+int collision_count;
+int transmission_count;
+
 void log_initialization(void);
 void log_finisher(void);
 
