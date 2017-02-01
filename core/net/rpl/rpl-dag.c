@@ -953,9 +953,18 @@ best_parent(rpl_dag_t *dag)
   best = NULL;
   uip_ds6_nbr_t *nbr;
   p = nbr_table_head(rpl_parents);
+  dag->base_rank = p->rank;
   while(p != NULL) {
+#if RPL_LIFETIME_MAX_MODE
 	  nbr = rpl_get_nbr(p);
+	  if(p->rank < dag->base_rank)
+	  {
+		  dag->base_rank = p->rank;
+	  }
     if(p->dag != dag || p->rank == INFINITE_RANK || (p->sink_reachability == 1 && rpl_find_child(&(nbr->ipaddr)) != NULL)) {
+#else
+    if(p->dag != dag || p->rank == INFINITE_RANK) {
+#endif
       /* ignore this neighbor */
     } else if(best == NULL) {
       best = p;

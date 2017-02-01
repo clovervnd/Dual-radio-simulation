@@ -14,7 +14,7 @@ int transmission_count;
 void log_initialization(void);
 void log_finisher(void);
 
-#define LOG_LEVEL		2
+#define LOG_LEVEL		3
 
 #if LOG_LEVEL == 0
 #define LOG_MESSAGE(...) printf(__VA_ARGS__)
@@ -43,4 +43,7 @@ void log_finisher(void);
 		cfs_write(log_file, __VA_ARGS__,30);\
 	}while(0)
 #endif	/* COOJA */
+
+#elif LOG_LEVEL == 3
+#define LOG_MESSAGES(...)
 #endif

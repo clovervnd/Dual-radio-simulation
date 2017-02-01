@@ -112,6 +112,7 @@ calculate_path_metric(rpl_parent_t *p)
 {
   uip_ds6_nbr_t *nbr;
   rpl_path_metric_t ret_metric;
+  rpl_rank_t rank_rate;
   if(p == NULL) {
     return MAX_PATH_COST * RPL_DAG_MC_ETX_DIVISOR;
   }
@@ -121,8 +122,14 @@ calculate_path_metric(rpl_parent_t *p)
   }
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
   {
-//	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
-	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR + ALPHA * p->rank;
+#if RPL_LIFETIME_MAX_MODE
+	  PRINTF("rank, base_rank %d %d\n",p->rank,rpl_get_any_dag()->base_rank);
+	  rank_rate = p->rank - rpl_get_any_dag()->base_rank < 0 ? 0 : p->rank - rpl_get_any_dag()->base_rank;
+	  PRINTF("rank_rate: %d\n",rank_rate);
+	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR + ALPHA * rank_rate;
+#else
+	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
+#endif
 	  PRINTF("ip:%d rank:%d ret_metric:%d\n",nbr->ipaddr.u8[15],p->rank,ret_metric);
 	  return ret_metric;
   }
@@ -225,6 +232,8 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 
 	PRINTF("LTMAX_OF %d parent_weight %d\n",is_longrange,p->parent_weight);
   }
+#else
+  }
 #endif
 }
 
@@ -295,6 +304,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
+#if RPL_LIFETIME_MAX_MODE
   if(p1 == dag->preferred_parent)
   {
 	  if(p1_metric - p1->parent_weight < 0)
@@ -317,6 +327,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  p2_metric -= p2->parent_weight;
 	  }
   }
+#endif
 
   if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
   {
@@ -357,68 +368,6 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  return p1_metric <= p2_metric ? p1 : p2;
 	  }
   }
-  /* Maintain stability of the preferred parent in case of similar weight. */
-/*  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-//	   When weight is 0, choose it as a parent
-	  if(p1_metric == 0 || p2_metric == 0)
-	  {
-//		   If both parent has 0 weight, choose smaller rank one
-		  if(p1_metric == 0 && p2_metric == 0)
-		  {
-			  return p1->rank < p2->rank ? p1 : p2;
-		  }
-		  if(p1_metric == 0 && p2_metric == 0)
-		  {
-			  if(p1->rank == p2->rank)
-			  {
-				  return dag->preferred_parent;
-			  }
-			  else
-			  {
-				  return p1->rank < p2->rank ? p1 : p2;
-			  }
-		  }
-		  else
-		  {
-			  return !p1_metric ? p1 : p2;
-		  }
-	  }*/
-
-
-//	  else if(p1_metric < p2_metric + min_diff &&
-//       p1_metric > p2_metric - min_diff) {
-//	  else if(p1_metric == p2_metric) {
-//      PRINTF("RPL_LTMAX_OF: LTMAX_OF hysteresis: %u <= %u <= %u\n",
-//             p2_metric - min_diff,
-//             p1_metric,
-//             p2_metric + min_diff);
-      /* When they have similar weight, choose smaller rank parent */
-      /* Maintain stability when rank is also in case of similarity */
-//      if(p1->rank < p2->rank + min_diff &&
-//    		  p1->rank > p2->rank -min_diff)
-//      {
-//    	  return dag->preferred_parent;
-//      }
-//      else
-//      {
-//    	  return p1->rank < p2->rank ? p1 : p2;
-//      }
-
-//    }
-//  }
-
-/*  if(p1_metric == 0 || p2_metric == 0)
-  {
-//	  If both parent has 0 weight, choose smaller rank one
-	  if(p1_metric == 0 && p2_metric == 0)
-	  {
-		  return p1->rank < p2->rank ? p1 : p2;
-	  }
-	  else
-	  {
-		  return !p1_metric ? p1 : p2;
-	  }
-  }*/
 }
 
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
