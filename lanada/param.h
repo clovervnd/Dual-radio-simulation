@@ -7,7 +7,7 @@
 #define RPL_LIFETIME_MAX_MODE 1
 
 /* Distributed weight update problem solutions */
-#define MODE_DIO_WEIGHT_UPDATED 1
+#define MODE_DIO_WEIGHT_UPDATED 0
 #define MODE_LAST_PARENT	0 // Tx Last parent info. in dio_ack
 #define MODE_PARENT_UPDATE_IN_ROUND 0 // Update parent only when round is synchronized // Not implemented yet
 

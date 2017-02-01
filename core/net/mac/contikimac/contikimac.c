@@ -288,7 +288,9 @@ static int broadcast_rate_counter;
 
 /* remaining energy JJH */
 #include "../lanada/param.h"
+#if RPL_ENERGY_MODE
 extern uint8_t remaining_energy;
+#endif
 
 /*---------------------------------------------------------------------------*/
 static void
@@ -641,6 +643,7 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
   transmit_len = packetbuf_totlen();
   NETSTACK_RADIO.prepare(packetbuf_hdrptr(), transmit_len);
 
+#if RPL_ENERGY_MODE
     /* Relaying Tx energy consumption for Data packet JJH */
     original_datalen = packetbuf_totlen();
     original_dataptr = packetbuf_hdrptr();
@@ -669,7 +672,7 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
     		PRINTF("ENERGY DEPLETION\n");
 			}
     }
-  
+#endif
   if(!is_broadcast && !is_receiver_awake) {
 #if WITH_PHASE_OPTIMIZATION
     ret = phase_wait(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
@@ -1085,6 +1088,7 @@ input_packet(void)
     	uint8_t src_addr2=original_dataptr[original_datalen-3];
     	uint8_t src_addr3=original_dataptr[original_datalen-2];
 */
+#if RPL_ENERGY_MODE
     	if(original_dataptr[original_datalen-1]=='X')
     	{
     		/* For each data relay, energy reduction 1 for short 2 for long */
@@ -1116,6 +1120,7 @@ input_packet(void)
     				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
 #endif
     	}
+#endif
         frame802154_t info154;
         frame802154_parse(original_dataptr, original_datalen, &info154);
 

@@ -142,6 +142,7 @@ static int
 radio_on(void)
 {
   simRadioHWOn = 1;
+  simRadioHWOnLR = 1;
   return 1;
 }
 /*---------------------------------------------------------------------------*/
@@ -149,6 +150,7 @@ static int
 radio_off(void)
 {
   simRadioHWOn = 0;
+  simRadioHWOnLR = 0;
   return 1;
 }
 /*---------------------------------------------------------------------------*/

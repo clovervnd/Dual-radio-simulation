@@ -446,8 +446,10 @@ send_packet(void)
   int is_already_streaming = 0;
   uint8_t collisions;
 	// JJH
+#if RPL_ENERGY_MODE
   int original_datalen;
   uint8_t *original_dataptr;
+#endif
 
   /* Create the X-MAC header for the data packet. */
 #if !NETSTACK_CONF_BRIDGE_MODE
@@ -690,8 +692,9 @@ send_packet(void)
   /* Send the data packet. */
   if((is_broadcast || got_strobe_ack || is_streaming) && collisions == 0) {
 
+#if RPL_ENERGY_MODE
 //	     Relaying Tx energy consumption for Data packet JJH
-		original_datalen = packetbuf_totlen();
+	  original_datalen = packetbuf_totlen();
 	  original_dataptr = packetbuf_hdrptr();
 	  if(original_dataptr[original_datalen-1]=='X')
 	  {
@@ -716,6 +719,7 @@ send_packet(void)
 	   		PRINTF("ENERGY DEPLETION\n");
 			}
 		}
+#endif
     NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
   }
 
@@ -841,7 +845,7 @@ input_packet(void)
 	uint8_t src_addr2=original_dataptr[original_datalen-3];
 	uint8_t src_addr3=original_dataptr[original_datalen-2];
 */
-
+#if RPL_ENERGY_MODE
 	if(original_dataptr[original_datalen-1]=='X')
 	{
 //		 For each data relay, energy reduction 1 for short 2 for long
@@ -871,10 +875,10 @@ input_packet(void)
 	PRINTF("DATA from: %d to: %d %d\n",
 				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
 #endif
-
 	}
+#endif
         PRINTDEBUG("cxmac: data(%u)\n", packetbuf_datalen());
-	NETSTACK_MAC.input();
+        NETSTACK_MAC.input();
         return;
       } else {
         PRINTDEBUG("cxmac: data not for us\n");
