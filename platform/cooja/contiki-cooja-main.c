@@ -61,7 +61,6 @@
 #include "dev/vib-sensor.h"
 
 #include "sys/node-id.h"
-
 /* JNI-defined functions, depends on the environment variable CLASSNAME */
 #ifndef CLASSNAME
 #error CLASSNAME is undefined, required by contiki-cooja-main.c
@@ -137,7 +136,9 @@ static struct cooja_mt_thread rtimer_thread;
 static struct cooja_mt_thread process_run_thread;
 
 /* JOONKI */
-// FILE *debugfp;
+#include "sys/log_message.h"
+#include "sys/residual.h"
+FILE *debugfp;
 // FILE *debugfp_2;
 
 // #include "net/mac/mac.h"
@@ -233,7 +234,6 @@ contiki_init()
   process_init();
 
   /* Start Contiki processes */
-
   process_start(&etimer_process, NULL);
   process_start(&sensors_process, NULL);
   ctimer_init();
@@ -260,10 +260,15 @@ contiki_init()
   queuebuf_init();
 
 	/* JOONKI */
-//	 char filename[100];
-//	 sprintf(filename, "/home/user/Desktop/Debug_log/Debug%d.txt",linkaddr_node_addr.u8[1]);
-//	 debugfp = fopen(filename,"w");
-	
+	// char filename[100];
+	// sprintf(filename, "/home/user/Desktop/Debug_log/Debug%d.txt",linkaddr_node_addr.u8[1]);
+ 	// debugfp = fopen(filename,"w");
+	// fprintf(debugfp, "Hello\n");
+	// fflush(debugfp);
+	log_initialization();
+	LOG_MESSAGE("COOJA platform log HELLO\n");
+	LOG_MESSAGE("Starting with energy %d\n",get_residual_energy());
+
   /* Initialize communication stack */
   netstack_init();
   printf("%s/%s/%s, channel check rate %lu Hz\n",
@@ -370,7 +375,7 @@ contiki_init()
       uip_ds6_long_addr_add(&long_ipaddr, 0, ADDR_TENTATIVE);
 #endif /* DUAL_RADIO */
 
-      printf("Tentative global IPv6 address ");
+			printf("Tentative global IPv6 address ");
       for(i = 0; i < 7; ++i) {
         printf("%02x%02x:",
                ipaddr.u8[i * 2], ipaddr.u8[i * 2 + 1]);

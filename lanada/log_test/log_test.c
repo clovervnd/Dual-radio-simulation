@@ -53,8 +53,8 @@ PROCESS_THREAD(hello_world_process, ev, data)
 {
   PROCESS_BEGIN();
 	
-	log_initialization();
-	log_finisher();
+	// log_initialization();
+	// log_finisher();
 	
 	//LOG_MESSAGE("Hello, Joonki!! \n");
 	/* char data[20];

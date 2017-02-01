@@ -76,6 +76,9 @@
 
 /* To transfer remaining energy JJH */
 #include "../lanada/param.h"
+#include "sys/log_message.h"
+#include "sys/residual.h"
+#include <stdlib.h>
 #if RPL_ENERGY_MODE
 extern uint8_t remaining_energy;
 #endif
@@ -334,6 +337,10 @@ dis_output(uip_ipaddr_t *addr)
    *     |     Flags     |   Reserved    |   Option(s)...
    *     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    */
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"DIS_OUTPUT, Energy: %d\n",get_residual_energy()); 
+	LOG_MESSAGE(log_buf); 
+	free(log_buf);
 
   buffer = UIP_ICMP_PAYLOAD;
   buffer[0] = buffer[1] = 0;
@@ -655,6 +662,11 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 #if !RPL_LEAF_ONLY
   uip_ipaddr_t addr;
 #endif /* !RPL_LEAF_ONLY */
+
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"DIO_OUTPUT, Energy: %d\n",get_residual_energy()); 
+	LOG_MESSAGE(log_buf); 
+	free(log_buf);
 
 #if RPL_LEAF_ONLY
   /* In leaf mode, we only send DIO messages as unicasts in response to
@@ -1059,6 +1071,11 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	uip_ipaddr_t addr;
 	rpl_dag_t *dag = instance->current_dag;
 	rpl_parent_t *p = dag->preferred_parent;
+
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"DIO_ACK_OUTPUT, Energy: %d\n",get_residual_energy()); 
+	LOG_MESSAGE(log_buf); 
+	free(log_buf);
 
 	pos = 0;
 
@@ -1541,6 +1558,12 @@ dao_output(rpl_parent_t *parent, uint8_t lifetime)
 {
   /* Destination Advertisement Object */
   uip_ipaddr_t prefix;
+
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"DAO_OUTPUT, Energy: %d\n",get_residual_energy()); 
+	LOG_MESSAGE(log_buf); 
+	free(log_buf);
+
 
   if(get_global_addr(&prefix) == 0) {
     PRINTF("RPL: No global address set for this node - suppressing DAO\n");
