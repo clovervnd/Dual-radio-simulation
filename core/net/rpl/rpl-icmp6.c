@@ -518,9 +518,11 @@ dio_input(void)
       dio.dag_max_rankinc = get16(buffer, i + 6);
       dio.dag_min_hoprankinc = get16(buffer, i + 8);
       dio.ocp = get16(buffer, i + 10);
-      /* buffer + 12 is reserved */
+#if RPL_LIFETIME_MAX_MODE
       /* Using buffer + 12 temporally for reachability */
       dio.reachability = buffer[i + 12]; // JJH
+#endif
+      /* buffer + 12 is reserved */
       dio.default_lifetime = buffer[i + 13];
       dio.lifetime_unit = get16(buffer, i + 14);
       PRINTF("RPL: DAG conf:dbl=%d, min=%d red=%d maxinc=%d mininc=%d ocp=%d d_l=%u l_u=%u\n",
@@ -778,7 +780,8 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   /* OCP is in the DAG_CONF option */
   set16(buffer, pos, instance->of->ocp);
   pos += 2;
-//  buffer[pos++] = 0; /* reserved */
+#if RPL_LIFETIME_MAX_MODE
+
   if(uip_ds6_get_link_local(-1)->ipaddr.u8[15]==1)
   {
 	  buffer[pos++] = 1; /* Sink reachability always 1  */
@@ -787,6 +790,9 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   {
 	  buffer[pos++] = my_sink_reachability-my_child_number; /* Temporally for reachability */
   }
+#else
+    buffer[pos++] = 0; /* reserved */
+#endif
   buffer[pos++] = instance->default_lifetime;
   set16(buffer, pos, instance->lifetime_unit);
   pos += 2;
@@ -909,6 +915,7 @@ dio_ack_input(void)
 	if(rpl_get_default_instance() == NULL)
 	{
 		PRINTF("rpl-icmp6 before joining instance\n");
+		uip_clear_buf();
 		return;
 	}
 

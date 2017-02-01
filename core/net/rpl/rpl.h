@@ -161,6 +161,9 @@ struct rpl_dag {
   struct rpl_instance *instance;
   rpl_prefix_t prefix_info;
   uint32_t lifetime;
+#if RPL_LIFETIME_MAX_MODE
+  rpl_rank_t base_rank; /* For rank regularization */
+#endif
 };
 typedef struct rpl_dag rpl_dag_t;
 typedef struct rpl_instance rpl_instance_t;
