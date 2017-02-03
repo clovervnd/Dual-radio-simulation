@@ -1055,9 +1055,9 @@ turn_off(int keep_radio_on)
 {
   cxmac_is_on = 0;
   if(keep_radio_on) {
-    return NETSTACK_RADIO.on(2);
+    return NETSTACK_RADIO.on();
   } else {
-    return NETSTACK_RADIO.off(2);
+    return NETSTACK_RADIO.off();
   }
 }
 /*---------------------------------------------------------------------------*/
