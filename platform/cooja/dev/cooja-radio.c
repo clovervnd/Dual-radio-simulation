@@ -78,6 +78,11 @@ int simOutSizeLR = 0;
 char simRadioHWOn = 1;
 char simRadioHWOnLR = 1;
 
+/* Radio on/off var */
+/* 0 = SHORT, 1 = LONG, 2 = BOTH */
+enum RadioTarget {SHORT, LONG, BOTH};
+enum RadioTarget simRadioTarget = SHORT;
+
 int simSignalStrength = -100;
 int simSignalStrengthLR = -100;
 
@@ -141,17 +146,55 @@ radio_LQI(void)
 static int
 radio_on(void)
 {
-  simRadioHWOn = 1;
-  simRadioHWOnLR = 1;
+	if(simRadioTarget == SHORT)
+	{
+		simRadioHWOn = 1;
+	}
+	else if(simRadioTarget == LONG)
+	{
+		simRadioHWOnLR = 1;
+	}
+	else if(simRadioTarget == BOTH)
+	{
+		simRadioHWOn = 1;
+		simRadioHWOnLR = 1;
+	}
   return 1;
 }
 /*---------------------------------------------------------------------------*/
 static int
 radio_off(void)
 {
-  simRadioHWOn = 0;
-  simRadioHWOnLR = 0;
+	if(simRadioTarget == SHORT)
+	{
+		simRadioHWOn = 0;
+	}
+	else if(simRadioTarget == LONG)
+	{
+		simRadioHWOnLR = 0;
+	}
+	else if(simRadioTarget == BOTH)
+	{
+		simRadioHWOn = 0;
+		simRadioHWOnLR = 0;
+	}
   return 1;
+}
+/*---------------------------------------------------------------------------*/
+static int
+radio_target_on(char target)
+{
+  simRadioTarget = target;
+  radio_on();
+  return 1;
+}
+/*---------------------------------------------------------------------------*/
+static int
+radio_target_off(char target)
+{
+	simRadioTarget = target;
+	radio_off();
+	return 1;
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -269,7 +312,7 @@ static int
 radio_send(const void *payload, unsigned short payload_len)
 {
   int radiostate = simRadioHWOn;
-
+  int radiostateLR = simRadioHWOnLR;
   /* Simulate turnaround time of 2ms for packets, 1ms for acks*/
 #if WITH_TURNAROUND
   simProcessRunValue = 1;
@@ -283,6 +326,11 @@ radio_send(const void *payload, unsigned short payload_len)
   if(!simRadioHWOn) {
     /* Turn on radio temporarily */
     simRadioHWOn = 1;
+  }
+  if(!simRadioHWOnLR)
+  {
+	  /* Turn on radio temporarily */
+	  simRadioHWOnLR = 1;
   }
   if(payload_len > COOJA_RADIO_BUFSIZE) {
     return RADIO_TX_ERR;
@@ -339,6 +387,7 @@ radio_send(const void *payload, unsigned short payload_len)
   }
 
   simRadioHWOn = radiostate;
+  simRadioHWOnLR = radiostateLR;
   return RADIO_TX_OK;
 }
 /*---------------------------------------------------------------------------*/
@@ -434,8 +483,10 @@ const struct radio_driver cooja_radio_driver =
     channel_clear,
     receiving_packet,
     pending_packet,
-    radio_on,
-    radio_off,
+//    radio_on,
+//    radio_off,
+	radio_target_on,
+	radio_target_off,
     get_value,
     set_value,
     get_object,

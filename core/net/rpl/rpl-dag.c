@@ -953,7 +953,9 @@ best_parent(rpl_dag_t *dag)
   best = NULL;
   uip_ds6_nbr_t *nbr;
   p = nbr_table_head(rpl_parents);
+#if RPL_LIFETIME_MAX_MODE
   dag->base_rank = p->rank;
+#endif
   while(p != NULL) {
 #if RPL_LIFETIME_MAX_MODE
 	  nbr = rpl_get_nbr(p);

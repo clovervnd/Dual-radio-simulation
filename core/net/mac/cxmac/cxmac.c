@@ -77,7 +77,7 @@
 #define WITH_STREAMING               1
 #endif
 #ifndef WITH_STROBE_BROADCAST
-#define WITH_STROBE_BROADCAST        0
+#define WITH_STROBE_BROADCAST        1
 #endif
 
 struct announcement_data {
@@ -144,7 +144,7 @@ struct cxmac_hdr {
    cycle. */
 #define ANNOUNCEMENT_TIME (random_rand() % (ANNOUNCEMENT_PERIOD))
 
-#define DEFAULT_STROBE_WAIT_TIME (7 * DEFAULT_ON_TIME / 8)
+#define DEFAULT_STROBE_WAIT_TIME (6 * DEFAULT_ON_TIME / 8)
 
 struct cxmac_config cxmac_config = {
   DEFAULT_ON_TIME,
@@ -187,7 +187,6 @@ static volatile unsigned char radio_is_on = 0;
 #define PRINTDEBUG(...)
 #endif
 
-// JJH
 #if DUAL_RADIO
 #ifdef ZOLERTIA_Z1
 #include	"../platform/z1/dual_radio.h"
@@ -236,8 +235,9 @@ static rtimer_clock_t stream_until;
 
 /* remaining energy JJH */
 #include "../lanada/param.h"
+#if RPL_ENERGY_MODE
 extern uint8_t remaining_energy;
-
+#endif
 
 /*---------------------------------------------------------------------------*/
 static void
@@ -590,23 +590,21 @@ send_packet(void)
 			  got_strobe_ack == 0 && collisions == 0 &&
 					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + cxmac_config.strobe_time);
 			  strobes++) {
-
 		  while(got_strobe_ack == 0 &&
 				  RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
 			  rtimer_clock_t now = RTIMER_NOW();
 			  /* See if we got an ACK */
-			  //            printf("before read\n");
 			  packetbuf_clear();
 			  len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
 			  if(len > 0) {
 				  packetbuf_set_datalen(len);
 				  if(NETSTACK_FRAMER.parse() >= 0) {
-					  //		  printf("packet parsed\n");
+//					  printf("packet parsed\n");
 					  hdr = packetbuf_dataptr();
 					  is_dispatch = hdr->dispatch == DISPATCH;
 					  is_strobe_ack = hdr->type == TYPE_STROBE_ACK;
 					  if(is_dispatch && is_strobe_ack) {
-						  //	    	printf("ACK recognized\n");
+//						  	    	printf("ACK recognized\n");
 #if DUAL_RADIO
 						  if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
 								  &linkaddr_node_addr) ||
@@ -618,7 +616,7 @@ send_packet(void)
 #endif
 								  /* We got an ACK from the receiver, so we can immediately send
 		   the packet. */
-								  printf("got strobe_ack\n");
+//								  printf("got strobe_ack\n");
 								  got_strobe_ack = 1;
 								  encounter_time = now;
 							  } else {
@@ -633,7 +631,6 @@ send_packet(void)
 					  }
 				  }
 			  }
-
       t = RTIMER_NOW();
       /* Send the strobe packet. */
       if(got_strobe_ack == 0 && collisions == 0) {
@@ -661,7 +658,6 @@ send_packet(void)
       }
     }
   }
-
 #if WITH_ACK_OPTIMIZATION
   /* If we have received the strobe ACK, and we are sending a packet
      that will need an upper layer ACK (as signified by the
@@ -761,7 +757,6 @@ send_packet(void)
     someone_is_sending++;
     return MAC_TX_COLLISION;
   }
-
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -1060,9 +1055,9 @@ turn_off(int keep_radio_on)
 {
   cxmac_is_on = 0;
   if(keep_radio_on) {
-    return NETSTACK_RADIO.on();
+    return NETSTACK_RADIO.on(2);
   } else {
-    return NETSTACK_RADIO.off();
+    return NETSTACK_RADIO.off(2);
   }
 }
 /*---------------------------------------------------------------------------*/

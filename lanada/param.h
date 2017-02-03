@@ -8,7 +8,7 @@
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
-#define MODE_LAST_PARENT	0 // Tx Last parent info. in dio_ack
+#define MODE_LAST_PARENT	1 // Tx Last parent info. in dio_ack
 #define MODE_PARENT_UPDATE_IN_ROUND 0 // Update parent only when round is synchronized // Not implemented yet
 
 #if RPL_ENERGY_MODE
