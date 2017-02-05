@@ -1,5 +1,5 @@
 #include "dual_conf.h"
-#define DEBUG_DUAL	0
+#define DEBUG_DUAL	1
 #if DEBUG_DUAL
 #include <stdio.h>
 #include "net/rpl/rpl-icmp6.h"
@@ -86,6 +86,28 @@ int radio_received_is_longrange(void)
 		// RADIO("$$$$$$$$$$$$$$$$$$  SHORT_RADIO_RECEIVED\n");
 		return SHORT_RADIO;
 	}
+}
+
+int dual_radio_turn_on(char targetRadio)
+{
+#if COOJA
+	simRadioTarget = targetRadio;
+	NETSTACK_RADIO.on();
+#else
+	NETSTACK_RADIO.on();
+#endif
+	return 1;
+}
+
+int dual_radio_turn_off(char targetRadio)
+{
+#if COOJA
+	simRadioTarget = targetRadio;
+	NETSTACK_RADIO.off();
+#else
+	NETSTACK_RADIO.off();
+#endif
+	return 1;
 }
 
 PROCESS_THREAD(dual_dio_broadcast, ev, data)

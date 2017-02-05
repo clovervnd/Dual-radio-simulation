@@ -9,7 +9,13 @@
 #define LONG_RADIO 1
 #endif
 
+#ifndef BOTH_RADIO
+#define BOTH_RADIO 0
+#endif
 
+#ifndef DUAL_DUTY_RATIO
+#define DUAL_DUTY_RATIO 2
+#endif
 
 /* Functions */
 int dual_radio_switch(int radio);
@@ -17,6 +23,8 @@ int dual_radio_change(void);
 int dual_radio_received(int radio); 
 int radio_received_is_longrange(void);
 int sending_in_LR(void);
+int dual_radio_turn_on(char targetRadio);
+int dual_radio_turn_off(char targetRadio);
 
 /* Process */
 int dio_broadcast(rpl_instance_t* instance);
@@ -28,6 +36,8 @@ int dio_ack_broadcast(rpl_instance_t* instance);
 /* Global variable for Dual RPL */
 int long_range_radio;
 int radio_received;
+char dual_duty_cycle_count;
 
 /* Global variable for Cooja simulation */
 extern int LongRangeTransmit;
+char simRadioTarget;

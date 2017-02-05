@@ -78,11 +78,6 @@ int simOutSizeLR = 0;
 char simRadioHWOn = 1;
 char simRadioHWOnLR = 1;
 
-/* Radio on/off var */
-/* 0 = SHORT, 1 = LONG, 2 = BOTH */
-enum RadioTarget {SHORT, LONG, BOTH};
-enum RadioTarget simRadioTarget = SHORT;
-
 int simSignalStrength = -100;
 int simSignalStrengthLR = -100;
 
@@ -111,7 +106,7 @@ void
 radio_set_channel(int channel)
 {
   simRadioChannel = channel;
-	simRadioChannelLR = channel;
+  simRadioChannelLR = channel;
 }
 /*---------------------------------------------------------------------------*/
 void
@@ -119,7 +114,7 @@ radio_set_txpower(unsigned char power)
 {
   /* 1 - 100: Number indicating output power */
   simPower = power;
-	simPowerLR = power;
+  simPowerLR = power;
 }
 /*---------------------------------------------------------------------------*/
 int
@@ -146,71 +141,74 @@ radio_LQI(void)
 static int
 radio_on(void)
 {
-	if(simRadioTarget == SHORT)
+#if DUAL_RADIO
+	if(simRadioTarget == SHORT_RADIO)
 	{
+		printf("on SHORT\n");
 		simRadioHWOn = 1;
 	}
-	else if(simRadioTarget == LONG)
+	else if(simRadioTarget == LONG_RADIO)
 	{
+//		printf("on LONG\n");
 		simRadioHWOnLR = 1;
 	}
-	else if(simRadioTarget == BOTH)
+	else if(simRadioTarget == BOTH_RADIO)
 	{
+		printf("on BOTH\n");
 		simRadioHWOn = 1;
 		simRadioHWOnLR = 1;
 	}
+#else
+	simRadioHWOn = 1;
+#endif
   return 1;
 }
 /*---------------------------------------------------------------------------*/
 static int
 radio_off(void)
 {
-	if(simRadioTarget == SHORT)
+#if DUAL_RADIO
+	if(simRadioTarget == SHORT_RADIO)
 	{
+		printf("off SHORT\n");
 		simRadioHWOn = 0;
 	}
-	else if(simRadioTarget == LONG)
+	else if(simRadioTarget == LONG_RADIO)
 	{
+//		printf("off LONG\n");
 		simRadioHWOnLR = 0;
 	}
-	else if(simRadioTarget == BOTH)
+	else if(simRadioTarget == BOTH_RADIO)
 	{
+		printf("off BOTH\n");
 		simRadioHWOn = 0;
 		simRadioHWOnLR = 0;
 	}
+#else
+	simRadioHWOn = 0;
+#endif
   return 1;
-}
-/*---------------------------------------------------------------------------*/
-static int
-radio_target_on(char target)
-{
-  simRadioTarget = target;
-  radio_on();
-  return 1;
-}
-/*---------------------------------------------------------------------------*/
-static int
-radio_target_off(char target)
-{
-	simRadioTarget = target;
-	radio_off();
-	return 1;
 }
 /*---------------------------------------------------------------------------*/
 static void
 doInterfaceActionsBeforeTick(void)
 {
+  printf("beforetick on %d %d size %d %d\n",simRadioHWOn,simRadioHWOnLR,simInSize,simInSizeLR);
   if(!simRadioHWOn) {
     simInSize = 0;
-    return;
-  }	else if(!simRadioHWOnLR) {
-    simInSizeLR = 0;
-    return;
   }
+  if(!simRadioHWOnLR) {
+    simInSizeLR = 0;
+  }
+  if(!simInSize && !simInSizeLR) {
+	  return;
+  }
+
   if(simReceiving) {
     simLastSignalStrength = simSignalStrength;
     return;
-  }	else if(simReceivingLR) {
+  }
+  if(simReceivingLR) {
     simLastSignalStrengthLR = simSignalStrengthLR;
     return;
   }
@@ -231,15 +229,15 @@ static int
 // radio_read(void *buf, unsigned short bufsize)
 radio_read(void *buf, unsigned short bufsize)
 {
-	// printf("radio read\n");
-	int tmp = simInSize;
+  printf("radio read %d %d\n",simInSize, simInSizeLR);
+  int tmp = simInSize;
 
   if(simInSize == 0 && simInSizeLR == 0) {
     return 0;
-  }	
+  }
   if(bufsize < simInSize || bufsize <simInSizeLR ) {
     simInSize = 0; /* rx flush */
-		simInSizeLR = 0;
+    simInSizeLR = 0;
     RIMESTATS_ADD(toolong);
     return 0;
   }
@@ -300,9 +298,9 @@ radio_read(void *buf, unsigned short bufsize)
 static int
 channel_clear(void)
 {
-  if(simSignalStrength > CCA_SS_THRESHOLD) {
+  if(simRadioTarget == SHORT_RADIO && simSignalStrength > CCA_SS_THRESHOLD) {
     return 0;
-  } else if(simSignalStrengthLR > CCA_SS_THRESHOLD) {
+  } else if(simRadioTarget == LONG_RADIO && simSignalStrengthLR > CCA_SS_THRESHOLD) {
     return 0;
   }
   return 1;
@@ -313,6 +311,7 @@ radio_send(const void *payload, unsigned short payload_len)
 {
   int radiostate = simRadioHWOn;
   int radiostateLR = simRadioHWOnLR;
+  char tmp = simRadioTarget;
   /* Simulate turnaround time of 2ms for packets, 1ms for acks*/
 #if WITH_TURNAROUND
   simProcessRunValue = 1;
@@ -329,8 +328,8 @@ radio_send(const void *payload, unsigned short payload_len)
   }
   if(!simRadioHWOnLR)
   {
-	  /* Turn on radio temporarily */
-	  simRadioHWOnLR = 1;
+	/* Turn on radio temporarily */
+	simRadioHWOnLR = 1;
   }
   if(payload_len > COOJA_RADIO_BUFSIZE) {
     return RADIO_TX_ERR;
@@ -350,6 +349,7 @@ radio_send(const void *payload, unsigned short payload_len)
 		PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit); 
   	/* Transmit on CCA */
 #if WITH_SEND_CCA
+		simRadioTarget = LONG_RADIO;
 	  if(!channel_clear()) {
   	  return RADIO_TX_COLLISION;
 	  }	
@@ -362,13 +362,13 @@ radio_send(const void *payload, unsigned short payload_len)
 	else {	
 #endif /* DUAL_RADIO */
 		PRINTF("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
-		PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit); 
+		PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit);
 	  if(simOutSize > 0) {
 	    return RADIO_TX_ERR;
 	  }
-
 	  /* Transmit on CCA */
 #if WITH_SEND_CCA
+	  simRadioTarget = SHORT_RADIO;
 	  if(!channel_clear()) {
 	    return RADIO_TX_COLLISION;
 	  }
@@ -388,6 +388,7 @@ radio_send(const void *payload, unsigned short payload_len)
 
   simRadioHWOn = radiostate;
   simRadioHWOnLR = radiostateLR;
+  simRadioTarget = tmp;
   return RADIO_TX_OK;
 }
 /*---------------------------------------------------------------------------*/

@@ -238,13 +238,19 @@ static rtimer_clock_t stream_until;
 #if RPL_ENERGY_MODE
 extern uint8_t remaining_energy;
 #endif
-
+#if DUAL_RADIO
+static void dual_radio_on(char target);
+static void dual_radio_off(char target);
+#endif
 /*---------------------------------------------------------------------------*/
 static void
 on(void)
 {
   if(cxmac_is_on && radio_is_on == 0) {
     radio_is_on = 1;
+#if DUAL_RADIO
+    simRadioTarget = BOTH_RADIO;
+#endif
     NETSTACK_RADIO.on();
     LEDS_ON(LEDS_RED);
   }
@@ -256,11 +262,35 @@ off(void)
   if(cxmac_is_on && radio_is_on != 0 && is_listening == 0 &&
      is_streaming == 0) {
     radio_is_on = 0;
+#if DUAL_RADIO
+    simRadioTarget = BOTH_RADIO;
+#endif
     NETSTACK_RADIO.off();
     LEDS_OFF(LEDS_RED);
   }
 }
 /*---------------------------------------------------------------------------*/
+#if DUAL_RADIO
+static void
+powercycle_dual_turn_radio_on(char target)
+{
+  if(we_are_sending == 0 &&
+     waiting_for_packet == 0) {
+	  dual_radio_on(target);
+  }
+#if CXMAC_CONF_COMPOWER
+  compower_accumulate(&compower_idle_activity);
+#endif /* CXMAC_CONF_COMPOWER */
+}
+static void
+powercycle_dual_turn_radio_off(char target)
+{
+  if(we_are_sending == 0 &&
+     waiting_for_packet == 0) {
+	  dual_radio_off(target);
+  }
+}
+#else
 static void
 powercycle_turn_radio_off(void)
 {
@@ -280,6 +310,29 @@ powercycle_turn_radio_on(void)
     on();
   }
 }
+#endif
+/*---------------------------------------------------------------------------*/
+#if DUAL_RADIO
+static void
+dual_radio_on(char target)
+{
+	if(cxmac_is_on && radio_is_on == 0) {
+		radio_is_on = 1;
+		dual_radio_turn_on(target);
+		LEDS_ON(LEDS_RED);
+	}
+}
+static void
+dual_radio_off(char target)
+{
+	if(cxmac_is_on && radio_is_on != 0 && is_listening == 0 &&
+			is_streaming == 0) {
+		radio_is_on = 0;
+		dual_radio_turn_off(target);
+		LEDS_OFF(LEDS_RED);
+	}
+}
+#endif
 /*---------------------------------------------------------------------------*/
 static struct ctimer cpowercycle_ctimer;
 #define CSCHEDULE_POWERCYCLE(rtime) cschedule_powercycle((1ul * CLOCK_SECOND * (rtime)) / RTIMER_ARCH_SECOND)
@@ -317,11 +370,28 @@ cpowercycle(void *ptr)
     }
 
     /* If there were a strobe in the air, turn radio on */
+#if DUAL_RADIO
+    if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
+    {
+    	dual_duty_cycle_count++;
+        powercycle_dual_turn_radio_on(SHORT_RADIO);
+    }
+    else
+    {
+    	dual_duty_cycle_count = 0;
+        powercycle_dual_turn_radio_on(BOTH_RADIO);
+    }
+#else
     powercycle_turn_radio_on();
+#endif
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
     PT_YIELD(&pt);
     if(cxmac_config.off_time > 0) {
+#if DUAL_RADIO
+      powercycle_dual_turn_radio_off(BOTH_RADIO);
+#else
       powercycle_turn_radio_off();
+#endif
       if(waiting_for_packet != 0) {
 	waiting_for_packet++;
 	if(waiting_for_packet > 2) {
@@ -329,7 +399,11 @@ cpowercycle(void *ptr)
 	     power cycles without having heard a packet, so we turn off
 	     the radio. */
 	  waiting_for_packet = 0;
+#if DUAL_RADIO
+	  powercycle_dual_turn_radio_off(BOTH_RADIO);
+#else
 	  powercycle_turn_radio_off();
+#endif
 	}
       }
       CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME);
@@ -445,6 +519,10 @@ send_packet(void)
   struct queuebuf *packet;
   int is_already_streaming = 0;
   uint8_t collisions;
+#if DUAL_RADIO
+  char target = SHORT_RADIO;
+  rtimer_clock_t strobe_time;
+#endif
 	// JJH
 #if RPL_ENERGY_MODE
   int original_datalen;
@@ -460,8 +538,12 @@ send_packet(void)
 	/* JOONKI */
 #if DUAL_RADIO
 	if(sending_in_LR() == LONG_RADIO){
+		target = LONG_RADIO;
+		strobe_time = cxmac_config.strobe_time * DUAL_DUTY_RATIO;
 	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
 	}	else	{
+		target = SHORT_RADIO;
+		strobe_time = cxmac_config.strobe_time;
 	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 	}
 #else
@@ -527,7 +609,11 @@ send_packet(void)
   }
 #endif /* WITH_STREAMING */
 
+#if DUAL_RADIO
+  dual_radio_off(BOTH_RADIO);
+#else
   off();
+#endif
 
 #if WITH_ENCOUNTER_OPTIMIZATION
   /* We go through the list of encounters to find if we have recorded
@@ -580,7 +666,11 @@ send_packet(void)
   /* Send a train of strobes until the receiver answers with an ACK. */
 
   /* Turn on the radio to listen for the strobe ACK. */
+#if DUAL_RADIO
+  dual_radio_on(target);
+#else
   on();
+#endif
   collisions = 0;
   if(!is_already_streaming) {
 	  watchdog_stop();
@@ -588,7 +678,11 @@ send_packet(void)
 	  t = RTIMER_NOW();
 	  for(strobes = 0, collisions = 0;
 			  got_strobe_ack == 0 && collisions == 0 &&
+#if DUAL_RADIO
+					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + strobe_time);
+#else
 					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + cxmac_config.strobe_time);
+#endif
 			  strobes++) {
 		  while(got_strobe_ack == 0 &&
 				  RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
@@ -642,18 +736,30 @@ send_packet(void)
 	  queuebuf_to_packetbuf(packet);
 	  NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
 #endif
+#if DUAL_RADIO
+	  dual_radio_off(target);
+#else
 	  off();
+#endif
 	} else {
 	  NETSTACK_RADIO.send(strobe, strobe_len);
 #if 0
 	  /* Turn off the radio for a while to let the other side
 	     respond. We don't need to keep our radio on when we know
 	     that the other side needs some time to produce a reply. */
+#if DUAL_RADIO
+	  dual_radio_off(target);
+#else
 	  off();
+#endif
 	  rtimer_clock_t wt = RTIMER_NOW();
 	  while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + WAIT_TIME_BEFORE_STROBE_ACK));
 #endif /* 0 */
+#if DUAL_RADIO
+	  dual_radio_on(target);
+#else
 	  on();
+#endif
 	}
       }
     }
@@ -672,13 +778,25 @@ send_packet(void)
 			PACKETBUF_ATTR_PACKET_TYPE_STREAM ||
 #endif
       0)) {
-    on(); /* Wait for ACK packet */
+#if DUAL_RADIO
+	  dual_radio_on(target);
+#else
+	  on(); /* Wait for ACK packet */
+#endif
     waiting_for_packet = 1;
   } else {
+#if DUAL_RADIO
+	dual_radio_off(target);
+#else
     off();
+#endif
   }
 #else /* WITH_ACK_OPTIMIZATION */
+#if DUAL_RADIO
+  dual_radio_off(target);
+#else
   off();
+#endif
 #endif /* WITH_ACK_OPTIMIZATION */
 
   /* restore the packet to send */
@@ -790,6 +908,9 @@ input_packet(void)
 {
   struct cxmac_hdr *hdr;
 	// JJH
+#if DUAL_RADIO
+  uint8_t target = SHORT_RADIO;
+#endif
   int original_datalen;
   uint8_t *original_dataptr;
 
@@ -817,7 +938,11 @@ input_packet(void)
 	/* We have received the final packet, so we can go back to being
 	   asleep. */
 #endif
-    off();
+#if DUAL_RADIO
+    	  dual_radio_off(BOTH_RADIO);
+#else
+    	  off();
+#endif
 
 #if CXMAC_CONF_COMPOWER
 	/* Accumulate the power consumption for the packet reception. */
@@ -909,9 +1034,11 @@ input_packet(void)
 			   packetbuf_addr(PACKETBUF_ADDR_SENDER));
 #if DUAL_RADIO
 	if(sending_in_LR() == LONG_RADIO){
-  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
+		target = LONG_RADIO;
+		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
 	}	else	{
-  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
+		target = SHORT_RADIO;
+		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 	}
 #else
   	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
@@ -922,7 +1049,11 @@ input_packet(void)
 	     packet. */
 	  someone_is_sending = 1;
 	  waiting_for_packet = 1;
+#if DUAL_RADIO
+	  dual_radio_on(target);
+#else
 	  on();
+#endif
 	  NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
 	  PRINTDEBUG("cxmac: send strobe ack %u\n", packetbuf_totlen());
 	} else {
@@ -935,7 +1066,11 @@ input_packet(void)
 	   case, we turn on the radio and wait for the incoming
 	   broadcast packet. */
 	waiting_for_packet = 1;
+#if DUAL_RADIO
+	dual_radio_on(target);
+#else
 	on();
+#endif
       } else {
         PRINTDEBUG("cxmac: strobe not for us\n");
       }
@@ -1020,6 +1155,7 @@ cxmac_init(void)
 {
   radio_is_on = 0;
   waiting_for_packet = 0;
+  dual_duty_cycle_count = 0;
   PT_INIT(&pt);
   /*  rtimer_set(&rt, RTIMER_NOW() + cxmac_config.off_time, 1,
       (void (*)(struct rtimer *, void *))powercycle, NULL);*/
@@ -1054,11 +1190,19 @@ static int
 turn_off(int keep_radio_on)
 {
   cxmac_is_on = 0;
+#if DUAL_RADIO
+  if(keep_radio_on) {
+    return dual_radio_turn_on(BOTH_RADIO);
+  } else {
+    return dual_radio_turn_off(BOTH_RADIO);
+  }
+#else
   if(keep_radio_on) {
     return NETSTACK_RADIO.on();
   } else {
     return NETSTACK_RADIO.off();
   }
+#endif
 }
 /*---------------------------------------------------------------------------*/
 static unsigned short

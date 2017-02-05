@@ -207,6 +207,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
     setLongRangeReceivingMode(this instanceof LongRangeInterface);
     // logger.warn("Reception starts, is it longrange? : "+(this instanceof LongRangeInterface));
     packetToMote = null;
+    logger.warn("mote:"+this.mote+" Inter, Recv, Trans " + isInterfered() +" " + isReceiving() + " " + );
     if (isInterfered() || isReceiving() || isTransmitting()) {
       interfereAnyReception();
       return;
@@ -225,7 +226,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
 
   public void signalReceptionEnd() {
     // logger.warn("Reception ends, is it longrange? : "+(this instanceof LongRangeInterface));
-
+      logger.warn("mote:"+this.mote+" isInterfered " + isInterfered);
       if (isInterfered || packetToMote == null) {
       isInterfered = false;
       packetToMote = null;
@@ -238,6 +239,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
     mote.requestImmediateWakeup();
     lastEventTime = mote.getSimulation().getSimulationTime();
     lastEvent = RadioEvent.RECEPTION_FINISHED;
+    logger.warn("signalRecvEnd mote:"+this.mote + "time:" + lastEventTime + "Insize:" + myMoteMemory.getIntValueOf(getSymbolNameLR("simInSize")));
     this.setChanged();
     this.notifyObservers();
   }
