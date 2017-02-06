@@ -177,7 +177,7 @@ public abstract class AbstractRadioMedium extends RadioMedium {
 					continue;
 				}
 				if (!intfRadio.isInterfered()) {
-					/*logger.warn("Radio was not interfered");*/
+//					logger.warn("Radio was not interfered");
 					intfRadio.interfereAnyReception();
 				}
 			}
@@ -203,6 +203,7 @@ public abstract class AbstractRadioMedium extends RadioMedium {
 			if (conn.isDestination(radio)) {
 				conn.addInterfered(radio);
 				if (!radio.isInterfered()) {
+//					logger.warn("Interferen dest");
 					radio.interfereAnyReception();
 				}
 			}
@@ -258,6 +259,7 @@ public abstract class AbstractRadioMedium extends RadioMedium {
 						 * Radio starts transmitting when it should be
 						 * receiving! Ok, but it won't receive the packet
 						 */
+//						logger.warn("radio.isReceiving");
 						radio.interfereAnyReception();
 						for (RadioConnection conn : activeConnections) {
 							if (conn.isDestination(radio)) {

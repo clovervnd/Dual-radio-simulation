@@ -734,6 +734,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	  buffer[pos++] = 0;
   }
 //  buffer[pos++] = 0; /* reserved */
+#if SINK_INFINITE_ENERGY
   /* For sink node, set weight 0 */
   if(uip_ds6_get_link_local(-1)->ipaddr.u8[15]==1)
   {
@@ -745,6 +746,9 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	  PRINTF("send my weight %d\n",my_weight);
 	  buffer[pos++] = my_weight;
   }
+#else
+  buffer[pos++] = my_weight;
+#endif
 #else
   /* reserved 2 bytes */
   buffer[pos++] = 0; /* flags */

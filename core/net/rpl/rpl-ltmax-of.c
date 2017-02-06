@@ -123,14 +123,15 @@ calculate_path_metric(rpl_parent_t *p)
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
   {
 #if RPL_LIFETIME_MAX_MODE
-	  PRINTF("rank, base_rank %d %d\n",p->rank,rpl_get_any_dag()->base_rank);
+//	  PRINTF("rank, base_rank %d %d\n",p->rank,rpl_get_any_dag()->base_rank);
 	  rank_rate = p->rank - rpl_get_any_dag()->base_rank < 0 ? 0 : p->rank - rpl_get_any_dag()->base_rank;
-	  PRINTF("rank_rate: %d\n",rank_rate);
+//	  PRINTF("weight: %d rank_rate: %d\n",p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, rank_rate);
 	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR + ALPHA * rank_rate;
 #else
 	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
 #endif
-	  PRINTF("ip:%d rank:%d ret_metric:%d\n",nbr->ipaddr.u8[15],p->rank,ret_metric);
+	  PRINTF("ip:%d %c weight:%d rank:%d rank_rate:%d ret_metric:%d %d\n",nbr->ipaddr.u8[15], nbr->ipaddr.u8[8]==0x82 ? 'L' : 'S',
+			  p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, p->rank, rank_rate, ret_metric, rpl_get_any_dag()->preferred_parent == p);
 	  return ret_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
@@ -297,6 +298,13 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   rpl_path_metric_t min_diff;
   rpl_path_metric_t p1_metric;
   rpl_path_metric_t p2_metric;
+#if DUAL_RADIO && RPL_LIFETIME_MAX_MODE
+  uip_ds6_nbr_t *nbr1 = NULL;
+  uip_ds6_nbr_t *nbr2 = NULL;
+  nbr1 = rpl_get_nbr(p1);
+  nbr2 = rpl_get_nbr(p2);
+#endif
+
   dag = p1->dag; /* Both parents are in the same DAG. */
 
   min_diff = RPL_DAG_MC_ETX_DIVISOR /
@@ -307,28 +315,29 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 #if RPL_LIFETIME_MAX_MODE
   if(p1 == dag->preferred_parent)
   {
-	  if(p1_metric - p1->parent_weight < 0)
+	  if(p1_metric - p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR < 0)
 	  {
 		  p1_metric = 0;
 	  }
 	  else
 	  {
-		  p1_metric -= p1->parent_weight;
+		  p1_metric -= p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
 	  }
   }
   else if(p2 == dag->preferred_parent)
   {
-	  if(p2_metric - p2->parent_weight < 0)
+	  if(p2_metric - p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR < 0)
 	  {
 		  p2_metric = 0;
 	  }
 	  else
 	  {
-		  p2_metric -= p2->parent_weight;
+		  p2_metric -= p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
 	  }
   }
 #endif
 
+#if OF_MWHOF
   if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
   {
 	  if(p1_metric < p2_metric + min_diff &&
@@ -356,7 +365,16 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  if(p1->rank == p2->rank)
 		  {
 			  // For the same metric and rank case, choose smaller id node
-			  return rpl_get_nbr(p1)->ipaddr.u8[15] < rpl_get_nbr(p2)->ipaddr.u8[15] ? p1 : p2;
+			  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p1)->ipaddr.u8[15] <=
+					  uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p2)->ipaddr.u8[15])
+			  {
+				  return p1;
+			  }
+			  else
+			  {
+				  return p2;
+			  }
+//			  return rpl_get_nbr(p1)->ipaddr.u8[15] < rpl_get_nbr(p2)->ipaddr.u8[15] ? p1 : p2;
 		  }
 		  else
 		  {
@@ -368,6 +386,62 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  return p1_metric <= p2_metric ? p1 : p2;
 	  }
   }
+#else
+  if(p1_metric == p2_metric)
+  {
+	  if(p1->rank == p2->rank)
+	  {
+		  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
+		  {
+			  return dag->preferred_parent;
+		  }
+		  else
+		  {
+			  if(nbr1->ipaddr.u8[8] == 0x2 || nbr2->ipaddr.u8[8] == 0x2)
+			  {
+				  if(nbr1->ipaddr.u8[8] == 0x2 && nbr2->ipaddr.u8[8] == 0x2)
+				  {
+					  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p1)->ipaddr.u8[15] <=
+							  uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p2)->ipaddr.u8[15])
+					  {
+						  return p1;
+					  }
+					  else
+					  {
+						  return p2;
+					  }
+				  }
+				  else
+				  {
+					  return nbr1->ipaddr.u8[8] == 0x2 ? p1 : p2;
+				  }
+			  }
+			  else
+			  {
+				  // For the same metric and rank case, choose smaller id node
+				  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p1)->ipaddr.u8[15] <=
+						  uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p2)->ipaddr.u8[15])
+				  {
+					  return p1;
+				  }
+				  else
+				  {
+					  return p2;
+				  }
+			  }
+		  }
+	  }
+	  else
+	  {
+		  return p1->rank <= p2->rank ? p1 : p2;
+	  }
+  }
+  else
+  {
+	  return p1_metric <= p2_metric ? p1 : p2;
+  }
+#endif
+
 }
 
 #if RPL_DAG_MC == RPL_DAG_MC_NONE

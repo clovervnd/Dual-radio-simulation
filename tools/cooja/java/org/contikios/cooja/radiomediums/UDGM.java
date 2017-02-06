@@ -229,9 +229,10 @@ public class UDGM extends AbstractRadioMedium {
       double distance = senderPos.getDistanceTo(recvPos);
       if (distance <= moteTransmissionRange) {
         /* Within transmission range */
-
+//	logger.warn("mote: "+recv.getMote()+" RadioOn: "+ recv.isRadioOn());
         if (!recv.isRadioOn()) {
           newConnection.addInterfered(recv);
+//	  logger.warn("recv.isRadioOn()");
           recv.interfereAnyReception();
         } else if (recv.isInterfered()) {
           /* Was interfered: keep interfering */
@@ -242,6 +243,7 @@ public class UDGM extends AbstractRadioMedium {
             (random.nextDouble() > getRxSuccessProbability(sender, recv))) {
           /* Was receiving, or reception failed: start interfering */
           newConnection.addInterfered(recv);
+//	  logger.warn("recv.isReceiving()");
           recv.interfereAnyReception();
 
           /* Interfere receiver in all other active radio connections */
@@ -258,6 +260,7 @@ public class UDGM extends AbstractRadioMedium {
       } else if (distance <= moteInterferenceRange) {
         /* Within interference range */
         newConnection.addInterfered(recv);
+//        logger.warn("interference range");
         recv.interfereAnyReception();
       }
     }
@@ -349,7 +352,7 @@ public class UDGM extends AbstractRadioMedium {
         }
 
         if (!intfRadio.isInterfered()) {
-          /*logger.warn("Radio was not interfered: " + intfRadio);*/
+//          logger.warn("Radio was not interfered: " + intfRadio);
           intfRadio.interfereAnyReception();
         }
       }

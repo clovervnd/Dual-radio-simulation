@@ -15,7 +15,7 @@ int dio_count, dis_count, dao_count, dio_ack_count;
 void log_initialization(void);
 void log_finisher(void);
 
-#define LOG_LEVEL		2
+#define LOG_LEVEL		3
 
 #if LOG_LEVEL == 0
 #define LOG_MESSAGE(...) printf(__VA_ARGS__)

@@ -88,6 +88,28 @@ int radio_received_is_longrange(void)
 	}
 }
 
+int dual_radio_turn_on(char targetRadio)
+{
+#if COOJA
+	simRadioTarget = targetRadio;
+	NETSTACK_RADIO.on();
+#else
+	NETSTACK_RADIO.on();
+#endif
+	return 1;
+}
+
+int dual_radio_turn_off(char targetRadio)
+{
+#if COOJA
+	simRadioTarget = targetRadio;
+	NETSTACK_RADIO.off();
+#else
+	NETSTACK_RADIO.off();
+#endif
+	return 1;
+}
+
 PROCESS_THREAD(dual_dio_broadcast, ev, data)
 {
 	static struct etimer et;
