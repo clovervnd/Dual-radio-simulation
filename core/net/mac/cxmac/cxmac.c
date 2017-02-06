@@ -108,6 +108,7 @@ struct announcement_msg {
 struct cxmac_hdr {
   uint8_t dispatch;
   uint8_t type;
+//  uint8_t strobe_num; // For strobe broadcast
 };
 
 #define MAX_STROBE_SIZE 50
@@ -144,7 +145,7 @@ struct cxmac_hdr {
    cycle. */
 #define ANNOUNCEMENT_TIME (random_rand() % (ANNOUNCEMENT_PERIOD))
 
-#define DEFAULT_STROBE_WAIT_TIME (6 * DEFAULT_ON_TIME / 8)
+#define DEFAULT_STROBE_WAIT_TIME (7 * DEFAULT_ON_TIME / 8)
 
 struct cxmac_config cxmac_config = {
   DEFAULT_ON_TIME,
@@ -171,7 +172,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)

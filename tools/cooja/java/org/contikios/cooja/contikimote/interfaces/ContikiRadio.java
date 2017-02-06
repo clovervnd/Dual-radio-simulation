@@ -207,7 +207,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
     setLongRangeReceivingMode(this instanceof LongRangeInterface);
     // logger.warn("Reception starts, is it longrange? : "+(this instanceof LongRangeInterface));
     packetToMote = null;
-    logger.warn("mote:"+this.mote+" Inter, Recv, Trans " + isInterfered() +" " + isReceiving() + " " + );
+//    logger.warn("mote:"+this.mote+" Inter, Recv, Trans " + isInterfered() +" " + isReceiving() + " " + isTransmitting());
     if (isInterfered() || isReceiving() || isTransmitting()) {
       interfereAnyReception();
       return;
@@ -226,7 +226,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
 
   public void signalReceptionEnd() {
     // logger.warn("Reception ends, is it longrange? : "+(this instanceof LongRangeInterface));
-      logger.warn("mote:"+this.mote+" isInterfered " + isInterfered);
+//      logger.warn("mote:"+this.mote+" isInterfered " + isInterfered);
       if (isInterfered || packetToMote == null) {
       isInterfered = false;
       packetToMote = null;
@@ -239,7 +239,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
     mote.requestImmediateWakeup();
     lastEventTime = mote.getSimulation().getSimulationTime();
     lastEvent = RadioEvent.RECEPTION_FINISHED;
-    logger.warn("signalRecvEnd mote:"+this.mote + "time:" + lastEventTime + "Insize:" + myMoteMemory.getIntValueOf(getSymbolNameLR("simInSize")));
+//    logger.warn("signalRecvEnd mote:"+this.mote + "time:" + lastEventTime + "Insize:" + myMoteMemory.getIntValueOf(getSymbolNameLR("simInSize")));
     this.setChanged();
     this.notifyObservers();
   }
@@ -257,6 +257,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
 
     lastEvent = RadioEvent.RECEPTION_INTERFERED;
     lastEventTime = mote.getSimulation().getSimulationTime();
+//    logger.warn("mote:"+this.mote+" time:"+lastEventTime+" interfereAnyReception");
     this.setChanged();
     this.notifyObservers();
   }
@@ -316,7 +317,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
     /* Check if radio hardware status changed */
     if (radioOn != (myMoteMemory.getByteValueOf(getSymbolNameLR("simRadioHWOn")) == 1)) {
       radioOn = !radioOn;
-
+//      logger.warn("mote:"+this.mote+" now: " + now + " radio state changed: "+radioOn);
       if (!radioOn) {
         myMoteMemory.setByteValueOf(getSymbolNameLR("simReceiving"), (byte) 0);
         myMoteMemory.setIntValueOf(getSymbolNameLR("simInSize"), 0);

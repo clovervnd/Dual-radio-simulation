@@ -144,7 +144,7 @@ radio_on(void)
 #if DUAL_RADIO
 	if(simRadioTarget == SHORT_RADIO)
 	{
-		printf("on SHORT\n");
+//		printf("on SHORT\n");
 		simRadioHWOn = 1;
 	}
 	else if(simRadioTarget == LONG_RADIO)
@@ -154,13 +154,14 @@ radio_on(void)
 	}
 	else if(simRadioTarget == BOTH_RADIO)
 	{
-		printf("on BOTH\n");
+//		printf("on BOTH\n");
 		simRadioHWOn = 1;
 		simRadioHWOnLR = 1;
 	}
 #else
 	simRadioHWOn = 1;
 #endif
+//  cooja_mt_yield();
   return 1;
 }
 /*---------------------------------------------------------------------------*/
@@ -170,7 +171,7 @@ radio_off(void)
 #if DUAL_RADIO
 	if(simRadioTarget == SHORT_RADIO)
 	{
-		printf("off SHORT\n");
+//		printf("off SHORT\n");
 		simRadioHWOn = 0;
 	}
 	else if(simRadioTarget == LONG_RADIO)
@@ -180,20 +181,21 @@ radio_off(void)
 	}
 	else if(simRadioTarget == BOTH_RADIO)
 	{
-		printf("off BOTH\n");
+//		printf("off BOTH\n");
 		simRadioHWOn = 0;
 		simRadioHWOnLR = 0;
 	}
 #else
 	simRadioHWOn = 0;
 #endif
+//  cooja_mt_yield();
   return 1;
 }
 /*---------------------------------------------------------------------------*/
 static void
 doInterfaceActionsBeforeTick(void)
 {
-  printf("beforetick on %d %d size %d %d\n",simRadioHWOn,simRadioHWOnLR,simInSize,simInSizeLR);
+//  printf("beforetick on %d %d size %d %d\n",simRadioHWOn,simRadioHWOnLR,simInSize,simInSizeLR);
   if(!simRadioHWOn) {
     simInSize = 0;
   }
@@ -229,7 +231,7 @@ static int
 // radio_read(void *buf, unsigned short bufsize)
 radio_read(void *buf, unsigned short bufsize)
 {
-  printf("radio read %d %d\n",simInSize, simInSizeLR);
+//  printf("radio read %d %d\n",simInSize, simInSizeLR);
   int tmp = simInSize;
 
   if(simInSize == 0 && simInSizeLR == 0) {
