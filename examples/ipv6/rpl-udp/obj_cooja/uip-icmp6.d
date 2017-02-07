@@ -27,7 +27,7 @@ obj_cooja/uip-icmp6.o: ../../../core/net/ipv6/uip-icmp6.c \
  ../../../core/./net/ipv6/uip-icmp6.h \
  ../../../core/./contiki-default-conf.h \
  ../../../core/net/ipv6/ipv6_debug.h ../../../core/net/rpl/rpl.h \
- ../../../core/net/rpl/rpl-conf.h
+ ../../../core/net/rpl/rpl-conf.h ../../../core/./../lanada/param.h
 ../../../core/net/ipv6/uip-icmp6.c :
  ../../../core/./net/ipv6/uip-ds6.h ../../../core/./net/ip/uip.h :
  ../../../core/./net/ip/uipopt.h ../../../platform/cooja/./contiki-conf.h :
@@ -57,4 +57,4 @@ obj_cooja/uip-icmp6.o: ../../../core/net/ipv6/uip-icmp6.c \
  ../../../core/./net/ipv6/uip-icmp6.h :
  ../../../core/./contiki-default-conf.h :
  ../../../core/net/ipv6/ipv6_debug.h ../../../core/net/rpl/rpl.h :
- ../../../core/net/rpl/rpl-conf.h :
+ ../../../core/net/rpl/rpl-conf.h ../../../core/./../lanada/param.h :

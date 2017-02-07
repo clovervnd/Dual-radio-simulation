@@ -28,13 +28,13 @@ obj_cooja/dual_conf.o: ../../../platform/cooja/./dual_conf.c \
  ../../../core/./net/mac/frame802154.h ../../../core/./net/mac/framer.h \
  ../../../core/./net/ipv6/uip-ds6-nbr.h \
  ../../../core/./net/ip/uip-packetqueue.h ../../../core/./sys/ctimer.h \
+ ../../../core/./../lanada/param.h \
  ../../../core/./net/ipv6/multicast/uip-mcast6.h \
  ../../../core/./net/ipv6/multicast/uip-mcast6-engines.h \
  ../../../core/./net/ipv6/multicast/uip-mcast6-route.h \
  ../../../core/./net/ipv6/multicast/smrf.h \
  ../../../core/./net/ipv6/multicast/roll-tm.h \
- ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h \
- ../../../core/./net/rpl/rpl-icmp6.h
+ ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h
 ../../../platform/cooja/./dual_conf.c :
  ../../../platform/cooja/./dual_conf.h :
  ../../../platform/cooja/./dev/cooja-radio.h ../../../core/./contiki.h :
@@ -65,10 +65,10 @@ obj_cooja/dual_conf.o: ../../../platform/cooja/./dual_conf.c \
  ../../../core/./net/mac/frame802154.h ../../../core/./net/mac/framer.h :
  ../../../core/./net/ipv6/uip-ds6-nbr.h :
  ../../../core/./net/ip/uip-packetqueue.h ../../../core/./sys/ctimer.h :
+ ../../../core/./../lanada/param.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6-engines.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6-route.h :
  ../../../core/./net/ipv6/multicast/smrf.h :
  ../../../core/./net/ipv6/multicast/roll-tm.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h :
- ../../../core/./net/rpl/rpl-icmp6.h :

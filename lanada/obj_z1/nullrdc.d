@@ -34,7 +34,8 @@ obj_z1/nullrdc.o: ..//core/net/mac/nullrdc.c \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
+ ..//core/./sys/log_message.h ..//core/./cfs/cfs.h
 ..//core/net/mac/nullrdc.c :
  ..//core/./net/mac/mac-sequence.h ..//core/./net/mac/nullrdc.h :
  ..//core/./net/mac/rdc.h ..//platform/z1/./contiki-conf.h :
@@ -72,3 +73,4 @@ obj_z1/nullrdc.o: ..//core/net/mac/nullrdc.c \
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
+ ..//core/./sys/log_message.h ..//core/./cfs/cfs.h :

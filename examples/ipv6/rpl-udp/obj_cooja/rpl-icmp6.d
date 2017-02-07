@@ -35,11 +35,12 @@ obj_cooja/rpl-icmp6.o: ../../../core/net/rpl/rpl-icmp6.c \
  ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ../../../core/lib/random.h ../../../core/./net/rpl/rpl-icmp6.h \
  ../../../core/./net/rpl/rpl-private.h ../../../core/./net/rpl/rpl.h \
- ../../../core/./net/rpl/rpl-conf.h ../../../core/net/rpl/rpl_debug.h \
- ../../../core/./net/ip/uip-debug.h \
+ ../../../core/./net/rpl/rpl-conf.h ../../../core/./../lanada/param.h \
+ ../../../core/net/rpl/rpl_debug.h ../../../core/./net/ip/uip-debug.h \
  ../../../core/./../platform/cooja/dual_conf.h \
  ../../../core/./../platform/cooja/dev/cooja-radio.h \
- ../../../core/./../lanada/param.h
+ ../../../core/./sys/log_message.h ../../../core/./cfs/cfs.h \
+ ../../../core/./sys/residual.h
 ../../../core/net/rpl/rpl-icmp6.c :
  ../../../core/./net/ip/tcpip.h ../../../core/./contiki.h :
  ../../../core/./contiki-version.h :
@@ -77,8 +78,9 @@ obj_cooja/rpl-icmp6.o: ../../../core/net/rpl/rpl-icmp6.c \
  ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h :
  ../../../core/lib/random.h ../../../core/./net/rpl/rpl-icmp6.h :
  ../../../core/./net/rpl/rpl-private.h ../../../core/./net/rpl/rpl.h :
- ../../../core/./net/rpl/rpl-conf.h ../../../core/net/rpl/rpl_debug.h :
- ../../../core/./net/ip/uip-debug.h :
+ ../../../core/./net/rpl/rpl-conf.h ../../../core/./../lanada/param.h :
+ ../../../core/net/rpl/rpl_debug.h ../../../core/./net/ip/uip-debug.h :
  ../../../core/./../platform/cooja/dual_conf.h :
  ../../../core/./../platform/cooja/dev/cooja-radio.h :
- ../../../core/./../lanada/param.h :
+ ../../../core/./sys/log_message.h ../../../core/./cfs/cfs.h :
+ ../../../core/./sys/residual.h :

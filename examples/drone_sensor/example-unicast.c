@@ -71,26 +71,26 @@ PROCESS_THREAD(example_unicast_process, ev, data)
   static int count=0;
 	unicast_open(&uc, 146, &unicast_callbacks);
 	// dual_radio_switch(SHORT_RADIO);
-	NETSTACK_CONF_RADIO = cc2420_driver;
-	NETSTACK_RADIO = cc2420_driver;
+	NETSTACK_CONF_RADIO = cc1200_driver;
+	NETSTACK_RADIO = cc1200_driver;
   while(1) {
 		count ++;
     static struct etimer et;
     linkaddr_t addr;
   
-		if(count%2 ==0){
-			NETSTACK_CONF_RADIO = cc2420_driver;
-			NETSTACK_RADIO = cc2420_driver;
-		} else {
-			NETSTACK_CONF_RADIO = cc2420_driver;
-			NETSTACK_RADIO = cc2420_driver;
-		}
+    //		if(count%2 ==0){
+    //			NETSTACK_CONF_RADIO = cc2420_driver;
+    //			NETSTACK_RADIO = cc2420_driver;
+    //		} else {
+    //			NETSTACK_CONF_RADIO = cc2420_driver;
+    //			NETSTACK_RADIO = cc2420_driver;
+    //		}
     etimer_set(&et, CLOCK_SECOND);
     
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
     packetbuf_copyfrom("Hello", 5);
-    addr.u8[0] = 15;
+    addr.u8[0] = 13;
     addr.u8[1] = 0;
     if(!linkaddr_cmp(&addr, &linkaddr_node_addr)) {
       unicast_send(&uc, &addr);

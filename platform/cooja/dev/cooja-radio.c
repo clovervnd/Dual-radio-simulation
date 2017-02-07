@@ -62,34 +62,37 @@
 #define WITH_SEND_CCA 1
 
 /* COOJA */
-char simReceiving = 0;
+#if DUAL_RADIO
+#else
+#endif
+
+//#if DUAL_RADIO
 char simReceivingLR = 0;
-char simInDataBuffer[COOJA_RADIO_BUFSIZE];
 char simInDataBufferLR[COOJA_RADIO_BUFSIZE];
-int simInSize = 0;
 int simInSizeLR = 0;
-char simOutDataBuffer[COOJA_RADIO_BUFSIZE];
 char simOutDataBufferLR[COOJA_RADIO_BUFSIZE];
-int simRadioChannel = 26;
 int simRadioChannelLR = 27;
-int simOutSize = 0;
 int simOutSizeLR = 0;
-
-char simRadioHWOn = 1;
 char simRadioHWOnLR = 1;
-
-int simSignalStrength = -100;
 int simSignalStrengthLR = -100;
+int simLastSignalStrengthLR = -100;
+char simPowerLR = 100;
+int simLQILR = 105;
+//#endif
+
+char simReceiving = 0;
+char simInDataBuffer[COOJA_RADIO_BUFSIZE];
+int simInSize = 0;
+char simOutDataBuffer[COOJA_RADIO_BUFSIZE];
+int simRadioChannel = 26;
+int simOutSize = 0;
+char simRadioHWOn = 1;
+int simSignalStrength = -100;
 
 /* Not used variable */
 int simLastSignalStrength = -100;
-int simLastSignalStrengthLR = -100;
-
 char simPower = 100;
-char simPowerLR = 100;
-
 int simLQI = 105;
-int simLQILR = 105;
 
 int LongRangeTransmit = 0;
 int LongRangeReceiving = 0;
@@ -105,16 +108,25 @@ PROCESS(cooja_radio_process, "cooja radio process");
 void
 radio_set_channel(int channel)
 {
-  simRadioChannel = channel;
-  simRadioChannelLR = channel;
+#if DUAL_RADIO
+	  simRadioChannel = channel;
+	  simRadioChannelLR = channel;
+#else
+	  simRadioChannel = channel;
+#endif
 }
 /*---------------------------------------------------------------------------*/
 void
 radio_set_txpower(unsigned char power)
 {
   /* 1 - 100: Number indicating output power */
-  simPower = power;
-  simPowerLR = power;
+
+#if DUAL_RADIO
+	simPower = power;
+	simPowerLR = power;
+#else
+	simPower = power;
+#endif
 }
 /*---------------------------------------------------------------------------*/
 int
@@ -199,26 +211,41 @@ doInterfaceActionsBeforeTick(void)
   if(!simRadioHWOn) {
     simInSize = 0;
   }
+#if DUAL_RADIO
   if(!simRadioHWOnLR) {
     simInSizeLR = 0;
   }
   if(!simInSize && !simInSizeLR) {
 	  return;
   }
+#else
+  if(!simInSize) {
+	  return;
+  }
+#endif
 
   if(simReceiving) {
     simLastSignalStrength = simSignalStrength;
     return;
   }
+#if DUAL_RADIO
   if(simReceivingLR) {
     simLastSignalStrengthLR = simSignalStrengthLR;
     return;
   }
+#endif
 //  printf("simInsize\n");
+#if DUAL_RADIO
   if(simInSize > 0 || simInSizeLR > 0) {
 	  // printf("In the simInsize\n");
 	    process_poll(&cooja_radio_process);
   }
+#else
+  if(simInSize > 0) {
+//	   printf("In the simInsize\n");
+	    process_poll(&cooja_radio_process);
+  }
+#endif
 //  printf("simInsize2\n");
 }
 /*---------------------------------------------------------------------------*/
@@ -234,6 +261,7 @@ radio_read(void *buf, unsigned short bufsize)
 //  printf("radio read %d %d\n",simInSize, simInSizeLR);
   int tmp = simInSize;
 
+#if DUAL_RADIO
   if(simInSize == 0 && simInSizeLR == 0) {
     return 0;
   }
@@ -243,6 +271,16 @@ radio_read(void *buf, unsigned short bufsize)
     RIMESTATS_ADD(toolong);
     return 0;
   }
+#else
+  if(simInSize == 0) {
+    return 0;
+  }
+  if(bufsize < simInSize ) {
+    simInSize = 0; /* rx flush */
+    RIMESTATS_ADD(toolong);
+    return 0;
+  }
+#endif
 
 #if DUAL_RADIO
 			/*JOONKI*/
@@ -251,6 +289,7 @@ radio_read(void *buf, unsigned short bufsize)
 			}	else {
 				dual_radio_received(SHORT_RADIO);
 			}
+
 #endif
 
 	/*	if (sent != NULL){
@@ -300,11 +339,17 @@ radio_read(void *buf, unsigned short bufsize)
 static int
 channel_clear(void)
 {
+#if DUAL_RADIO
   if(simRadioTarget == SHORT_RADIO && simSignalStrength > CCA_SS_THRESHOLD) {
     return 0;
   } else if(simRadioTarget == LONG_RADIO && simSignalStrengthLR > CCA_SS_THRESHOLD) {
     return 0;
   }
+#else
+  if(simSignalStrength > CCA_SS_THRESHOLD) {
+	  return 0;
+  }
+#endif
   return 1;
 }
 /*---------------------------------------------------------------------------*/
@@ -312,8 +357,10 @@ static int
 radio_send(const void *payload, unsigned short payload_len)
 {
   int radiostate = simRadioHWOn;
+#if DUAL_RADIO
   int radiostateLR = simRadioHWOnLR;
   char tmp = simRadioTarget;
+#endif
   /* Simulate turnaround time of 2ms for packets, 1ms for acks*/
 #if WITH_TURNAROUND
   simProcessRunValue = 1;
@@ -328,11 +375,13 @@ radio_send(const void *payload, unsigned short payload_len)
     /* Turn on radio temporarily */
     simRadioHWOn = 1;
   }
+#if DUAL_RADIO
   if(!simRadioHWOnLR)
   {
 	/* Turn on radio temporarily */
 	simRadioHWOnLR = 1;
   }
+#endif
   if(payload_len > COOJA_RADIO_BUFSIZE) {
     return RADIO_TX_ERR;
   }
@@ -362,6 +411,7 @@ radio_send(const void *payload, unsigned short payload_len)
 		}	
 /* IN CASE OF SHORT RADIO */
 	else {	
+	  simRadioTarget = SHORT_RADIO;
 #endif /* DUAL_RADIO */
 		PRINTF("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
 		PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit);
@@ -370,7 +420,6 @@ radio_send(const void *payload, unsigned short payload_len)
 	  }
 	  /* Transmit on CCA */
 #if WITH_SEND_CCA
-	  simRadioTarget = SHORT_RADIO;
 	  if(!channel_clear()) {
 	    return RADIO_TX_COLLISION;
 	  }
@@ -382,15 +431,23 @@ radio_send(const void *payload, unsigned short payload_len)
 #if DUAL_RADIO
 	}
 #endif
-
   /* Transmit */
+#if DUAL_RADIO
   while(simOutSize > 0 || simOutSizeLR > 0) {
     cooja_mt_yield();
   }
+#else
+	while(simOutSize > 0) {
+//		printf("in the simOutSize\n");
+		cooja_mt_yield();
+  }
+#endif
 
   simRadioHWOn = radiostate;
+#if DUAL_RADIO
   simRadioHWOnLR = radiostateLR;
   simRadioTarget = tmp;
+#endif
   return RADIO_TX_OK;
 }
 /*---------------------------------------------------------------------------*/
@@ -414,13 +471,21 @@ transmit_packet(unsigned short len)
 static int
 receiving_packet(void)
 {
+#if DUAL_RADIO
 	return simReceiving|simReceivingLR;
+#else
+	return simReceiving;
+#endif
 }
 /*---------------------------------------------------------------------------*/
 static int
 pending_packet(void)
 {
+#if DUAL_RADIO
   return (!simReceiving && simInSize > 0)|(!simReceivingLR && simInSizeLR > 0);
+#else
+  return !simReceiving && simInSize >0;
+#endif
 }
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(cooja_radio_process, ev, data)

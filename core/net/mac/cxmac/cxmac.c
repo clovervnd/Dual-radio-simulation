@@ -1156,7 +1156,9 @@ cxmac_init(void)
 {
   radio_is_on = 0;
   waiting_for_packet = 0;
+#if DUAL_RADIO
   dual_duty_cycle_count = 0;
+#endif
   PT_INIT(&pt);
   /*  rtimer_set(&rt, RTIMER_NOW() + cxmac_config.off_time, 1,
       (void (*)(struct rtimer *, void *))powercycle, NULL);*/

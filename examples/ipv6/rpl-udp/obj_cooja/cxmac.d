@@ -50,13 +50,13 @@ obj_cooja/cxmac.o: ../../../core/net/mac/cxmac/cxmac.c \
  ../../../core/./net/ipv6/uip-ds6-route.h ../../../core/./net/nbr-table.h \
  ../../../core/./net/ipv6/uip-ds6-nbr.h \
  ../../../core/./net/ip/uip-packetqueue.h \
+ ../../../core/./../lanada/param.h \
  ../../../core/./net/ipv6/multicast/uip-mcast6.h \
  ../../../core/./net/ipv6/multicast/uip-mcast6-engines.h \
  ../../../core/./net/ipv6/multicast/uip-mcast6-route.h \
  ../../../core/./net/ipv6/multicast/smrf.h \
  ../../../core/./net/ipv6/multicast/roll-tm.h \
- ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h \
- ../../../core/./../lanada/param.h
+ ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h
 ../../../core/net/mac/cxmac/cxmac.c :
  ../../../core/./dev/leds.h ../../../platform/cooja/./contiki-conf.h :
  project-conf.h ../../../core/./dev/radio.h :
@@ -109,10 +109,10 @@ obj_cooja/cxmac.o: ../../../core/net/mac/cxmac/cxmac.c \
  ../../../core/./net/ipv6/uip-ds6-route.h ../../../core/./net/nbr-table.h :
  ../../../core/./net/ipv6/uip-ds6-nbr.h :
  ../../../core/./net/ip/uip-packetqueue.h :
+ ../../../core/./../lanada/param.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6-engines.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6-route.h :
  ../../../core/./net/ipv6/multicast/smrf.h :
  ../../../core/./net/ipv6/multicast/roll-tm.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6-stats.h :
- ../../../core/./../lanada/param.h :

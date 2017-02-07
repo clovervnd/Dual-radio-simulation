@@ -1,18 +1,17 @@
-/* Adding simple remaining energy and alpha JJH*/
-#define INITIAL_ENERGY 200
-#define ALPHA 0.5
-
 /* RPL MODES */
 #define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 1
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
-#define MODE_LAST_PARENT	1 // Tx Last parent info. in dio_ack
+#define MODE_LAST_PARENT	0 // Tx Last parent info. in dio_ack
 #define MODE_PARENT_UPDATE_IN_ROUND 0 // Update parent only when round is synchronized // Not implemented yet
 
 /* OF best parent selection strategy */
 #define OF_MWHOF	0 // Minimum Weight Hysteresis Objective Function
+
+/* Metric ratio between weight and rank */
+#define ALPHA 2
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	0

@@ -581,23 +581,29 @@ dio_input(void)
   }
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
+#if DUAL_RADIO
   uint8_t is_longrange = radio_received_is_longrange();
+  PRINTF("before child cmp %d\n",is_longrange);
+#endif
 #if MODE_DIO_WEIGHT_UPDATED
   uint8_t prev_weight = my_weight;
 #endif
-  PRINTF("before child cmp %d\n",is_longrange);
   c = rpl_find_child(&from);
   if(c != NULL)
   {
 	  PRINTF("after child cmp\n");
 	  PRINT6ADDR(&dio.parent_addr);
 	  PRINTF("\n");
+#if DUAL_RADIO
 	  if((is_longrange == LONG_RADIO
 			  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
 			  || (is_longrange == SHORT_RADIO
 					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))
 //	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
 //		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
+#else
+		  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr))
+#endif
 	    {
 		  PRINTF("it's me\n");
 		  // weight update
@@ -621,11 +627,16 @@ dio_input(void)
   }
   else
   {
+#if DUAL_RADIO
 	  if((is_longrange == LONG_RADIO
 			  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
 			  || (is_longrange == SHORT_RADIO
 					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))
+#else
+		  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr))
+#endif
 	  {
+
 		  c = rpl_add_child(dio.parent_weight, &from);
 		  if(c == NULL)
 		  {
@@ -973,12 +984,16 @@ dio_ack_input(void)
 	{
 		PRINTF("fail to add nbr with dio_ack\n");
 	}
-	uint8_t is_longrange = radio_received_is_longrange();
 	c = rpl_find_child(&from);
+#if DUAL_RADIO
+	uint8_t is_longrange = radio_received_is_longrange();
 	if((is_longrange == LONG_RADIO
 			&& uip_ipaddr_cmp(&parent, &uip_ds6_long_get_link_local(-1)->ipaddr))
 			|| (is_longrange == SHORT_RADIO
 					&& uip_ipaddr_cmp(&parent, &uip_ds6_get_link_local(-1)->ipaddr)))
+#else
+		if(uip_ipaddr_cmp(&parent, &uip_ds6_get_link_local(-1)->ipaddr))
+#endif
 	{
 		if (c == NULL)
 		{
@@ -1008,10 +1023,14 @@ dio_ack_input(void)
 	}
 	// If I'm a last parent
 #if MODE_LAST_PARENT
+#if DUAL_RADIO
 	else if((is_longrange == LONG_RADIO
 			&& uip_ipaddr_cmp(&last_parent, &uip_ds6_long_get_link_local(-1)->ipaddr))
 			|| (is_longrange == SHORT_RADIO
 					&& uip_ipaddr_cmp(&last_parent, &uip_ds6_get_link_local(-1)->ipaddr)))
+#else
+		else if(uip_ipaddr_cmp(&last_parent, &uip_ds6_get_link_local(-1)->ipaddr))
+#endif
 	{
 		if (c != NULL)
 		{

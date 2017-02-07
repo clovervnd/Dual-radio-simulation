@@ -90,21 +90,25 @@ PROCESS_THREAD(cc1200_demo_process, ev, data)
 	dual_radio_switch(LONG_RADIO);
   while(1) {
     PROCESS_YIELD();
-    if(ev == PROCESS_EVENT_TIMER) {
-			if (counter%2 ==0){
-				dual_radio_switch(LONG_RADIO);
-			}
-			else{
-				dual_radio_switch(SHORT_RADIO);
-			}
+    if(linkaddr_node_addr.u8[0] == 13)
+      {
+      
+	if(ev == PROCESS_EVENT_TIMER) {
+	  //			if (counter%2 ==0){
+	  //				dual_radio_switch(LONG_RADIO);
+	  //			}
+	  //			else{
+	  //				dual_radio_switch(SHORT_RADIO);
+	  //			}
 
-      printf("\nBroadcast --> %u\n", counter);
-      leds_toggle(LEDS_RED);
-      packetbuf_copyfrom(&counter, sizeof(counter));
-			printf("##############################  SEND  ##############################\n");
-      broadcast_send(&bc);
-      counter++;
-      etimer_set(&et, LOOP_INTERVAL);
+	  printf("\nBroadcast --> %u\n", counter);
+	  leds_toggle(LEDS_RED);
+	  packetbuf_copyfrom(&counter, sizeof(counter));
+	  printf("##############################  SEND  ##############################\n");
+	  broadcast_send(&bc);
+	  counter++;
+	  etimer_set(&et, LOOP_INTERVAL);
+	}
     }
   }
 

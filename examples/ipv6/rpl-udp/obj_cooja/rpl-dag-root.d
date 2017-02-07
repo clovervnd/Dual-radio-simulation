@@ -59,7 +59,7 @@ obj_cooja/rpl-dag-root.o: ../../../core/net/rpl/rpl-dag-root.c \
  ../../../core/./net/rime/rucb.h ../../../core/./net/rime/timesynch.h \
  ../../../core/./net/rime/trickle.h ../../../core/./net/netstack.h \
  ../../../core/./net/rpl/rpl.h ../../../core/./net/rpl/rpl-conf.h \
- ../../../core/./net/rpl/rpl-private.h \
+ ../../../core/./../lanada/param.h ../../../core/./net/rpl/rpl-private.h \
  ../../../core/./net/ipv6/multicast/uip-mcast6.h \
  ../../../core/./net/ipv6/multicast/uip-mcast6-engines.h \
  ../../../core/./net/ipv6/multicast/uip-mcast6-route.h \
@@ -131,7 +131,7 @@ obj_cooja/rpl-dag-root.o: ../../../core/net/rpl/rpl-dag-root.c \
  ../../../core/./net/rime/rucb.h ../../../core/./net/rime/timesynch.h :
  ../../../core/./net/rime/trickle.h ../../../core/./net/netstack.h :
  ../../../core/./net/rpl/rpl.h ../../../core/./net/rpl/rpl-conf.h :
- ../../../core/./net/rpl/rpl-private.h :
+ ../../../core/./../lanada/param.h ../../../core/./net/rpl/rpl-private.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6-engines.h :
  ../../../core/./net/ipv6/multicast/uip-mcast6-route.h :
