@@ -130,7 +130,8 @@ rpl_print_child_neighbor_list(void)
     while(c != NULL) {
       uip_ds6_nbr_t *nbr = rpl_get_nbr_child(c);
 //      printf("RPL: nbr %3u %5u, %5u => %5u %c%c (last tx %u min ago)\n",
-      	PRINTF("RPL_child: nbr %3u\n",
+//      	PRINTF("RPL_child: nbr %3u\n",
+      	printf("RPL_child: nbr %3u\n",
           nbr_table_get_lladdr(rpl_children, c)->u8[7]);
 //          p->rank, nbr ? nbr->link_metric : 0,
 //          default_instance->of->calculate_rank(p, 0),
@@ -139,7 +140,8 @@ rpl_print_child_neighbor_list(void)
 //          (unsigned)((now - p->last_tx_time) / (60 * CLOCK_SECOND)));
       c = nbr_table_next(rpl_children, c);
     }
-    PRINTF("RPL: end of list\n");
+//    PRINTF("RPL: end of list\n");
+    printf("RPL: end of list\n");
   }
 }
 #endif
@@ -726,9 +728,7 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
 #endif /* RPL_DAG_MC != RPL_DAG_MC_NONE */
 #if RPL_LIFETIME_MAX_MODE
       p->parent_weight = dio->parent_weight;
-      p->sink_reachability = dio->reachability;
-      my_sink_reachability++; // Increase sink_reachability by 1 for each parent
-#endif
+ #endif
     }
   }
   return p;
@@ -938,7 +938,7 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
 		  instance->last_parent_weight = last_parent->parent_weight;
 	  }
 #endif
-	  rpl_schedule_dio_ack(instance);
+//	    rpl_schedule_dio_ack(instance);
 //      dio_ack_output(rpl_get_parent_ipaddr(best_dag->preferred_parent)); // JJH for debug
   }
 #endif
@@ -957,16 +957,12 @@ best_parent(rpl_dag_t *dag)
   dag->base_rank = p->rank;
 #endif
   while(p != NULL) {
-#if RPL_LIFETIME_MAX_MODE
 	  nbr = rpl_get_nbr(p);
 	  if(p->rank < dag->base_rank)
 	  {
 		  dag->base_rank = p->rank;
 	  }
-    if(p->dag != dag || p->rank == INFINITE_RANK || (p->sink_reachability == 1 && rpl_find_child(&(nbr->ipaddr)) != NULL)) {
-#else
     if(p->dag != dag || p->rank == INFINITE_RANK) {
-#endif
       /* ignore this neighbor */
     } else if(best == NULL) {
       best = p;
@@ -1517,7 +1513,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
 #if MODE_LAST_PARENT
       rpl_get_default_instance()->last_parent = NULL;
 #endif
-      rpl_schedule_dio_ack(rpl_get_default_instance()); // Tx dio_ack when joining new instance
+//      rpl_schedule_dio_ack(rpl_get_default_instance()); // Tx dio_ack when joining new instance
 #endif
 //      dio_ack_output(from); // Tx dio_ack when joining new instance
     } else {
@@ -1622,10 +1618,24 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   }
   p->rank = dio->rank;
 #if RPL_LIFETIME_MAX_MODE
+  rpl_parent_t *p_temp;
+  uip_ipaddr_t *ip_temp;
   p->parent_sum_weight = dio->dio_weight;
-//  p->sink_reachability = dio->reachability;
-//  my_sink_reachability |= dio->reachability;
-  PRINTF("my_sink_reachability %d\n",my_sink_reachability);
+/* Short and Long parent should share weight */
+  ip_temp = from;
+  if(ip_temp->u8[8] == 0x82)
+  {
+	  ip_temp->u8[8] = 0x2;
+  }
+  else
+  {
+	  ip_temp->u8[8] = 0x82;
+  }
+  p_temp = rpl_find_parent(dag,ip_temp);
+  if(p_temp != NULL)
+  {
+	  p_temp->parent_sum_weight = dio->dio_weight;
+  }
 #endif
   /* Parent info has been updated, trigger rank recalculation */
   p->flags |= RPL_PARENT_FLAG_UPDATED;

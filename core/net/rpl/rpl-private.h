@@ -71,7 +71,7 @@
 #define RPL_CODE_DIO                   0x01   /* DAG Information Option */
 #define RPL_CODE_DAO                   0x02   /* Destination Advertisement Option */
 #define RPL_CODE_DAO_ACK               0x03   /* DAO acknowledgment */
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 #define RPL_CODE_DIO_ACK               0x04   /* DIO acknowledgment */
 #endif
 #define RPL_CODE_SEC_DIS               0x80   /* Secure DIS */
@@ -120,7 +120,7 @@
 #else /* RPL_CONF_DAO_DELAY */
 #define RPL_DAO_DELAY                 (CLOCK_SECOND * 4)
 #endif /* RPL_CONF_DAO_DELAY */
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 #define RPL_DIO_ACK_DELAY		      (CLOCK_SECOND * 4)
 #endif
 
@@ -154,7 +154,7 @@
 #else
 #define RPL_MIN_HOPRANKINC          RPL_CONF_MIN_HOPRANKINC
 #endif
-#define RPL_MAX_RANKINC             (7 * RPL_MIN_HOPRANKINC)
+#define RPL_MAX_RANKINC             (20 * RPL_MIN_HOPRANKINC)
 
 #define DAG_RANK(fixpt_rank, instance) \
   ((fixpt_rank) / (instance)->min_hoprankinc)
@@ -261,7 +261,6 @@ struct rpl_dio {
   uip_ipaddr_t parent_addr;
   uint8_t parent_weight; /* dio parent's weight info. JJH */
   uint8_t dio_weight; /* dio sender's total weight JJH */
-  uint8_t reachability;
 #endif
 };
 typedef struct rpl_dio rpl_dio_t;
@@ -304,7 +303,7 @@ void dio_output(rpl_instance_t *, uip_ipaddr_t *uc_addr);
 void dao_output(rpl_parent_t *, uint8_t lifetime);
 void dao_output_target(rpl_parent_t *, uip_ipaddr_t *, uint8_t lifetime);
 void dao_ack_output(rpl_instance_t *, uip_ipaddr_t *, uint8_t, uint8_t);
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 void dio_ack_output(rpl_instance_t *, uip_ipaddr_t *uc_addr);
 #endif
 void rpl_icmp6_register_handlers(void);
@@ -358,7 +357,7 @@ void rpl_schedule_dao(rpl_instance_t *);
 void rpl_schedule_dao_immediately(rpl_instance_t *);
 void rpl_schedule_unicast_dio_immediately(rpl_instance_t *instance);
 void rpl_cancel_dao(rpl_instance_t *instance);
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 void rpl_schedule_dio_ack(rpl_instance_t *);
 void rpl_schedule_dio_ack_immediately(rpl_instance_t *);
 void rpl_cancel_dio_ack(rpl_instance_t *instance);

@@ -240,7 +240,7 @@ rpl_reset_dio_timer(rpl_instance_t *instance)
 }
 /*---------------------------------------------------------------------------*/
 static void handle_dao_timer(void *ptr);
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 static void handle_dio_ack_timer(void *ptr);
 #endif
 static void
@@ -375,7 +375,7 @@ rpl_cancel_dao(rpl_instance_t *instance)
   ctimer_stop(&instance->dao_lifetime_timer);
 }
 /*---------------------------------------------------------------------------*/
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 static void
 handle_dio_ack_timer(void *ptr)
 {

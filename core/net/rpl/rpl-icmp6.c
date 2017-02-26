@@ -97,7 +97,7 @@ static void dis_input(void);
 static void dio_input(void);
 static void dao_input(void);
 static void dao_ack_input(void);
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 static void dio_ack_input(void);
 #endif
 
@@ -126,7 +126,7 @@ UIP_ICMP6_HANDLER(dis_handler, ICMP6_RPL, RPL_CODE_DIS, dis_input);
 UIP_ICMP6_HANDLER(dio_handler, ICMP6_RPL, RPL_CODE_DIO, dio_input);
 UIP_ICMP6_HANDLER(dao_handler, ICMP6_RPL, RPL_CODE_DAO, dao_input);
 UIP_ICMP6_HANDLER(dao_ack_handler, ICMP6_RPL, RPL_CODE_DAO_ACK, dao_ack_input);
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 UIP_ICMP6_HANDLER(dio_ack_handler, ICMP6_RPL, RPL_CODE_DIO_ACK, dio_ack_input);
 #endif
 /*---------------------------------------------------------------------------*/
@@ -163,6 +163,8 @@ add_nbr_from_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   }
   return 1;
 }
+#endif
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 static int
 add_nbr_from_dio_ack(uip_ipaddr_t *from, uint8_t weight)
 {
@@ -176,6 +178,21 @@ add_nbr_from_dio_ack(uip_ipaddr_t *from, uint8_t weight)
   return 1;
 }
 #endif
+#if RPL_LIFETIME_MAX_MODE
+static int
+add_nbr_from_dao(uip_ipaddr_t *from, uint8_t weight)
+{
+  /* add this to the neighbor cache if not already there */
+  if(rpl_icmp6_update_nbr_table(from, NBR_TABLE_REASON_RPL_DAO, &weight) == NULL) {
+    PRINTF("RPL: Out of memory, dropping DAO from ");
+    PRINT6ADDR(from);
+    PRINTF("\n");
+    return 0;
+  }
+  return 1;
+}
+#endif
+
 /* prepare for forwarding of DAO */
 static uint8_t
 prepare_for_dao_fwd(uint8_t sequence, uip_ds6_route_t *rep)
@@ -526,10 +543,6 @@ dio_input(void)
       dio.dag_max_rankinc = get16(buffer, i + 6);
       dio.dag_min_hoprankinc = get16(buffer, i + 8);
       dio.ocp = get16(buffer, i + 10);
-#if RPL_LIFETIME_MAX_MODE
-      /* Using buffer + 12 temporally for reachability */
-      dio.reachability = buffer[i + 12]; // JJH
-#endif
       /* buffer + 12 is reserved */
       dio.default_lifetime = buffer[i + 13];
       dio.lifetime_unit = get16(buffer, i + 14);
@@ -809,19 +822,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   /* OCP is in the DAG_CONF option */
   set16(buffer, pos, instance->of->ocp);
   pos += 2;
-#if RPL_LIFETIME_MAX_MODE
-
-  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15]==1)
-  {
-	  buffer[pos++] = 1; /* Sink reachability always 1  */
-  }
-  else
-  {
-	  buffer[pos++] = my_sink_reachability-my_child_number; /* Temporally for reachability */
-  }
-#else
-    buffer[pos++] = 0; /* reserved */
-#endif
+  buffer[pos++] = 0; /* reserved */
   buffer[pos++] = instance->default_lifetime;
   set16(buffer, pos, instance->lifetime_unit);
   pos += 2;
@@ -927,7 +928,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 #endif /* RPL_LEAF_ONLY */
 }
 /*---------------------------------------------------------------------------*/
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 void
 dio_ack_input(void)
 {
@@ -1098,9 +1099,9 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	rpl_parent_t *p = dag->preferred_parent;
 
 	char *log_buf = (char*) malloc(sizeof(char)*100);
-	sprintf(log_buf,"DIO_ACK_OUTPUT, Energy: %d\n",get_residual_energy()); 
+	sprintf(log_buf,"DIO_ACK_OUTPUT, Energy: %d\n",get_residual_energy());
 	dio_ack_count ++;
-	LOG_MESSAGE(log_buf); 
+	LOG_MESSAGE(log_buf);
 	free(log_buf);
 
 	pos = 0;
@@ -1179,6 +1180,7 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	}
 }
 #endif
+
 /*---------------------------------------------------------------------------*/
 static void
 dao_input(void)
@@ -1209,6 +1211,10 @@ dao_input(void)
 	int is_root;
 	uip_ipaddr_t tmp_addr;
 	uip_ipaddr_t tmp_addr_2;
+#if RPL_LIFETIME_MAX_MODE
+	rpl_child_t *c = NULL;
+	uint8_t weight;
+#endif
 
   prefixlen = 0;
   parent = NULL;
@@ -1440,6 +1446,44 @@ dao_input(void)
 #if RPL_CONF_MULTICAST
 fwd_dao:
 #endif
+
+  /* Add child as receiving DAO */
+  if(!add_nbr_from_dao(&dao_sender_addr, weight))
+  {
+	  PRINTF("fail to add nbr with dao\n");
+  }
+  c = rpl_find_child(&dao_sender_addr);
+#if DUAL_RADIO
+  uint8_t is_longrange = radio_received_is_longrange();
+  weight = is_longrange == LONG_RADIO ? LONG_WEIGHT_RATIO : 1;
+#else
+  weight = 1;
+#endif
+  if (c == NULL)
+  {
+	  c = rpl_add_child(weight,&dao_sender_addr);
+	  if(c == NULL)
+	  {
+		  PRINTF("fail to add child\n");
+	  }
+	  else
+	  {
+		  my_weight += c->weight;
+		  PRINTF("my_weight in dao %d\n",my_weight);
+	  }
+	  PRINTF("child list in dao input\n");
+	  rpl_print_child_neighbor_list();
+  }
+  else
+  {
+	  if(c->weight != weight)
+	  {
+		  my_weight -= c->weight;
+		  c->weight = weight;
+		  my_weight += c->weight;
+		  PRINTF("my_weight update in dao %d\n",my_weight);
+	  }
+  }
 
   if(learned_from == RPL_ROUTE_FROM_UNICAST_DAO) {
     int should_ack = 0;
@@ -1949,7 +1993,7 @@ rpl_icmp6_register_handlers()
   uip_icmp6_register_input_handler(&dio_handler);
   uip_icmp6_register_input_handler(&dao_handler);
   uip_icmp6_register_input_handler(&dao_ack_handler);
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
   uip_icmp6_register_input_handler(&dio_ack_handler);
 #endif
 }

@@ -99,8 +99,8 @@ rpl_of_t rpl_ltmax_of = {
 /* Reject parents that have a higher path cost than the following. */
 #define MAX_PATH_COST			100
 
-/*
- * The rank must differ more than 1/PARENT_SWITCH_THRESHOLD_DIV in order
+	/*
+	 * The rank must differ more than 1/PARENT_SWITCH_THRESHOLD_DIV in order
  * to switch preferred parent.
  */
 #define PARENT_SWITCH_THRESHOLD_DIV	1
@@ -112,7 +112,7 @@ calculate_path_metric(rpl_parent_t *p)
 {
   uip_ds6_nbr_t *nbr;
   rpl_path_metric_t ret_metric;
-  rpl_rank_t rank_rate;
+//  rpl_rank_t rank_rate;
   if(p == NULL) {
     return MAX_PATH_COST * RPL_DAG_MC_ETX_DIVISOR;
   }
@@ -124,14 +124,16 @@ calculate_path_metric(rpl_parent_t *p)
   {
 #if RPL_LIFETIME_MAX_MODE
 //	  PRINTF("rank, base_rank %d %d\n",p->rank,rpl_get_any_dag()->base_rank);
-	  rank_rate = p->rank - rpl_get_any_dag()->base_rank < 0 ? 0 : p->rank - rpl_get_any_dag()->base_rank;
+//	  rank_rate = p->rank - rpl_get_any_dag()->base_rank < 0 ? 0 : p->rank - rpl_get_any_dag()->base_rank;
 //	  PRINTF("weight: %d rank_rate: %d\n",p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, rank_rate);
-	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR + ALPHA * rank_rate;
+//	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR + ALPHA * rank_rate;
+
+	  ret_metric = p->rank + p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
 #else
 	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
 #endif
-	  PRINTF("ip:%d %c weight:%d rank:%d rank_rate:%d ret_metric:%d %d\n",nbr->ipaddr.u8[15], nbr->ipaddr.u8[8]==0x82 ? 'L' : 'S',
-			  p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, p->rank, rank_rate, ret_metric, rpl_get_any_dag()->preferred_parent == p);
+	  PRINTF("ip:%d %c weight:%d rank:%d ret_metric:%d %d\n",nbr->ipaddr.u8[15], nbr->ipaddr.u8[8]==0x82 ? 'L' : 'S',
+			  p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, p->rank, ret_metric, rpl_get_any_dag()->preferred_parent == p);
 	  return ret_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
@@ -223,14 +225,14 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 #if RPL_ETX_WEIGHT
 	if(nbr->link_metric == 0)
 	{
-		p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
+		p->parent_weight = 1 * (is_longrange ? LONG_WEIGHT_RATIO : 1);
 	}
 	else
 	{
-		p->parent_weight = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_RX_COST : SHORT_RX_COST); // Tx cost using DIO_ACK
+		p->parent_weight = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_WEIGHT_RATIO : 1); // Tx cost using DIO_ACK
 	}
 #else
-	p->parent_weight = 1 * (is_longrange ? LONG_RX_COST : SHORT_RX_COST);
+	p->parent_weight = 1 * (is_longrange ? LONG_WEIGHT_RATIO : 1);
 
 #endif
 
@@ -264,11 +266,19 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 
   if(p == NULL || (nbr = rpl_get_nbr(p)) == NULL) {
     if(base_rank == 0) {
+    	printf("null inf rank\n");
       return INFINITE_RANK;
     }
     rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
   } else {
-    rank_increase = nbr->link_metric;
+	  if(p->parent_sum_weight == 0)
+	  {
+		  rank_increase = 1 * RPL_DAG_MC_ETX_DIVISOR;
+	  }
+	  else
+	  {
+		  rank_increase = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
+	  }
     if(base_rank == 0) {
       base_rank = p->rank;
     }
@@ -276,6 +286,7 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 
   if(INFINITE_RANK - base_rank < rank_increase) {
     /* Reached the maximum rank. */
+	  printf("reach max rank\n");
     new_rank = INFINITE_RANK;
   } else {
    /* Calculate the rank based on the new rank information from DIO or
@@ -359,137 +370,21 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  if(p1_metric < p2_metric + min_diff &&
 			  p1_metric > p2_metric - min_diff)
 	  {
-		  if(p1->rank < p2->rank + min_diff &&
-				  p1->rank > p2->rank - min_diff)
-		  {
-			  return dag->preferred_parent;
-		  }
-		  else
-		  {
-			  return p1->rank <= p2->rank ? p1 : p2;
-		  }
-	  }
-	  else
-	  {
-		  return p1_metric <= p2_metric ? p1 : p2;
+		  return dag->preferred_parent;
 	  }
   }
-  else
-  {
-	  if(p1_metric == p2_metric)
-	  {
-		  if(p1->rank == p2->rank)
-		  {
-			  if(nbr1->ipaddr.u8[8] == 0x2 || nbr2->ipaddr.u8[8] == 0x2)
-			  {
-				  if(nbr1->ipaddr.u8[8] == 0x2 && nbr2->ipaddr.u8[8] == 0x2)
-				  {
-					  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p1)->ipaddr.u8[15] <=
-							  uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p2)->ipaddr.u8[15])
-					  {
-						  return p1;
-					  }
-					  else
-					  {
-						  return p2;
-					  }
-				  }
-				  else
-				  {
-					  return nbr1->ipaddr.u8[8] == 0x2 ? p1 : p2;
-				  }
-			  }
-			  else
-			  {
-				  // For the same metric and rank case, choose smaller id node
-				  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p1)->ipaddr.u8[15] <=
-						  uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p2)->ipaddr.u8[15])
-				  {
-					  return p1;
-				  }
-				  else
-				  {
-					  return p2;
-				  }
-			  }
-/*			  // For the same metric and rank case, choose smaller id node
-			  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p1)->ipaddr.u8[15] <=
-					  uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p2)->ipaddr.u8[15])
-			  {
-				  return p1;
-			  }
-			  else
-			  {
-				  return p2;
-			  }*/
-//			  return rpl_get_nbr(p1)->ipaddr.u8[15] < rpl_get_nbr(p2)->ipaddr.u8[15] ? p1 : p2;
-		  }
-		  else
-		  {
-			  return p1->rank <= p2->rank ? p1 : p2;
-		  }
-	  }
-	  else
-	  {
-		  return p1_metric <= p2_metric ? p1 : p2;
-	  }
-  }
+  return p1_metric <= p2_metric ? p1 : p2;
+
 #else
   if(p1_metric == p2_metric)
   {
-	  if(p1->rank == p2->rank)
+	  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
 	  {
-		  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
-		  {
-			  return dag->preferred_parent;
-		  }
-		  else
-		  {
-			  if(nbr1->ipaddr.u8[8] == 0x2 || nbr2->ipaddr.u8[8] == 0x2)
-			  {
-				  if(nbr1->ipaddr.u8[8] == 0x2 && nbr2->ipaddr.u8[8] == 0x2)
-				  {
-					  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p1)->ipaddr.u8[15] <=
-							  uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p2)->ipaddr.u8[15])
-					  {
-						  return p1;
-					  }
-					  else
-					  {
-						  return p2;
-					  }
-				  }
-				  else
-				  {
-					  return nbr1->ipaddr.u8[8] == 0x2 ? p1 : p2;
-				  }
-			  }
-			  else
-			  {
-				  // For the same metric and rank case, choose smaller id node
-				  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p1)->ipaddr.u8[15] <=
-						  uip_ds6_get_link_local(-1)->ipaddr.u8[15] - rpl_get_nbr(p2)->ipaddr.u8[15])
-				  {
-					  return p1;
-				  }
-				  else
-				  {
-					  return p2;
-				  }
-			  }
-		  }
-	  }
-	  else
-	  {
-		  return p1->rank <= p2->rank ? p1 : p2;
+		  return dag->preferred_parent;
 	  }
   }
-  else
-  {
-	  return p1_metric <= p2_metric ? p1 : p2;
-  }
+  return p1_metric <= p2_metric ? p1 : p2;
 #endif
-
 }
 
 #if RPL_DAG_MC == RPL_DAG_MC_NONE

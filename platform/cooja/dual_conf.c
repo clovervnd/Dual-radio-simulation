@@ -11,7 +11,7 @@
 #endif
 PROCESS(dual_dio_broadcast, "dio_broadcast");
 PROCESS(dual_dis_broadcast, "dis_broadcast");
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 PROCESS(dual_dio_ack_broadcast, "dio_ack_broadcast");
 #endif
 
@@ -141,7 +141,7 @@ PROCESS_THREAD(dual_dis_broadcast, ev, data)
 	PROCESS_END();
 }
 	
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 PROCESS_THREAD(dual_dio_ack_broadcast, ev, data)
 {
 	static struct etimer et;
@@ -171,7 +171,7 @@ int dis_broadcast(void)
 	return 1;
 }
 
-#if RPL_LIFETIME_MAX_MODE
+#if RPL_LIFETIME_MAX_MODE_DIO_ACK
 int dio_ack_broadcast(rpl_instance_t * instance)
 {
 	temp_instance = instance;
