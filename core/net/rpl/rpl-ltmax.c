@@ -273,7 +273,7 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
   } else {
 	  if(p->parent_sum_weight == 0)
 	  {
-		  rank_increase = 1 * RPL_DAG_MC_ETX_DIVISOR;
+		  rank_increase = (nbr->ipaddr.u8[8] == 0x82 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
 	  }
 	  else
 	  {
@@ -286,7 +286,7 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 
   if(INFINITE_RANK - base_rank < rank_increase) {
     /* Reached the maximum rank. */
-	  printf("reach max rank\n");
+	  PRINTF("reach max rank\n");
     new_rank = INFINITE_RANK;
   } else {
    /* Calculate the rank based on the new rank information from DIO or
@@ -331,6 +331,10 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   nbr1 = rpl_get_nbr(p1);
   nbr2 = rpl_get_nbr(p2);
 #endif
+#if DUAL_RADIO
+  uint8_t is_longrange1;
+  uint8_t is_longrange2;
+#endif
 
   dag = p1->dag; /* Both parents are in the same DAG. */
 
@@ -340,7 +344,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
 #if RPL_LIFETIME_MAX_MODE
-  if(p1 == dag->preferred_parent)
+/*  if(p1 == dag->preferred_parent)
   {
 	  if(p1_metric - p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR < 0)
 	  {
@@ -361,9 +365,20 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  {
 		  p2_metric -= p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
 	  }
+  }*/
+  if(p1 != dag->preferred_parent)
+  {
+	  is_longrange1 = nbr1->ipaddr.u8[8]==0x82;
+	  p1_metric += (is_longrange1 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
+  }
+  if(p2 != dag->preferred_parent)
+  {
+	  is_longrange2 = nbr2->ipaddr.u8[8]==0x82;
+	  p2_metric += (is_longrange2 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
   }
 #endif
-
+  PRINTF("Comparing p1: %d\n",p1_metric);
+  PRINTF("Comparing p2: %d\n",p2_metric);
 #if OF_MWHOF
   if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
   {
