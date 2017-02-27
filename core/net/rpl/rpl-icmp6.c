@@ -587,11 +587,13 @@ dio_input(void)
 #endif
 
   rpl_process_dio(&from, &dio);
-#if RPL_LIFETIME_MAX_MODE
+/*  PRINTF("before add_nbr\n");
   if(!add_nbr_from_dio(&from, &dio)) {
     PRINTF("RPL: Could not add parent based on DIO in icmp6\n");
     return;
   }
+  PRINTF("after add_nbr\n");*/
+#if RPL_LIFETIME_MAX_MODE
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
 #if DUAL_RADIO
@@ -601,7 +603,12 @@ dio_input(void)
 #if MODE_DIO_WEIGHT_UPDATED
   uint8_t prev_weight = my_weight;
 #endif
+  uint8_t prev_weight = my_weight;
+
+  PRINTF("DIO_from:");
+  PRINT6ADDR(&from);
   c = rpl_find_child(&from);
+  PRINTF(" c: %d\n",c == NULL);
   if(c != NULL)
   {
 	  PRINTF("after child cmp\n");
@@ -672,6 +679,12 @@ dio_input(void)
 	  dio_broadcast(rpl_get_default_instance());
   }
 #endif
+  if(prev_weight != my_weight)
+  {
+	  PRINTF("DIO Reset in DIO\n");
+	  rpl_reset_dio_timer(rpl_get_default_instance());
+  }
+  PRINTF("DIO INPUT my_weight %d\n",my_weight);
 #endif
 
  discard:
@@ -744,8 +757,8 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   {
 	  if(dag->preferred_parent->parent_weight == 0)
 	  {
-		  PRINTF("send dio weight %d default\n",1);
-		  buffer[pos++] = 1; /* parent's weight default */
+		  PRINTF("send dio weight %d default\n",sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1);
+		  buffer[pos++] = sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1; /* parent's weight default */
 	  }
 	  else
 	  {
@@ -886,7 +899,6 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     uip_create_linklocal_rplnodes_mcast(&addr);
     uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_DIO, pos);
   } else {
-
 /*JOONKI*/
 #if DUAL_RADIO
 #if ADDR_MAP
@@ -1446,13 +1458,16 @@ dao_input(void)
 #if RPL_CONF_MULTICAST
 fwd_dao:
 #endif
-
+	uint8_t prev_weight = my_weight;
   /* Add child as receiving DAO */
-  if(!add_nbr_from_dao(&dao_sender_addr, weight))
+/*  if(!add_nbr_from_dao(&dao_sender_addr, weight))
   {
 	  PRINTF("fail to add nbr with dao\n");
   }
+  PRINTF("DAO_sender:");
+  PRINT6ADDR(&dao_sender_addr);*/
   c = rpl_find_child(&dao_sender_addr);
+
 #if DUAL_RADIO
   uint8_t is_longrange = radio_received_is_longrange();
   weight = is_longrange == LONG_RADIO ? LONG_WEIGHT_RATIO : 1;
@@ -1562,6 +1577,11 @@ fwd_dao:
       dao_ack_output(instance, &dao_sender_addr, sequence,
                      RPL_DAO_ACK_UNCONDITIONAL_ACCEPT);
     }
+  }
+  if(prev_weight != my_weight)
+  {
+	  PRINTF("DIO Reset in DAO\n");
+	  rpl_reset_dio_timer(instance);
   }
 
  discard:

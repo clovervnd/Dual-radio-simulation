@@ -1636,6 +1636,16 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   {
 	  p_temp->parent_sum_weight = dio->dio_weight;
   }
+  /* Recover addr */
+  if(ip_temp->u8[8] == 0x82)
+  {
+	  ip_temp->u8[8] = 0x2;
+  }
+  else
+  {
+	  ip_temp->u8[8] = 0x82;
+  }
+
 #endif
   /* Parent info has been updated, trigger rank recalculation */
   p->flags |= RPL_PARENT_FLAG_UPDATED;
