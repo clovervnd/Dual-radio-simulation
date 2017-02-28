@@ -13,10 +13,10 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 2
+#define LONG_WEIGHT_RATIO 5
 
 /* Sink's infinite energy */
-#define SINK_INFINITE_ENERGY	0
+#define SINK_INFINITE_ENERGY	1
 
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;

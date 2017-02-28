@@ -266,7 +266,7 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 
   if(p == NULL || (nbr = rpl_get_nbr(p)) == NULL) {
     if(base_rank == 0) {
-    	printf("null inf rank\n");
+    	PRINTF("null inf rank\n");
       return INFINITE_RANK;
     }
     rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
@@ -397,6 +397,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  {
 		  return dag->preferred_parent;
 	  }
+//	  return p1->rank <= p2->rank ? p1 : p2;
   }
   return p1_metric <= p2_metric ? p1 : p2;
 #endif

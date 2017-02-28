@@ -131,7 +131,7 @@ rpl_print_child_neighbor_list(void)
       uip_ds6_nbr_t *nbr = rpl_get_nbr_child(c);
 //      printf("RPL: nbr %3u %5u, %5u => %5u %c%c (last tx %u min ago)\n",
 //      	PRINTF("RPL_child: nbr %3u\n",
-      	printf("RPL_child: nbr %3u\n",
+      	PRINTF("RPL_child: nbr %3u\n",
           nbr_table_get_lladdr(rpl_children, c)->u8[7]);
 //          p->rank, nbr ? nbr->link_metric : 0,
 //          default_instance->of->calculate_rank(p, 0),
@@ -141,7 +141,7 @@ rpl_print_child_neighbor_list(void)
       c = nbr_table_next(rpl_children, c);
     }
 //    PRINTF("RPL: end of list\n");
-    printf("RPL: end of list\n");
+    PRINTF("RPL: end of list\n");
   }
 }
 #endif
@@ -971,7 +971,12 @@ best_parent(rpl_dag_t *dag)
     }
     p = nbr_table_next(rpl_parents, p);
   }
+  if(rand()%10 > 7)
+  {
+	  return dag->preferred_parent;
+  }
   return best;
+
 }
 /*---------------------------------------------------------------------------*/
 rpl_parent_t *
