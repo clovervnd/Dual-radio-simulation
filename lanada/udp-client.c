@@ -125,7 +125,7 @@ send_packet(void *ptr)
   seq_id++;
 	
 	char *log_buf = (char*) malloc(sizeof(char)*100);
-	sprintf(log_buf,"DATA_PACKET, Energy: %d, Number: %d\n",get_residual_energy(), seq_id); 
+	sprintf(log_buf,"DATA_PACKET, Energy: %d, Number: %d\n",(int) get_residual_energy(), seq_id); 
 	data_message_count = seq_id;
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);

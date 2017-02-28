@@ -250,9 +250,10 @@ on(void)
   if(cxmac_is_on && radio_is_on == 0) {
     radio_is_on = 1;
 #if DUAL_RADIO
-    simRadioTarget = BOTH_RADIO;
-#endif
+		dual_radio_turn_on(BOTH_RADIO);
+#else
     NETSTACK_RADIO.on();
+#endif
     LEDS_ON(LEDS_RED);
   }
 }
@@ -264,9 +265,10 @@ off(void)
      is_streaming == 0) {
     radio_is_on = 0;
 #if DUAL_RADIO
-    simRadioTarget = BOTH_RADIO;
-#endif
+		dual_radio_turn_off(BOTH_RADIO);
+#else
     NETSTACK_RADIO.off();
+#endif
     LEDS_OFF(LEDS_RED);
   }
 }

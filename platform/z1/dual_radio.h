@@ -15,8 +15,8 @@
 #define BOTH_RADIO 0
 #endif
 
-#ifndef DUAL_DUTY_RADIO
-#define DUAL_DUTY_RADIO 2
+#ifndef DUAL_DUTY_RATIO
+#define DUAL_DUTY_RATIO 2
 #endif
 
 

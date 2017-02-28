@@ -90,6 +90,42 @@ int radio_received_is_longrange(void)
 	}
 }
 
+int dual_radio_turn_on(char targetRadio)
+{
+	if (targetRadio == LONG_RADIO) {
+		dual_radio_switch(LONG_RADIO);
+		NETSTACK_RADIO.on();
+	}	else if (targetRadio == SHORT_RADIO) {
+		dual_radio_switch(SHORT_RADIO);
+		NETSTACK_RADIO.on();
+	}	else {
+		dual_radio_switch(LONG_RADIO);
+		NETSTACK_RADIO.on();
+		dual_radio_switch(SHORT_RADIO);
+		NETSTACK_RADIO.on();
+	}
+	return 1;
+}
+
+int dual_radio_turn_off(char targetRadio)
+{
+	if (targetRadio == LONG_RADIO) {
+		dual_radio_switch(LONG_RADIO);
+		NETSTACK_RADIO.off();
+	}	else if (targetRadio == SHORT_RADIO) {
+		dual_radio_switch(SHORT_RADIO);
+		NETSTACK_RADIO.off();
+	}	else {
+		dual_radio_switch(LONG_RADIO);
+		NETSTACK_RADIO.off();
+		dual_radio_switch(SHORT_RADIO);
+		NETSTACK_RADIO.off();
+	}
+	return 1;
+}
+	
+
+
 PROCESS_THREAD(dual_dio_broadcast, ev, data)
 {
 	static struct etimer et;
