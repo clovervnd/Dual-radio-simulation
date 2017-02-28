@@ -4,12 +4,21 @@
 #include "net/rpl/rpl-private.h"
 
 #ifndef SHORT_RADIO
-#define SHORT_RADIO 1
+#define SHORT_RADIO 2
 #endif
 
 #ifndef LONG_RADIO
-#define LONG_RADIO 2
+#define LONG_RADIO 1
 #endif
+
+#ifndef BOTH_RADIO
+#define BOTH_RADIO 0
+#endif
+
+#ifndef DUAL_DUTY_RATIO
+#define DUAL_DUTY_RATIO 2
+#endif
+
 
 /* Radio drivers */
 extern struct radio_driver NETSTACK_CONF_RADIO;
