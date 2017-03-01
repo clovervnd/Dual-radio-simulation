@@ -406,14 +406,14 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 #else
   if(p1_metric == p2_metric)
   {
-/*	  if(p1->rank < p2->rank)
+	  if(p1->rank < p2->rank)
 	  {
 		  return p1;
 	  }
 	  else if(p1->rank > p2->rank)
 	  {
 		  return p2;
-	  }*/
+	  }
 	  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
 	  {
 		  return dag->preferred_parent;

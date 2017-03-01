@@ -106,8 +106,9 @@ rpl_print_neighbor_list(void)
     PRINTF("RPL: rank %u dioint %u, %u nbr(s)\n", curr_rank, curr_dio_interval, uip_ds6_nbr_num());
     while(p != NULL) {
       uip_ds6_nbr_t *nbr = rpl_get_nbr(p);
-      PRINTF("RPL: nbr %3u %5u, %5u => %5u %c%c (last tx %u min ago)\n",
+      PRINTF("RPL: nbr %3u %c %5u, %5u => %5u %c%c (last tx %u min ago)\n",
           nbr_table_get_lladdr(rpl_parents, p)->u8[7],
+		  nbr->ipaddr.u8[8] == 0x82 ? 'L' : 'S',
           p->rank, nbr ? nbr->link_metric : 0,
           default_instance->of->calculate_rank(p, 0),
           default_instance->current_dag == p->dag ? 'd' : ' ',
@@ -718,8 +719,10 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
       p->dag = dag;
       p->rank = dio->rank;
       p->dtsn = dio->dtsn;
+#if RPL_LIFETIME_MAX_MODE
       my_parent_number++;
-      printf("my_parent_number inc: %d\n",my_parent_number);
+#endif
+//      printf("my_parent_number inc: %d\n",my_parent_number);
       /* Check whether we have a neighbor that has not gotten a link metric yet */
       if(nbr != NULL && nbr->link_metric == 0) {
 	nbr->link_metric = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
@@ -921,9 +924,9 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
       rpl_schedule_dao(instance);
     }
     rpl_reset_dio_timer(instance);
-#if DEBUG
+//#if DEBUG
     rpl_print_neighbor_list();
-#endif
+//#endif
   } else if(best_dag->rank != old_rank) {
     PRINTF("RPL: Preferred parent update, rank changed from %u to %u\n",
   	(unsigned)old_rank, best_dag->rank);
@@ -952,14 +955,14 @@ best_parent(rpl_dag_t *dag)
   rpl_parent_t *p, *best, *prev;
 
   best = NULL;
-  uip_ds6_nbr_t *nbr;
+//  uip_ds6_nbr_t *nbr;
   p = nbr_table_head(rpl_parents);
   prev = dag->preferred_parent;
 #if RPL_LIFETIME_MAX_MODE
   dag->base_rank = p->rank;
 #endif
   while(p != NULL) {
-	  nbr = rpl_get_nbr(p);
+//	  nbr = rpl_get_nbr(p);
 #if RPL_LIFETIME_MAX_MODE
 	  if(p->rank < dag->base_rank)
 	  {
@@ -978,7 +981,7 @@ best_parent(rpl_dag_t *dag)
 #if RPL_LIFETIME_MAX_MODE
   if(best != prev && best != NULL && prev != NULL)
   {
-	  printf("among my_parent_number^2: %d weight diff: %d\n",my_parent_number, prev->parent_sum_weight - best->parent_sum_weight);
+//	  printf("among my_parent_number^2: %d weight diff: %d\n",my_parent_number, prev->parent_sum_weight - best->parent_sum_weight);
 	  if(rand() % (my_parent_number) > (prev->parent_sum_weight - best->parent_sum_weight))
 	  {
 		  return prev;
@@ -1012,8 +1015,10 @@ rpl_remove_parent(rpl_parent_t *parent)
   PRINTF("\n");
 
   rpl_nullify_parent(parent);
+#if RPL_LIFETIME_MAX_MODE
   my_parent_number--;
-  printf("my_parent_number dec: %d\n",my_parent_number);
+#endif
+//  printf("my_parent_number dec: %d\n",my_parent_number);
   nbr_table_remove(rpl_parents, parent);
 }
 /*---------------------------------------------------------------------------*/
