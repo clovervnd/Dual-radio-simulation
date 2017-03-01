@@ -354,11 +354,13 @@ dis_output(uip_ipaddr_t *addr)
    *     |     Flags     |   Reserved    |   Option(s)...
    *     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    */
-	char *log_buf = (char*) malloc(sizeof(char)*100);
-	sprintf(log_buf,"DIS_OUTPUT, Energy: %d\n",get_residual_energy()); 
 	dis_count ++;
+#if RPL_ICMP_ENERGY_LOG
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"DIS_OUTPUT, Energy: %d\n",(int)get_residual_energy()); 
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
+#endif
 
   buffer = UIP_ICMP_PAYLOAD;
   buffer[0] = buffer[1] = 0;
@@ -701,11 +703,13 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   uip_ipaddr_t addr;
 #endif /* !RPL_LEAF_ONLY */
 
-	char *log_buf = (char*) malloc(sizeof(char)*100);
-	sprintf(log_buf,"DIO_OUTPUT, Energy: %d\n",get_residual_energy()); 
 	dio_count ++;
+#if RPL_ICMP_ENERGY_LOG
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"DIO_OUTPUT, Energy: %d\n",(int) get_residual_energy()); 
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
+#endif
 
 #if RPL_LEAF_ONLY
   /* In leaf mode, we only send DIO messages as unicasts in response to
@@ -757,8 +761,13 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   {
 	  if(dag->preferred_parent->parent_weight == 0)
 	  {
+#if DUAL_RADIO
 		  PRINTF("send dio weight %d default\n",sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1);
 		  buffer[pos++] = sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1; /* parent's weight default */
+#else	/* DUAL_RADIO */
+			PRINTF("send dio weight %d default\n",1);
+		  buffer[pos++] = 1; /* parent's weight default */
+#endif	/* DUAL_RADIO */
 	  }
 	  else
 	  {
@@ -1111,7 +1120,7 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	rpl_parent_t *p = dag->preferred_parent;
 
 	char *log_buf = (char*) malloc(sizeof(char)*100);
-	sprintf(log_buf,"DIO_ACK_OUTPUT, Energy: %d\n",get_residual_energy());
+	sprintf(log_buf,"DIO_ACK_OUTPUT, Energy: %d\n",(int) get_residual_energy());
 	dio_ack_count ++;
 	LOG_MESSAGE(log_buf);
 	free(log_buf);
@@ -1458,6 +1467,7 @@ dao_input(void)
 #if RPL_CONF_MULTICAST
 fwd_dao:
 #endif
+#if RPL_LIFETIME_MAX_MODE
 	uint8_t prev_weight = my_weight;
   /* Add child as receiving DAO */
 /*  if(!add_nbr_from_dao(&dao_sender_addr, weight))
@@ -1499,7 +1509,7 @@ fwd_dao:
 		  PRINTF("my_weight update in dao %d\n",my_weight);
 	  }
   }
-
+#endif
   if(learned_from == RPL_ROUTE_FROM_UNICAST_DAO) {
     int should_ack = 0;
 
@@ -1578,11 +1588,13 @@ fwd_dao:
                      RPL_DAO_ACK_UNCONDITIONAL_ACCEPT);
     }
   }
+#if RPL_LIFETIME_MAX_MODE
   if(prev_weight != my_weight)
   {
 	  PRINTF("DIO Reset in DAO\n");
 	  rpl_reset_dio_timer(instance);
   }
+#endif
 
  discard:
   uip_clear_buf();
@@ -1649,11 +1661,13 @@ dao_output(rpl_parent_t *parent, uint8_t lifetime)
   /* Destination Advertisement Object */
   uip_ipaddr_t prefix;
 
-	char *log_buf = (char*) malloc(sizeof(char)*100);
-	sprintf(log_buf,"DAO_OUTPUT, Energy: %d\n",get_residual_energy()); 
 	dao_count ++;
+#if RPL_ICMP_ENERGY_LOG
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"DAO_OUTPUT, Energy: %d\n",(int) get_residual_energy()); 
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
+#endif
 
 
   if(get_global_addr(&prefix) == 0) {

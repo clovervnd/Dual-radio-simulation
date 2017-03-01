@@ -718,7 +718,8 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
       p->dag = dag;
       p->rank = dio->rank;
       p->dtsn = dio->dtsn;
-
+      my_parent_number++;
+      printf("my_parent_number inc: %d\n",my_parent_number);
       /* Check whether we have a neighbor that has not gotten a link metric yet */
       if(nbr != NULL && nbr->link_metric == 0) {
 	nbr->link_metric = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
@@ -779,7 +780,7 @@ rpl_add_child(uint8_t weight, uip_ipaddr_t *addr)
 //      uip_ds6_nbr_t *nbr;
 //      nbr = rpl_get_nbr_child(c);
       c->weight = weight;
-      my_child_number++;
+//      my_child_number++;
 /*       Check whether we have a neighbor that has not gotten a link metric yet
       if(nbr != NULL && nbr->link_metric == 0) {
 	nbr->link_metric = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
@@ -948,20 +949,23 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
 static rpl_parent_t *
 best_parent(rpl_dag_t *dag)
 {
-  rpl_parent_t *p, *best;
+  rpl_parent_t *p, *best, *prev;
 
   best = NULL;
   uip_ds6_nbr_t *nbr;
   p = nbr_table_head(rpl_parents);
+  prev = dag->preferred_parent;
 #if RPL_LIFETIME_MAX_MODE
   dag->base_rank = p->rank;
 #endif
   while(p != NULL) {
 	  nbr = rpl_get_nbr(p);
+#if RPL_LIFETIME_MAX_MODE
 	  if(p->rank < dag->base_rank)
 	  {
 		  dag->base_rank = p->rank;
 	  }
+#endif
     if(p->dag != dag || p->rank == INFINITE_RANK) {
       /* ignore this neighbor */
     } else if(best == NULL) {
@@ -971,10 +975,16 @@ best_parent(rpl_dag_t *dag)
     }
     p = nbr_table_next(rpl_parents, p);
   }
-  if(rand()%10 > 7)
+#if RPL_LIFETIME_MAX_MODE
+  if(best != prev && best != NULL && prev != NULL)
   {
-	  return dag->preferred_parent;
+	  printf("among my_parent_number^2: %d weight diff: %d\n",my_parent_number, prev->parent_sum_weight - best->parent_sum_weight);
+	  if(rand() % (my_parent_number) > (prev->parent_sum_weight - best->parent_sum_weight))
+	  {
+		  return prev;
+	  }
   }
+#endif
   return best;
 
 }
@@ -1002,7 +1012,8 @@ rpl_remove_parent(rpl_parent_t *parent)
   PRINTF("\n");
 
   rpl_nullify_parent(parent);
-
+  my_parent_number--;
+  printf("my_parent_number dec: %d\n",my_parent_number);
   nbr_table_remove(rpl_parents, parent);
 }
 /*---------------------------------------------------------------------------*/
@@ -1017,7 +1028,7 @@ rpl_remove_child(rpl_child_t *child)
 //  rpl_nullify_parent(parent);
 
   nbr_table_remove(rpl_children, child);
-  my_child_number--;
+//  my_child_number--;
 }
 #endif
 /*---------------------------------------------------------------------------*/

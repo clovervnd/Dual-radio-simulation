@@ -13,10 +13,16 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 5
+#define LONG_WEIGHT_RATIO 3
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
+
+/* Using strobe cnt, reducing idle listening while Tx preamble */
+#define STROBE_CNT_MODE		1
+
+/* Energy log */
+#define RPL_ICMP_ENERGY_LOG		0
 
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;
@@ -27,7 +33,7 @@ uint8_t alpha;
 #define RPL_ETX_WEIGHT 	0
 uint8_t my_weight;
 uint8_t my_sink_reachability;
-uint8_t my_child_number;
+uint8_t my_parent_number;
 #define DATA_PKT_SIZE 10 // 'B' in theory
 #define SHORT_TX_COST 1
 #define SHORT_RX_COST 1

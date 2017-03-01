@@ -60,6 +60,8 @@
 
 #include <string.h>
 
+#include "../lanada/param.h"
+
 /*
 #if CONTIKI_TARGET_COOJA
 #include "lib/simEnvChange.h"
@@ -108,7 +110,9 @@ struct announcement_msg {
 struct cxmac_hdr {
   uint8_t dispatch;
   uint8_t type;
-//  uint8_t strobe_num; // For strobe broadcast
+#if STROBE_CNT_MODE
+  uint8_t strobe_cnt; // For strobe cnt mode
+#endif
 };
 
 #define MAX_STROBE_SIZE 50
@@ -197,6 +201,8 @@ static volatile unsigned char radio_is_on = 0;
 #include "../platform/zoul/dual_radio.h"
 #endif /* ZOLERTIA_Z1 */
 #endif /* DUAL_RADIO */
+#include "sys/log_message.h"
+extern int collision_count, transmission_count;
 
 #if CXMAC_CONF_ANNOUNCEMENTS
 /* Timers for keeping track of when to send announcements. */
@@ -235,7 +241,6 @@ static rtimer_clock_t stream_until;
 #define DEFAULT_STREAM_TIME (RTIMER_ARCH_SECOND)
 
 /* remaining energy JJH */
-#include "../lanada/param.h"
 #if RPL_ENERGY_MODE
 extern uint8_t remaining_energy;
 #endif
@@ -250,9 +255,10 @@ on(void)
   if(cxmac_is_on && radio_is_on == 0) {
     radio_is_on = 1;
 #if DUAL_RADIO
-    simRadioTarget = BOTH_RADIO;
-#endif
+		dual_radio_turn_on(BOTH_RADIO);
+#else
     NETSTACK_RADIO.on();
+#endif
     LEDS_ON(LEDS_RED);
   }
 }
@@ -264,9 +270,10 @@ off(void)
      is_streaming == 0) {
     radio_is_on = 0;
 #if DUAL_RADIO
-    simRadioTarget = BOTH_RADIO;
-#endif
+		dual_radio_turn_off(BOTH_RADIO);
+#else
     NETSTACK_RADIO.off();
+#endif
     LEDS_OFF(LEDS_RED);
   }
 }
@@ -520,6 +527,7 @@ send_packet(void)
   struct queuebuf *packet;
   int is_already_streaming = 0;
   uint8_t collisions;
+  transmission_count++;
 #if DUAL_RADIO
   char target = SHORT_RADIO;
   rtimer_clock_t strobe_time;
@@ -529,7 +537,10 @@ send_packet(void)
   int original_datalen;
   uint8_t *original_dataptr;
 #endif
-
+#if STROBE_CNT_MODE
+  uint8_t strobe_cnt = 1;
+  int cnt_pos;
+#endif
   /* Create the X-MAC header for the data packet. */
 #if !NETSTACK_CONF_BRIDGE_MODE
   /* If NETSTACK_CONF_BRIDGE_MODE is set, assume PACKETBUF_ADDR_SENDER is already set. */
@@ -580,6 +591,10 @@ send_packet(void)
   memcpy(strobe, packetbuf_hdrptr(), len);
   strobe[len] = DISPATCH; /* dispatch */
   strobe[len + 1] = TYPE_STROBE; /* type */
+#if STROBE_CNT_MODE
+  strobe[len + 2] = strobe_cnt;
+  cnt_pos = len + 2;
+#endif
 
   packetbuf_compact();
   packet = queuebuf_new_from_packetbuf();
@@ -732,6 +747,10 @@ send_packet(void)
 	if(is_broadcast) {
 #if WITH_STROBE_BROADCAST
 	  NETSTACK_RADIO.send(strobe, strobe_len);
+#if STROBE_CNT_MODE
+	  strobe[cnt_pos] = strobe_cnt++;
+//	  printf("cxmac tx strobe_cnt %d t: %d\n",strobe_cnt,RTIMER_NOW());
+#endif
 #else
 	  /* restore the packet to send */
 	  queuebuf_to_packetbuf(packet);
@@ -874,6 +893,7 @@ send_packet(void)
     }
   } else {
     someone_is_sending++;
+    collision_count++;
     return MAC_TX_COLLISION;
   }
 }
@@ -910,15 +930,19 @@ input_packet(void)
   struct cxmac_hdr *hdr;
 	// JJH
 #if DUAL_RADIO
-  uint8_t target = SHORT_RADIO;
+  int target = SHORT_RADIO;
 #endif
+#if RPL_ENERGY_MODE
   int original_datalen;
   uint8_t *original_dataptr;
+#endif
 
   if(NETSTACK_FRAMER.parse() >= 0) {
     hdr = packetbuf_dataptr();
+#if RPL_ENERGY_MODE
     original_datalen = packetbuf_totlen();
     original_dataptr = packetbuf_hdrptr();
+#endif
     if(hdr->dispatch != DISPATCH) {
       someone_is_sending = 0;
 #if DUAL_RADIO
@@ -1066,12 +1090,27 @@ input_packet(void)
 	   prepare for an incoming broadcast packet. If this is the
 	   case, we turn on the radio and wait for the incoming
 	   broadcast packet. */
-	waiting_for_packet = 1;
+//    	  printf("cxmac strobe_cnt %d %d\n",hdr->strobe_cnt,RTIMER_NOW());
+    	  waiting_for_packet = 1;
+#if STROBE_CNT_MODE
 #if DUAL_RADIO
-	dual_radio_on(target);
+    	  target = radio_received_is_longrange();
+    	  dual_radio_off(BOTH_RADIO);
 #else
-	on();
+    	  off();
 #endif
+    	  rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (hdr->strobe_cnt + 1)*(cxmac_config.on_time + 1);
+    	  rtimer_clock_t t = RTIMER_NOW() + t_wait;
+    	  while(RTIMER_CLOCK_LT(RTIMER_NOW(), t)) {}
+
+#if DUAL_RADIO
+    	  dual_radio_on(target);
+#else
+    	  on();
+#endif
+//    	  printf("cxmac radio on t: %d\n",RTIMER_NOW());
+#endif
+
       } else {
         PRINTDEBUG("cxmac: strobe not for us\n");
       }
