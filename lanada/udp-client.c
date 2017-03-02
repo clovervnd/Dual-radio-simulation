@@ -54,7 +54,7 @@
 #include "net/ip/uip-debug.h"
 
 #ifndef PERIOD
-#define PERIOD 60
+#define PERIOD 10
 #endif
 
 #define START_INTERVAL		(15 * CLOCK_SECOND)
@@ -123,18 +123,20 @@ send_packet(void *ptr)
 #endif /* SERVER_REPLY */
 
   seq_id++;
-	
+  data_message_count = seq_id;
+
+#if RPL_ICMP_ENERGY_LOG
 	char *log_buf = (char*) malloc(sizeof(char)*100);
 	sprintf(log_buf,"DATA_PACKET, Energy: %d, Number: %d\n",(int) get_residual_energy(), seq_id); 
-	data_message_count = seq_id;
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
+#endif
 
-	if (data_message_count%10 == 0) {
-		LOG_MESSAGE("Periodic status review:\n");
-		LOG_MESSAGE("Transmission: %d, Collision: %d\n", transmission_count, collision_count); 
-		LOG_MESSAGE("DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, dio_count+dao_count+dis_count+dio_ack_count);
-		LOG_MESSAGE("Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count); 
+	if (data_message_count%100 == 0) {
+		LOG_MESSAGE("[PS] Periodic status review:\n");
+		LOG_MESSAGE("[PS] Transmission: %d, Collision: %d\n", transmission_count, collision_count);
+		LOG_MESSAGE("[PS] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, dio_count+dao_count+dis_count+dio_ack_count);
+		LOG_MESSAGE("[PS] Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count);
 	}
 
 	if (lifetime > 0) {

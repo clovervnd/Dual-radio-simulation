@@ -32,11 +32,11 @@ extern energy_t COOJA_radioRxLong;
 extern energy_t COOJA_duration;
 static const energy_t DISSIPATION_RATE[] = {
     10,  // radioOn
-    40,  // radioTx
-    40,  // radioRx
-    20,  // radioOnLong
-    80,  // radioTxLong
-    80,  // radioRxLong
+    10,  // radioTx
+    10,  // radioRx
+    10,  // radioOnLong
+    30,  // radioTxLong
+    30,  // radioRxLong
     1,  // duration
 };
 static const int DISSIPATION_RATE_DIVISOR = 16;
@@ -56,9 +56,11 @@ get_residual_energy(void){
     energy -= COOJA_radioOn * DISSIPATION_RATE[0] / DISSIPATION_RATE_DIVISOR;
     energy -= COOJA_radioTx * DISSIPATION_RATE[1] / DISSIPATION_RATE_DIVISOR;
     energy -= COOJA_radioRx * DISSIPATION_RATE[2] / DISSIPATION_RATE_DIVISOR;
+#if DUAL_RADIO
     energy -= COOJA_radioOnLong * DISSIPATION_RATE[3] / DISSIPATION_RATE_DIVISOR;
     energy -= COOJA_radioTxLong * DISSIPATION_RATE[4] / DISSIPATION_RATE_DIVISOR;
     energy -= COOJA_radioRxLong * DISSIPATION_RATE[5] / DISSIPATION_RATE_DIVISOR;
+#endif
     energy -= COOJA_duration * DISSIPATION_RATE[6] / DISSIPATION_RATE_DIVISOR;
     
     energy = energy < 0 ? 0 : energy;

@@ -9,13 +9,13 @@ extern int log_file;
 #endif	/* COOJA */
 
 int collision_count, transmission_count;
-int control_message_count, data_message_count;
+int control_message_count, data_message_count, data_relay_count;
 int dio_count, dis_count, dao_count, dio_ack_count;
 
 void log_initialization(void);
 void log_finisher(void);
 
-#define LOG_LEVEL		3
+#define LOG_LEVEL		0
 
 #if LOG_LEVEL == 0
 #define LOG_MESSAGE(...) printf(__VA_ARGS__)

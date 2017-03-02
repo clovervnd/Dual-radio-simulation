@@ -45,7 +45,6 @@
  * \addtogroup uip6
  * @{
  */
-
 #include "net/rpl/rpl-private.h"
 #include "net/nbr-table.h"
 
@@ -66,6 +65,7 @@
 /* JJH */
 #include "../lanada/param.h"
 
+#if RPL_LIFETIME_MAX_MODE
 static void reset(rpl_dag_t *);
 static void neighbor_link_callback(rpl_parent_t *, int, int);
 #if RPL_WITH_DAO_ACK
@@ -103,7 +103,7 @@ rpl_of_t rpl_ltmax_of = {
 	 * The rank must differ more than 1/PARENT_SWITCH_THRESHOLD_DIV in order
  * to switch preferred parent.
  */
-#define PARENT_SWITCH_THRESHOLD_DIV	1
+#define PARENT_SWITCH_THRESHOLD_DIV	2
 
 typedef uint16_t rpl_path_metric_t;
 
@@ -266,7 +266,7 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 
   if(p == NULL || (nbr = rpl_get_nbr(p)) == NULL) {
     if(base_rank == 0) {
-    	printf("null inf rank\n");
+    	PRINTF("null inf rank\n");
       return INFINITE_RANK;
     }
     rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
@@ -406,10 +406,19 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 #else
   if(p1_metric == p2_metric)
   {
+/*	  if(p1->rank < p2->rank)
+	  {
+		  return p1;
+	  }
+	  else if(p1->rank > p2->rank)
+	  {
+		  return p2;
+	  }*/
 	  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
 	  {
 		  return dag->preferred_parent;
 	  }
+//	  return p1->rank <= p2->rank ? p1 : p2;
   }
   return p1_metric <= p2_metric ? p1 : p2;
 #endif
@@ -471,5 +480,5 @@ update_metric_container(rpl_instance_t *instance)
 #endif /* RPL_DAG_MC == RPL_DAG_MC_ETX */
 }
 #endif /* RPL_DAG_MC == RPL_DAG_MC_NONE */
-
+#endif
 /** @}*/

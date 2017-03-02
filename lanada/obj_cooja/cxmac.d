@@ -35,18 +35,20 @@ obj_cooja/cxmac.o: ..//core/net/mac/cxmac/cxmac.c ..//core/./dev/leds.h \
  ..//core/./net/rime/rmh.h ..//core/./net/rime/route.h \
  ..//core/./net/rime/rucb.h ..//core/./net/rime/timesynch.h \
  ..//core/./net/rime/trickle.h ..//core/./sys/compower.h \
- ../platform/cooja/dual_conf.h ../platform/cooja/dev/cooja-radio.h \
- ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h \
- ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/uip-ds6.h \
- ..//core/./sys/stimer.h ..//core/./net/ipv6/uip-nd6.h \
- ..//core/./net/ipv6/uip-ds6-route.h ..//core/./net/nbr-table.h \
- ..//core/./net/ipv6/uip-ds6-nbr.h ..//core/./net/ip/uip-packetqueue.h \
- ../lanada/param.h ..//core/./net/ipv6/multicast/uip-mcast6.h \
+ ../lanada/param.h ../platform/cooja/dual_conf.h \
+ ../platform/cooja/dev/cooja-radio.h ..//core/./net/rpl/rpl-private.h \
+ ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h \
+ ..//core/./net/ipv6/uip-ds6.h ..//core/./sys/stimer.h \
+ ..//core/./net/ipv6/uip-nd6.h ..//core/./net/ipv6/uip-ds6-route.h \
+ ..//core/./net/nbr-table.h ..//core/./net/ipv6/uip-ds6-nbr.h \
+ ..//core/./net/ip/uip-packetqueue.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-engines.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
+ ..//core/./sys/log_message.h ..//core/./cfs/cfs.h
 ..//core/net/mac/cxmac/cxmac.c ..//core/./dev/leds.h :
  ..//platform/cooja/./contiki-conf.h project-conf.h :
  ..//core/./dev/radio.h ..//core/./dev/watchdog.h :
@@ -84,15 +86,17 @@ obj_cooja/cxmac.o: ..//core/net/mac/cxmac/cxmac.c ..//core/./dev/leds.h \
  ..//core/./net/rime/rmh.h ..//core/./net/rime/route.h :
  ..//core/./net/rime/rucb.h ..//core/./net/rime/timesynch.h :
  ..//core/./net/rime/trickle.h ..//core/./sys/compower.h :
- ../platform/cooja/dual_conf.h ../platform/cooja/dev/cooja-radio.h :
- ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
- ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/uip-ds6.h :
- ..//core/./sys/stimer.h ..//core/./net/ipv6/uip-nd6.h :
- ..//core/./net/ipv6/uip-ds6-route.h ..//core/./net/nbr-table.h :
- ..//core/./net/ipv6/uip-ds6-nbr.h ..//core/./net/ip/uip-packetqueue.h :
- ../lanada/param.h ..//core/./net/ipv6/multicast/uip-mcast6.h :
+ ../lanada/param.h ../platform/cooja/dual_conf.h :
+ ../platform/cooja/dev/cooja-radio.h ..//core/./net/rpl/rpl-private.h :
+ ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h :
+ ..//core/./net/ipv6/uip-ds6.h ..//core/./sys/stimer.h :
+ ..//core/./net/ipv6/uip-nd6.h ..//core/./net/ipv6/uip-ds6-route.h :
+ ..//core/./net/nbr-table.h ..//core/./net/ipv6/uip-ds6-nbr.h :
+ ..//core/./net/ip/uip-packetqueue.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-engines.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
+ ..//core/./sys/log_message.h ..//core/./cfs/cfs.h :
