@@ -657,15 +657,63 @@ tcpip_ipv6_output(void)
           return;
         }
       }
+
+			/* JOONKI */
 #if TCPIP_CONF_ANNOTATE_TRANSMISSIONS
       if(nexthop != NULL) {
         static uint8_t annotate_last;
         static uint8_t annotate_has_last = 0;
+				static uint8_t last_LR;
 
         if(annotate_has_last) {
-          printf("#L %u 0; red\n", annotate_last);
+//         	printf("#L %u 0; black\n", annotate_last);
+					if (last_LR == 1){
+	          printf("#L %u 0; black\n", annotate_last);
+					}	else {
+						printf("#L %u 0; red\n", annotate_last);
+					}
         }
-        printf("#L %u 1; red\n", nexthop->u8[sizeof(uip_ipaddr_t) - 1]);
+
+#if DUAL_RADIO
+#if ADDR_MAP
+			int i;
+//			PRINTF("At tcpip_ipv6_output :\n");
+			uip_ds6_nbr_t *nbr_2 = NULL;
+			nbr_2 = uip_ds6_nbr_lookup(nexthop);
+			for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+//				if(nbr_2 == NULL)
+//				{
+//					PRINTF("nbr_2 is null\n");
+//					break;
+//				}
+//				PRINTLLADDR(uip_ds6_nbr_get_ll(nbr_2));
+//				PRINTF("\n");
+//				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
+//				PRINTF("\n");
+				if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr_2))){
+					if (ds6_lr_addrmap[i].lr == 1){
+							last_LR = 1;
+						}	else	{
+							last_LR = 0;
+						}
+					break;
+				}
+			}
+#else /* ADDR_MAP */
+			if (foraddr.u8[8] == 0x82){
+				last_LR = 1;
+			}	else {
+				last_LR = 0;
+			}
+#endif	/* ADDR_MAP */
+#endif /* DUAL_RADIO */
+
+        // printf("#L %u 1; red\n", nexthop->u8[sizeof(uip_ipaddr_t) - 1]);
+				if (last_LR == 1){
+	        printf("#L %u 1; black\n", nexthop->u8[sizeof(uip_ipaddr_t) - 1]);
+				} else {
+	        printf("#L %u 1; red\n", nexthop->u8[sizeof(uip_ipaddr_t) - 1]);
+				}
         annotate_last = nexthop->u8[sizeof(uip_ipaddr_t) - 1];
         annotate_has_last = 1;
       }
