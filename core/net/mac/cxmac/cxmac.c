@@ -700,6 +700,11 @@ send_packet(void)
 					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + cxmac_config.strobe_time);
 #endif
 			  strobes++) {
+			/* JOONKI
+			 * short range broadcast skip sending strobed preambles */
+			if (is_broadcast && sending_in_LR() == SHORT_RADIO){
+				break;
+			}
 		  while(got_strobe_ack == 0 &&
 				  RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
 			  rtimer_clock_t now = RTIMER_NOW();
@@ -964,7 +969,16 @@ input_packet(void)
 	   asleep. */
 #endif
 #if DUAL_RADIO
-    	  dual_radio_off(BOTH_RADIO);
+				/* JOONKI
+				 * waiting for incoming short broadcast */
+				if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) && 
+						radio_received_is_longrange()==LONG_RADIO){
+					dual_radio_off(LONG_RADIO);
+					dual_radio_on(SHORT_RADIO);
+					waiting_for_packet = 1;
+				}	else {
+    	  	dual_radio_off(BOTH_RADIO);
+				}
 #else
     	  off();
 #endif
