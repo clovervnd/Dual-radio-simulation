@@ -1,3 +1,5 @@
+#if DUAL_RADIO
+
 #include "dual_radio.h"
 #define DEBUG_DUAL	0
 
@@ -195,3 +197,5 @@ int dio_ack_broadcast(rpl_instance_t * instance)
 	return 1;
 }
 #endif
+
+#endif /* DUAL_RADIO */

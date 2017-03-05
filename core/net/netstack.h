@@ -88,7 +88,7 @@
 #error Change NETSTACK_RDC_CONF_CHANNEL_CHECK_RATE in contiki-conf.h, project-conf.h or in your Makefile.
 #endif
 
-#ifndef NETSTACK_DUAL_RADIO
+#if NETSTACK_DUAL_RADIO == 0
 #ifndef NETSTACK_RADIO
 #ifdef NETSTACK_CONF_RADIO
 #define NETSTACK_RADIO NETSTACK_CONF_RADIO
@@ -130,7 +130,7 @@ extern const struct network_driver NETSTACK_NETWORK;
 extern const struct llsec_driver   NETSTACK_LLSEC;
 extern const struct rdc_driver     NETSTACK_RDC;
 extern const struct mac_driver     NETSTACK_MAC;
-#ifndef NETSTACK_DUAL_RADIO
+#if NETSTACK_DUAL_RADIO == 0
 extern const struct radio_driver   NETSTACK_RADIO;
 #endif 
 extern const struct framer         NETSTACK_FRAMER;

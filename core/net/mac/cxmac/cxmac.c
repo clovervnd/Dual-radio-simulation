@@ -702,9 +702,11 @@ send_packet(void)
 			  strobes++) {
 			/* JOONKI
 			 * short range broadcast skip sending strobed preambles */
+#if DUAL_RADIO
 			if (is_broadcast && sending_in_LR() == SHORT_RADIO){
 				break;
 			}
+#endif
 		  while(got_strobe_ack == 0 &&
 				  RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
 			  rtimer_clock_t now = RTIMER_NOW();
@@ -968,6 +970,7 @@ input_packet(void)
 	/* We have received the final packet, so we can go back to being
 	   asleep. */
 #endif
+
 #if DUAL_RADIO
 				/* JOONKI
 				 * waiting for incoming short broadcast */

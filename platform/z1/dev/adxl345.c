@@ -370,7 +370,9 @@ ISR(PORT1, port1_isr)
   } else if(CC1200_GPIO0_PORT(IFG) & BV(CC1200_GPIO0_PIN))
 	{
 		/* CC1200 interrupt */
+#if DUAL_RADIO
 		dual_radio_received(LONG_RADIO);
+#endif	/* DUAL_RADIO */
 		printf("##################  CC1200_INTERRUPT  ######################\n");
 		if (cc1200_rx_interrupt())
 		{
@@ -381,7 +383,9 @@ ISR(PORT1, port1_isr)
   }
 	else{
 		/* CC2420 interrupt */
+#if DUAL_RADIO
 		dual_radio_received(SHORT_RADIO);
+#endif /* DUAL_RADIO */
   	if(cc2420_interrupt()) {	
 			printf("##################  CC2420_INTERRUPT  ######################\n");
 			LPM4_EXIT;

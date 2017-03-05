@@ -354,12 +354,15 @@ main(int argc, char **argv)
   queuebuf_init();
 
 	/* Don'y erase this part. This is necessary. */
+#if DUAL_RADIO
 	NETSTACK_CONF_RADIO = cc2420_driver;
 	NETSTACK_RADIO = cc2420_driver;
   NETSTACK_RDC.init();
 
 	NETSTACK_CONF_RADIO = cc1200_driver;
 	NETSTACK_RADIO = cc1200_driver;
+#endif /* DUAL_RADIO */
+
   NETSTACK_RDC.init();
 
   NETSTACK_MAC.init();
