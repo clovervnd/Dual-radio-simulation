@@ -392,6 +392,7 @@ cpowercycle(void *ptr)
 #else
     powercycle_turn_radio_on();
 #endif
+
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
     PT_YIELD(&pt);
     if(cxmac_config.off_time > 0) {
@@ -400,6 +401,7 @@ cpowercycle(void *ptr)
 #else
       powercycle_turn_radio_off();
 #endif
+
       if(waiting_for_packet != 0) {
 	waiting_for_packet++;
 	if(waiting_for_packet > 2) {

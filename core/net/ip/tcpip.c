@@ -663,7 +663,7 @@ tcpip_ipv6_output(void)
       if(nexthop != NULL) {
         static uint8_t annotate_last;
         static uint8_t annotate_has_last = 0;
-				static uint8_t last_LR;
+				static uint8_t last_LR = 0;
 
         if(annotate_has_last) {
 //         	printf("#L %u 0; black\n", annotate_last);

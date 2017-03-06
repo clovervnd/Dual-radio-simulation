@@ -102,10 +102,10 @@ uip_ds6_nbr_add(const uip_ipaddr_t *ipaddr, const uip_lladdr_t *lladdr,
 	/* JOONKI */
 #if DUAL_RADIO
 #if ADDR_MAP
-	int i,j;
+	int i,ret;
 	PRINTF("Neighbors added to lr/lladdr table: \n");
-	j=lladdr_map_add_lr(ds6_lr_addrmap, (linkaddr_t*)lladdr);
-	PRINTF("Success?? %d\n",j);
+	ret=lladdr_map_add_lr(ds6_lr_addrmap, (linkaddr_t*)lladdr);
+	PRINTF("Success?? %d\n",ret);
 	for (i=0;i<10;i++) {
 		PRINTF("ADDR_MAP # %d",i);
 		PRINTF("        ");

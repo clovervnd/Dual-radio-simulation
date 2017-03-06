@@ -24,6 +24,9 @@
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
+/* Data aggregation shceme enabled or not */
+#define DATA_AGGREGATION 1
+
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;
 uint8_t alpha;
