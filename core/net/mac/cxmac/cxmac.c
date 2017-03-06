@@ -324,6 +324,7 @@ powercycle_turn_radio_on(void)
 static void
 dual_radio_on(char target)
 {
+//	printf("dual_radio_on target %d %d\n",target, radio_is_on);
 	if(cxmac_is_on && radio_is_on == 0) {
 		radio_is_on = 1;
 		dual_radio_turn_on(target);
@@ -345,6 +346,7 @@ dual_radio_on(char target)
 static void
 dual_radio_off(char target)
 {
+//	printf("dual_radio_off target %d %d\n",target, radio_is_on);
 	if(cxmac_is_on && radio_is_on != 0 && is_listening == 0 &&
 			is_streaming == 0) {
 		radio_is_on = 0;
@@ -416,7 +418,7 @@ cpowercycle(void *ptr)
 #else
     powercycle_turn_radio_on();
 #endif
-
+    printf("cpowerycle on\n");
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
     PT_YIELD(&pt);
     if(cxmac_config.off_time > 0) {
@@ -440,6 +442,7 @@ cpowercycle(void *ptr)
 #endif
 	}
       }
+      printf("cpowerycle off\n");
       CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME);
       PT_YIELD(&pt);
     }
@@ -1007,9 +1010,11 @@ input_packet(void)
 					waiting_for_packet = 1;
 				}	else {
     	  	dual_radio_off(BOTH_RADIO);
+    		waiting_for_packet = 0;
 				}
 #else
     	  off();
+    	  waiting_for_packet = 0;
 #endif
 
 #if CXMAC_CONF_COMPOWER
@@ -1026,7 +1031,6 @@ input_packet(void)
 	compower_clear(&current_packet);
 #endif /* CXMAC_CONF_COMPOWER */
 
-	waiting_for_packet = 0;
 
 /*
   uint8_t src_addr1=original_dataptr[original_datalen-4];
@@ -1142,12 +1146,13 @@ input_packet(void)
 #else
     	  off();
 #endif
-    	  rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (hdr->strobe_cnt + 1)*(cxmac_config.on_time + 1);
+    	  rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (hdr->strobe_cnt+1)*(cxmac_config.on_time + 1);
     	  rtimer_clock_t t = RTIMER_NOW() + t_wait;
     	  while(RTIMER_CLOCK_LT(RTIMER_NOW(), t)) {}
 
 #if DUAL_RADIO
     	  dual_radio_on(target);
+//    	  dual_radio_on(BOTH_RADIO);
 #else
     	  on();
 #endif
