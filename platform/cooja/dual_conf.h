@@ -14,7 +14,7 @@
 #endif
 
 #ifndef DUAL_DUTY_RATIO
-#define DUAL_DUTY_RATIO 2
+#define DUAL_DUTY_RATIO 1
 #endif
 
 /* Functions */

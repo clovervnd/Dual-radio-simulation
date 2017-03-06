@@ -149,7 +149,7 @@ struct cxmac_hdr {
    cycle. */
 #define ANNOUNCEMENT_TIME (random_rand() % (ANNOUNCEMENT_PERIOD))
 
-#define DEFAULT_STROBE_WAIT_TIME (7 * DEFAULT_ON_TIME / 8)
+#define DEFAULT_STROBE_WAIT_TIME (8 * DEFAULT_ON_TIME / 8)
 
 struct cxmac_config cxmac_config = {
   DEFAULT_ON_TIME,
@@ -176,7 +176,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -258,8 +258,8 @@ on(void)
 		dual_radio_turn_on(BOTH_RADIO);
 #else
     NETSTACK_RADIO.on();
-#endif
     LEDS_ON(LEDS_RED);
+#endif
   }
 }
 /*---------------------------------------------------------------------------*/
@@ -273,8 +273,8 @@ off(void)
 		dual_radio_turn_off(BOTH_RADIO);
 #else
     NETSTACK_RADIO.off();
-#endif
     LEDS_OFF(LEDS_RED);
+#endif
   }
 }
 /*---------------------------------------------------------------------------*/
@@ -327,7 +327,19 @@ dual_radio_on(char target)
 	if(cxmac_is_on && radio_is_on == 0) {
 		radio_is_on = 1;
 		dual_radio_turn_on(target);
-		LEDS_ON(LEDS_RED);
+		if(target == LONG_RADIO)
+		{
+			LEDS_ON(LEDS_GREEN);
+		}
+		if(target == SHORT_RADIO)
+		{
+			LEDS_ON(LEDS_RED);
+		}
+		if(target == BOTH_RADIO)
+		{
+			LEDS_ON(LEDS_GREEN);
+			LEDS_ON(LEDS_RED);
+		}
 	}
 }
 static void
@@ -337,7 +349,19 @@ dual_radio_off(char target)
 			is_streaming == 0) {
 		radio_is_on = 0;
 		dual_radio_turn_off(target);
-		LEDS_OFF(LEDS_RED);
+		if(target == LONG_RADIO)
+		{
+			LEDS_OFF(LEDS_GREEN);
+		}
+		if(target == SHORT_RADIO)
+		{
+			LEDS_OFF(LEDS_RED);
+		}
+		if(target == BOTH_RADIO)
+		{
+			LEDS_OFF(LEDS_GREEN);
+			LEDS_OFF(LEDS_RED);
+		}
 	}
 }
 #endif
