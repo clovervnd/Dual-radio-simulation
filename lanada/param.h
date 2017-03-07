@@ -28,7 +28,10 @@
 #define DATA_AGGREGATION 1
 
 /* Dual routing converge */
-#define DUAL_ROUTING_CONVERGE 	1
+#define DUAL_ROUTING_CONVERGE 	0
+
+/* Preamble free short broadcast after long broadcast */
+#define DUAL_BROADCAST	0
 
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;

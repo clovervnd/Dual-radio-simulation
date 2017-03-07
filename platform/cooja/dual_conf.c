@@ -2,7 +2,7 @@
 
 
 #include "dual_conf.h"
-#define DEBUG_DUAL	1
+#define DEBUG_DUAL	0
 #if DEBUG_DUAL
 #include <stdio.h>
 #include "net/rpl/rpl-icmp6.h"

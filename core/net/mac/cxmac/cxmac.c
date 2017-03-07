@@ -161,7 +161,7 @@ struct cxmac_config cxmac_config = {
 #include <stdio.h>
 
 static struct pt pt;
-#if DUAL_RADIO
+#if STROBE_CNT_MODE
 PROCESS(strobe_wait, "strobe wait");
 #endif
 
@@ -179,7 +179,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -306,24 +306,6 @@ powercycle_dual_turn_radio_off(char target)
 	  dual_radio_off(target);
   }
 }
-PROCESS_THREAD(strobe_wait, ev, data)
-{
-	printf("in the process\n");
-	static struct etimer et;
-	uint8_t* cnt = (uint8_t *)data;
-	PROCESS_BEGIN();
-	rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (*cnt + 1)*(cxmac_config.on_time + 1);
-	t_wait >= cxmac_config.strobe_time ? t_wait = 1 : t_wait;
-	clock_time_t time = (1ul * CLOCK_SECOND * (t_wait)) / RTIMER_ARCH_SECOND;
-	printf("before timer set\n");
-	dual_radio_off(BOTH_RADIO);
-	etimer_set(&et, time);
-	PROCESS_WAIT_UNTIL(etimer_expired(&et));
-	printf("after time expired\n");
-	dual_radio_on(LONG_RADIO);
-	waiting_for_packet = 1;
-	PROCESS_END();
-}
 #else
 static void
 powercycle_turn_radio_off(void)
@@ -345,6 +327,33 @@ powercycle_turn_radio_on(void)
   }
 }
 #endif
+#if STROBE_CNT_MODE
+PROCESS_THREAD(strobe_wait, ev, data)
+{
+	static struct etimer et;
+	uint8_t* cnt = (uint8_t *)data;
+	PROCESS_BEGIN();
+	rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (*cnt + 1)*(cxmac_config.on_time + 1);
+	t_wait >= cxmac_config.strobe_time ? t_wait = 1 : t_wait;
+	clock_time_t time = (1ul * CLOCK_SECOND * (t_wait)) / RTIMER_ARCH_SECOND;
+#if DUAL_RADIO
+	dual_radio_off(BOTH_RADIO);
+#else
+	off();
+#endif
+	etimer_set(&et, time);
+	PROCESS_WAIT_UNTIL(etimer_expired(&et));
+	printf("after time expired\n");
+#if DUAL_RADIO
+	dual_radio_on(LONG_RADIO);
+#else
+	on();
+#endif
+	waiting_for_packet = 1;
+	PROCESS_END();
+}
+#endif
+
 /*---------------------------------------------------------------------------*/
 #if DUAL_RADIO
 static void
@@ -424,14 +433,19 @@ cpowercycle(void *ptr)
   PT_BEGIN(&pt);
 
   while(1) {
-    	lr_count = 0;
-			sr_count = 0;/* Only wait for some cycles to pass for someone to start sending */
     if(someone_is_sending > 0) {
       someone_is_sending--;
     }
 
     /* If there were a strobe in the air, turn radio on */
 #if DUAL_RADIO
+#if DUAL_ROUTING_CONVERGE
+		// JOOONKI is working on this	
+		lr_count = 0;
+		sr_count = 0;/* Only wait for some cycles to pass for someone to start sending */
+
+
+#else /* DUAL_ROUTING_CONVERGE */
     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
     {
     	dual_duty_cycle_count++;
@@ -442,9 +456,13 @@ cpowercycle(void *ptr)
     	dual_duty_cycle_count = 0;
         powercycle_dual_turn_radio_on(BOTH_RADIO);
     }
-#else
+#endif /* DUAL_ROUTING_CONVERGE */
+#else	/* DUAL_RADIO */
     powercycle_turn_radio_on();
-#endif
+#endif /* DUAL_RADIO */
+
+
+
     // printf("cpowerycle on\n");
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
     PT_YIELD(&pt);
@@ -759,9 +777,11 @@ send_packet(void)
 			/* JOONKI
 			 * short range broadcast skip sending strobed preambles */
 #if DUAL_RADIO
+#if DUAL_BROADCAST
 			if (is_broadcast && sending_in_LR() == SHORT_RADIO){
 				break;
 			}
+#endif /* DUAL_BROADCAST */ 
 #endif
 			while(got_strobe_ack == 0 &&
 					RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
@@ -1028,17 +1048,22 @@ input_packet(void)
 #endif
 
 #if DUAL_RADIO
-    	  /* JOONKI
-    	   * waiting for incoming short broadcast */
-    	  if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) &&
-    			  radio_received_is_longrange()==LONG_RADIO){
-    		  dual_radio_off(LONG_RADIO);
-    		  dual_radio_on(SHORT_RADIO);
-    		  waiting_for_packet = 1;
-    	  }	else {
-    		  dual_radio_off(BOTH_RADIO);
-    		  waiting_for_packet = 0;
-    	  }
+#if DUAL_BROADCAST
+				/* JOONKI
+				 * waiting for incoming short broadcast */
+				if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) && 
+						radio_received_is_longrange()==LONG_RADIO){
+					dual_radio_off(LONG_RADIO);
+					dual_radio_on(SHORT_RADIO);
+					waiting_for_packet = 1;
+				}	else {
+				dual_radio_off(BOTH_RADIO);
+    			waiting_for_packet = 0;
+				}
+#else		/* DUAL_BROADCAST */
+				dual_radio_off(BOTH_RADIO);
+				waiting_for_packet = 0;
+#endif /* DUAL_BROADCAST */
 #else
     	  off();
     	  waiting_for_packet = 0;
@@ -1167,28 +1192,16 @@ input_packet(void)
 //    	  printf("cxmac strobe_cnt %d %d\n",hdr->strobe_cnt,RTIMER_NOW());
     	  waiting_for_packet = 1;
 #if STROBE_CNT_MODE
+    	  uint8_t cnt = hdr->strobe_cnt;
 #if DUAL_RADIO
     	  target = radio_received_is_longrange();
     	  dual_radio_off(BOTH_RADIO);
+    	  /* Wait based on strobe count, to Rx data */
+    	  process_start(&strobe_wait, &cnt);
 #else
     	  off();
-#endif
-    	  /* Wait based on strobe count, to Rx data */
-    	  printf("before strobe_wait call\n");
-    	  uint8_t cnt = hdr->strobe_cnt;
     	  process_start(&strobe_wait, &cnt);
-
-    	  printf("after strobe_wait call\n");
-/*
-
-#if DUAL_RADIO
-    	  dual_radio_on(target);
-//    	  dual_radio_on(BOTH_RADIO);
-#else
-    	  on();
 #endif
-//    	  printf("cxmac radio on t: %d\n",RTIMER_NOW());
-*/
 #endif
 
 
@@ -1283,6 +1296,11 @@ cxmac_init(void)
   waiting_for_packet = 0;
 #if DUAL_RADIO
   dual_duty_cycle_count = 0;
+#if DUAL_ROUTING_CONVERGE
+	long_duty_cycle_count = 0;
+	short_duty_cycle_count = 0;
+
+#endif	/* DUAL_ROUTING_CONVERGE */
 #endif
   PT_INIT(&pt);
   /*  rtimer_set(&rt, RTIMER_NOW() + cxmac_config.off_time, 1,

@@ -28,8 +28,7 @@ obj_cooja/rpl-dag.o: ..//core/net/rpl/rpl-dag.c ..//core/./contiki.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ..//core/./lib/memb.h \
- ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h \
- ..//core/./net/mac/cxmac/cxmac.h
+ ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h
 ..//core/net/rpl/rpl-dag.c ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//platform/cooja/./contiki-conf.h :
  project-conf.h ..//core/./contiki-default-conf.h :
@@ -61,4 +60,3 @@ obj_cooja/rpl-dag.o: ..//core/net/rpl/rpl-dag.c ..//core/./contiki.h \
  ..//core/./net/ipv6/multicast/roll-tm.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ..//core/./lib/memb.h :
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h :
- ..//core/./net/mac/cxmac/cxmac.h :
