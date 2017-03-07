@@ -208,7 +208,10 @@ static void
 doInterfaceActionsBeforeTick(void)
 {
 //  printf("beforetick on %d %d size %d %d\n",simRadioHWOn,simRadioHWOnLR,simInSize,simInSizeLR);
-  if(!simRadioHWOn) {
+
+	printf("HWOnLR: %d, HWOn: %d\n",simRadioHWOnLR, simRadioHWOn);
+	
+	if(!simRadioHWOn) {
     simInSize = 0;
   }
 #if DUAL_RADIO

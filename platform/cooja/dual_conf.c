@@ -1,3 +1,6 @@
+#include "dev/cooja-radio.h"
+
+
 #include "dual_conf.h"
 #define DEBUG_DUAL	1
 #if DEBUG_DUAL
@@ -63,12 +66,14 @@ int dual_radio_received(int radio)
 	{
 		radio_received = LONG_RADIO;
 		RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! long-range radio\n");
+		RADIO("HwOnLR: %d, HwOn: %d\n", simRadioHWOnLR, simRadioHWOn);
 		return 1;
 	}
 	else if(radio == SHORT_RADIO)
 	{
 		radio_received = SHORT_RADIO;	
 		RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! short-range radio\n");
+		RADIO("HwOnLR: %d, HwOn: %d\n", simRadioHWOnLR, simRadioHWOn);
 		return 1;
 	}
 	return 0;
