@@ -235,6 +235,11 @@ LIST(encounter_list);
 MEMB(encounter_memb, struct encounter, MAX_ENCOUNTERS);
 #endif /* WITH_ENCOUNTER_OPTIMIZATION */
 
+#if DUAL_ROUTING_CONVERGE
+int lr_count;
+int sr_count;
+#endif
+
 static uint8_t is_streaming;
 static linkaddr_t is_streaming_to, is_streaming_to_too;
 static rtimer_clock_t stream_until;
@@ -324,6 +329,7 @@ powercycle_turn_radio_on(void)
 static void
 dual_radio_on(char target)
 {
+//	printf("dual_radio_on target %d %d\n",target, radio_is_on);
 	if(cxmac_is_on && radio_is_on == 0) {
 		radio_is_on = 1;
 		dual_radio_turn_on(target);
@@ -345,6 +351,7 @@ dual_radio_on(char target)
 static void
 dual_radio_off(char target)
 {
+//	printf("dual_radio_off target %d %d\n",target, radio_is_on);
 	if(cxmac_is_on && radio_is_on != 0 && is_listening == 0 &&
 			is_streaming == 0) {
 		radio_is_on = 0;
@@ -396,7 +403,8 @@ cpowercycle(void *ptr)
   PT_BEGIN(&pt);
 
   while(1) {
-    /* Only wait for some cycles to pass for someone to start sending */
+    	lr_count = 0;
+			sr_count = 0;/* Only wait for some cycles to pass for someone to start sending */
     if(someone_is_sending > 0) {
       someone_is_sending--;
     }
@@ -416,7 +424,7 @@ cpowercycle(void *ptr)
 #else
     powercycle_turn_radio_on();
 #endif
-
+    // printf("cpowerycle on\n");
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
     PT_YIELD(&pt);
     if(cxmac_config.off_time > 0) {
@@ -440,6 +448,7 @@ cpowercycle(void *ptr)
 #endif
 	}
       }
+      // printf("cpowerycle off\n");
       CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME);
       PT_YIELD(&pt);
     }
@@ -1007,9 +1016,11 @@ input_packet(void)
 					waiting_for_packet = 1;
 				}	else {
     	  	dual_radio_off(BOTH_RADIO);
+    		waiting_for_packet = 0;
 				}
 #else
     	  off();
+    	  waiting_for_packet = 0;
 #endif
 
 #if CXMAC_CONF_COMPOWER
@@ -1026,7 +1037,6 @@ input_packet(void)
 	compower_clear(&current_packet);
 #endif /* CXMAC_CONF_COMPOWER */
 
-	waiting_for_packet = 0;
 
 /*
   uint8_t src_addr1=original_dataptr[original_datalen-4];
@@ -1142,12 +1152,13 @@ input_packet(void)
 #else
     	  off();
 #endif
-    	  rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (hdr->strobe_cnt + 1)*(cxmac_config.on_time + 1);
+    	  rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (hdr->strobe_cnt+1)*(cxmac_config.on_time + 1);
     	  rtimer_clock_t t = RTIMER_NOW() + t_wait;
     	  while(RTIMER_CLOCK_LT(RTIMER_NOW(), t)) {}
 
 #if DUAL_RADIO
     	  dual_radio_on(target);
+//    	  dual_radio_on(BOTH_RADIO);
 #else
     	  on();
 #endif
@@ -1236,6 +1247,11 @@ cxmac_set_announcement_radio_txpower(int txpower)
 void
 cxmac_init(void)
 {
+#if DUAL_ROUTING_CONVERGE
+	lr_count = 0;
+	sr_count = 0;
+#endif
+
   radio_is_on = 0;
   waiting_for_packet = 0;
 #if DUAL_RADIO

@@ -370,6 +370,10 @@ void rpl_reset_periodic_timer(void);
 /* Route poisoning. */
 void rpl_poison_routes(rpl_dag_t *, rpl_parent_t *);
 
+#if DUAL_ROUTING_CONVERGE
+char rpl_lr_in_neighbor_tree(void);
+#endif /* DUAL_ROUTING_CONVERGENCE */
+
 
 rpl_instance_t *rpl_get_default_instance(void);
 

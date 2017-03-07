@@ -36,8 +36,8 @@
 #include "contiki.h"
 #include "dev/radio.h"
 
-extern char simRadioHWOnLR;
-extern char simRadioHWOn;
+// extern char simRadioHWOnLR;
+// extern char simRadioHWOn;
 
 
 extern const struct radio_driver cooja_radio_driver;

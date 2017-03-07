@@ -27,6 +27,9 @@
 /* Data aggregation shceme enabled or not */
 #define DATA_AGGREGATION 1
 
+/* Dual routing converge */
+#define DUAL_ROUTING_CONVERGE 	1
+
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;
 uint8_t alpha;

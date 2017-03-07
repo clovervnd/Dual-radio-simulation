@@ -17,6 +17,13 @@
 #define DUAL_DUTY_RATIO 1
 #endif
 
+#ifndef LONG_DUTY_RATIO
+#define LONG_DUTY_RADIO		1
+#endif
+
+#ifndef SHORT_DUTY_RATIO
+#define SHORT_DUTY_RATIO	1
+
 /* Functions */
 int dual_radio_switch(int radio);
 int dual_radio_change(void);

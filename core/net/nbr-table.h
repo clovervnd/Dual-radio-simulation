@@ -124,14 +124,8 @@ typedef struct uip_ds6_lr_addrmap{
 
 // static uip_ds6_lr_addrmap_t	ds6_lr_addrmap[NBR_TABLE_MAX_NEIGHBORS];
 //uip_ds6_lr_addrmap_t	ds6_lr_addrmap[10];
-#endif	/* ADDR_MAP */
-#endif	/* DUAL_RADIO */
 
-
-
-/* JOONKI */
-#if DUAL_RADIO
-#if ADDR_MAP
+char long_ip_from_lladdr_map(uip_ipaddr_t * ipaddr);
 int lladdr_map_add_lr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr);
 int lladdr_map_rm_lr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr);
 #endif

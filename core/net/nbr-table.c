@@ -100,6 +100,29 @@ LIST(nbr_table_keys);
 #if DUAL_RADIO
 #if ADDR_MAP
 /*---------------------------------------------------------------------------*/
+extern uip_ds6_lr_addrmap_t ds6_lr_addrmap[NBR_TABLE_MAX_NEIGHBORS];
+
+char
+long_ip_from_lladdr_map(uip_ipaddr_t * ipaddr)
+{
+	char is_long_ip;
+	int i;
+	uip_ds6_nbr_t *nbr = NULL;
+	nbr = uip_ds6_nbr_lookup(ipaddr);	
+	for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
+		if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
+			if (ds6_lr_addrmap[i].lr == 1){
+					is_long_ip = 1;
+				}	else	{
+					is_long_ip = 0;
+				}
+			break;
+		}
+	}
+	
+	return is_long_ip;
+}
+	
 int 
 lladdr_map_add_lr(uip_ds6_lr_addrmap_t *map, const linkaddr_t *lladdr)
 {

@@ -61,6 +61,10 @@
 #define DEBUG DEBUG_RPL_DAG
 #include "net/ip/uip-debug.h"
 
+#if DUAL_ROUTING_CONVERGE
+#include "net/mac/cxmac/cxmac.h"
+#endif	/* DUAL_ROUTING_CONVERGE */
+
 //extern FILE *debugfp;
 
 /* A configurable function called after every RPL parent switch */
@@ -91,6 +95,67 @@ NBR_TABLE_GLOBAL(rpl_child_t, rpl_children);
 /* Allocate instance table. */
 rpl_instance_t instance_table[RPL_MAX_INSTANCES];
 rpl_instance_t *default_instance;
+
+/*---------------------------------------------------------------------------*/
+
+
+#if DUAL_ROUTING_CONVERGE
+char
+rpl_lr_in_neighbor_tree(void)
+{
+	char parent_long = 0;
+
+	lr_count = 0;
+	sr_count = 0;
+
+	// Count child
+	if(default_instance != NULL && default_instance->current_dag != NULL &&
+      default_instance->of != NULL && default_instance->of->calculate_rank != NULL) {
+  	rpl_child_t *c = nbr_table_head(rpl_children);
+		while(c != NULL) {
+    	uip_ds6_nbr_t *nbr = rpl_get_nbr_child(c);
+			if (long_ip_from_lladdr_map(&nbr->ipaddr))	{
+				lr_count ++;
+			}	else	{
+				sr_count ++;
+			}
+      PRINTF("RPL_child: nbr %3u\n", nbr_table_get_lladdr(rpl_children, c)->u8[7]);
+      c = nbr_table_next(rpl_children, c);
+    }
+
+		// Count parent
+		rpl_parent_t *p = nbr_table_head(rpl_parents);
+		if (p!=NULL) {
+			rpl_parent_t *preferred_parent = p->dag->preferred_parent;
+    	uip_ds6_nbr_t *nbr = rpl_get_nbr(preferred_parent);
+			parent_long = long_ip_from_lladdr_map(&nbr->ipaddr);
+		}
+		
+    if(linkaddr_node_addr.u8[7] != 0x1) {
+			PRINTF("Neighbors: Long range child: %d, Short range child: %d, Parent is %s\n"
+					,lr_count, sr_count, parent_long?"Long":"Short");
+			if(parent_long == 1){
+				lr_count ++;
+			} else {
+				sr_count ++;
+			}
+		} else {
+			PRINTF("Neighbors: Long range child: %d, Short range child: %d, I don't have parent\n"
+					,lr_count, sr_count);
+		}
+	}
+	
+	if (lr_count > 0 && sr_count > 0){
+		return 3;
+	} else if (lr_count == 0 && sr_count > 0){
+		return 2;
+	} else if (lr_count > 0 && sr_count == 0){
+		return 1;
+	}	else {
+		return -1;
+	}
+}
+#endif /* DUAL_ROUTING_CONVERGE */
 
 /*---------------------------------------------------------------------------*/
 void
