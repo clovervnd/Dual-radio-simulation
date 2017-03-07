@@ -149,7 +149,7 @@ struct cxmac_hdr {
    cycle. */
 #define ANNOUNCEMENT_TIME (random_rand() % (ANNOUNCEMENT_PERIOD))
 
-#define DEFAULT_STROBE_WAIT_TIME (8 * DEFAULT_ON_TIME / 8)
+#define DEFAULT_STROBE_WAIT_TIME (7 * DEFAULT_ON_TIME / 8)
 
 struct cxmac_config cxmac_config = {
   DEFAULT_ON_TIME,
@@ -161,6 +161,9 @@ struct cxmac_config cxmac_config = {
 #include <stdio.h>
 
 static struct pt pt;
+#if DUAL_RADIO
+PROCESS(strobe_wait, "strobe wait");
+#endif
 
 static volatile uint8_t cxmac_is_on = 0;
 
@@ -302,6 +305,24 @@ powercycle_dual_turn_radio_off(char target)
      waiting_for_packet == 0) {
 	  dual_radio_off(target);
   }
+}
+PROCESS_THREAD(strobe_wait, ev, data)
+{
+	printf("in the process\n");
+	static struct etimer et;
+	uint8_t* cnt = (uint8_t *)data;
+	PROCESS_BEGIN();
+	rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (*cnt + 1)*(cxmac_config.on_time + 1);
+	t_wait >= cxmac_config.strobe_time ? t_wait = 1 : t_wait;
+	clock_time_t time = (1ul * CLOCK_SECOND * (t_wait)) / RTIMER_ARCH_SECOND;
+	printf("before timer set\n");
+	dual_radio_off(BOTH_RADIO);
+	etimer_set(&et, time);
+	PROCESS_WAIT_UNTIL(etimer_expired(&et));
+	printf("after time expired\n");
+	dual_radio_on(LONG_RADIO);
+	waiting_for_packet = 1;
+	PROCESS_END();
 }
 #else
 static void
@@ -742,90 +763,90 @@ send_packet(void)
 				break;
 			}
 #endif
-		  while(got_strobe_ack == 0 &&
-				  RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
-			  rtimer_clock_t now = RTIMER_NOW();
-			  /* See if we got an ACK */
-			  packetbuf_clear();
-			  len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
-			  if(len > 0) {
-				  packetbuf_set_datalen(len);
-				  if(NETSTACK_FRAMER.parse() >= 0) {
-//					  printf("packet parsed\n");
-					  hdr = packetbuf_dataptr();
-					  is_dispatch = hdr->dispatch == DISPATCH;
-					  is_strobe_ack = hdr->type == TYPE_STROBE_ACK;
-					  if(is_dispatch && is_strobe_ack) {
-//						  	    	printf("ACK recognized\n");
+			while(got_strobe_ack == 0 &&
+					RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
+				rtimer_clock_t now = RTIMER_NOW();
+				/* See if we got an ACK */
+				packetbuf_clear();
+				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
+				if(len > 0) {
+					packetbuf_set_datalen(len);
+					if(NETSTACK_FRAMER.parse() >= 0) {
+						//					  printf("packet parsed\n");
+						hdr = packetbuf_dataptr();
+						is_dispatch = hdr->dispatch == DISPATCH;
+						is_strobe_ack = hdr->type == TYPE_STROBE_ACK;
+						if(is_dispatch && is_strobe_ack) {
+							//						  	    	printf("ACK recognized\n");
 #if DUAL_RADIO
-						  if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-								  &linkaddr_node_addr) ||
-								  linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-										  &long_linkaddr_node_addr)) {
+							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+									&linkaddr_node_addr) ||
+									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+											&long_linkaddr_node_addr)) {
 #else
-							  if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-									  &linkaddr_node_addr)) {
+								if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+										&linkaddr_node_addr)) {
 #endif
-								  /* We got an ACK from the receiver, so we can immediately send
+									/* We got an ACK from the receiver, so we can immediately send
 		   the packet. */
-//								  printf("got strobe_ack\n");
-								  got_strobe_ack = 1;
-								  encounter_time = now;
-							  } else {
-								  PRINTDEBUG("cxmac: strobe ack for someone else\n");
-							  }
-						  } else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
-							  PRINTDEBUG("cxmac: strobe from someone else\n");
-							  collisions++;
-						  }
-					  } else {
-						  PRINTF("cxmac: send failed to parse %u\n", len);
-					  }
-				  }
-			  }
-      t = RTIMER_NOW();
-      /* Send the strobe packet. */
-      if(got_strobe_ack == 0 && collisions == 0) {
-	if(is_broadcast) {
+									//								  printf("got strobe_ack\n");
+									got_strobe_ack = 1;
+									encounter_time = now;
+								} else {
+									PRINTDEBUG("cxmac: strobe ack for someone else\n");
+								}
+							} else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
+								PRINTDEBUG("cxmac: strobe from someone else\n");
+								collisions++;
+							}
+						} else {
+							PRINTF("cxmac: send failed to parse %u\n", len);
+						}
+					}
+				}
+				t = RTIMER_NOW();
+				/* Send the strobe packet. */
+				if(got_strobe_ack == 0 && collisions == 0) {
+					if(is_broadcast) {
 #if WITH_STROBE_BROADCAST
-	  NETSTACK_RADIO.send(strobe, strobe_len);
+						NETSTACK_RADIO.send(strobe, strobe_len);
 #if STROBE_CNT_MODE
-	  strobe[cnt_pos] = strobe_cnt++;
-//	  printf("cxmac tx strobe_cnt %d t: %d\n",strobe_cnt,RTIMER_NOW());
+						strobe[cnt_pos] = strobe_cnt++;
+						//	  printf("cxmac tx strobe_cnt %d t: %d\n",strobe_cnt,RTIMER_NOW());
 #endif
 #else
-	  /* restore the packet to send */
-	  queuebuf_to_packetbuf(packet);
-	  NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
+						/* restore the packet to send */
+						queuebuf_to_packetbuf(packet);
+						NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
 #endif
 #if DUAL_RADIO
-	  dual_radio_off(target);
+						dual_radio_off(target);
 #else
-	  off();
+						off();
 #endif
-	} else {
-	  NETSTACK_RADIO.send(strobe, strobe_len);
+					} else {
+						NETSTACK_RADIO.send(strobe, strobe_len);
 #if 0
-	  /* Turn off the radio for a while to let the other side
+						/* Turn off the radio for a while to let the other side
 	     respond. We don't need to keep our radio on when we know
 	     that the other side needs some time to produce a reply. */
 #if DUAL_RADIO
-	  dual_radio_off(target);
+						dual_radio_off(target);
 #else
-	  off();
+						off();
 #endif
-	  rtimer_clock_t wt = RTIMER_NOW();
-	  while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + WAIT_TIME_BEFORE_STROBE_ACK));
+						rtimer_clock_t wt = RTIMER_NOW();
+						while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + WAIT_TIME_BEFORE_STROBE_ACK));
 #endif /* 0 */
 #if DUAL_RADIO
-	  dual_radio_on(target);
+						dual_radio_on(target);
 #else
-	  on();
+						on();
 #endif
-	}
-      }
-    }
-  }
+					}
+				}
+			}
+	  }
 #if WITH_ACK_OPTIMIZATION
   /* If we have received the strobe ACK, and we are sending a packet
      that will need an upper layer ACK (as signified by the
@@ -1007,17 +1028,17 @@ input_packet(void)
 #endif
 
 #if DUAL_RADIO
-				/* JOONKI
-				 * waiting for incoming short broadcast */
-				if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) && 
-						radio_received_is_longrange()==LONG_RADIO){
-					dual_radio_off(LONG_RADIO);
-					dual_radio_on(SHORT_RADIO);
-					waiting_for_packet = 1;
-				}	else {
-    	  	dual_radio_off(BOTH_RADIO);
-    		waiting_for_packet = 0;
-				}
+    	  /* JOONKI
+    	   * waiting for incoming short broadcast */
+    	  if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) &&
+    			  radio_received_is_longrange()==LONG_RADIO){
+    		  dual_radio_off(LONG_RADIO);
+    		  dual_radio_on(SHORT_RADIO);
+    		  waiting_for_packet = 1;
+    	  }	else {
+    		  dual_radio_off(BOTH_RADIO);
+    		  waiting_for_packet = 0;
+    	  }
 #else
     	  off();
     	  waiting_for_packet = 0;
@@ -1152,9 +1173,13 @@ input_packet(void)
 #else
     	  off();
 #endif
-    	  rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (hdr->strobe_cnt+1)*(cxmac_config.on_time + 1);
-    	  rtimer_clock_t t = RTIMER_NOW() + t_wait;
-    	  while(RTIMER_CLOCK_LT(RTIMER_NOW(), t)) {}
+    	  /* Wait based on strobe count, to Rx data */
+    	  printf("before strobe_wait call\n");
+    	  uint8_t cnt = hdr->strobe_cnt;
+    	  process_start(&strobe_wait, &cnt);
+
+    	  printf("after strobe_wait call\n");
+/*
 
 #if DUAL_RADIO
     	  dual_radio_on(target);
@@ -1163,7 +1188,9 @@ input_packet(void)
     	  on();
 #endif
 //    	  printf("cxmac radio on t: %d\n",RTIMER_NOW());
+*/
 #endif
+
 
       } else {
         PRINTDEBUG("cxmac: strobe not for us\n");

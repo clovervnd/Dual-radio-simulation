@@ -23,6 +23,7 @@
 
 #ifndef SHORT_DUTY_RATIO
 #define SHORT_DUTY_RATIO	1
+#endif
 
 /* Functions */
 int dual_radio_switch(int radio);
