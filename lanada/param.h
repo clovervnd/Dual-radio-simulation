@@ -13,19 +13,19 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 2
+#define LONG_WEIGHT_RATIO 3
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
 
 /* Using strobe cnt, reducing idle listening while Tx preamble */
-#define STROBE_CNT_MODE		1
+#define STROBE_CNT_MODE		0
 
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
 /* Data aggregation shceme enabled or not */
-#define DATA_AGGREGATION 1
+// #define DATA_AGGREGATION 1
 
 /* Dual routing converge */
 #define DUAL_ROUTING_CONVERGE 	0
