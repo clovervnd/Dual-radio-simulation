@@ -149,7 +149,7 @@ struct cxmac_hdr {
    cycle. */
 #define ANNOUNCEMENT_TIME (random_rand() % (ANNOUNCEMENT_PERIOD))
 
-#define DEFAULT_STROBE_WAIT_TIME (8 * DEFAULT_ON_TIME / 8)
+#define DEFAULT_STROBE_WAIT_TIME (7 * DEFAULT_ON_TIME / 8)
 
 struct cxmac_config cxmac_config = {
   DEFAULT_ON_TIME,
