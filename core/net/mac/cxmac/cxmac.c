@@ -437,18 +437,35 @@ cpowercycle(void *ptr)
 #if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
 		// JOOONKI is working on this	
-
+		if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
+    {
+    	dual_duty_cycle_count++;
+			if (short_duty_on == 1){
+	      powercycle_dual_turn_radio_on(SHORT_RADIO);
+			}
+    }
+    else
+    {
+    	dual_duty_cycle_count = 0;
+			if (short_duty_on == 1 && long_duty_on == 1) {
+	      powercycle_dual_turn_radio_on(BOTH_RADIO);
+			}	else if (long_duty_on == 1) {
+	      powercycle_dual_turn_radio_on(LONG_RADIO);
+			}	else if (short_duty_on == 1 ) {
+				powercycle_dual_turn_radio_on(SHORT_RADIO);
+			}
+    }
 
 #else /* DUAL_ROUTING_CONVERGE */
     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
     {
     	dual_duty_cycle_count++;
-        powercycle_dual_turn_radio_on(SHORT_RADIO);
+      powercycle_dual_turn_radio_on(SHORT_RADIO);
     }
     else
     {
     	dual_duty_cycle_count = 0;
-        powercycle_dual_turn_radio_on(BOTH_RADIO);
+      powercycle_dual_turn_radio_on(BOTH_RADIO);
     }
 #endif /* DUAL_ROUTING_CONVERGE */
 #else	/* DUAL_RADIO */

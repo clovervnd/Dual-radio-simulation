@@ -2,13 +2,17 @@
 
 
 #include "dual_conf.h"
+#include "../lanada/param.h"
 #define DEBUG_DUAL	0
 #if DEBUG_DUAL
 #include <stdio.h>
 #include "net/rpl/rpl-icmp6.h"
 #include "contiki.h"
+<<<<<<< HEAD
 #include "../lanada/param.h"
 
+=======
+>>>>>>> 7beb44ba8a9d4b01567bfcbdc7083b415880de17
 
 #define RADIO(...) printf(__VA_ARGS__)
 #else
