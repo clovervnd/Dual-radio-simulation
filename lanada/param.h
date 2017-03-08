@@ -55,3 +55,7 @@ uint8_t long_duty_on;
 uint8_t short_duty_on;
 #define CONVERGE_TIME	(3600ul * CLOCK_SECOND) // Convergence time in second
 #endif
+
+#if DUAL_BROADCAST
+#define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 2) // Short on time slot length in rtimer
+#endif
