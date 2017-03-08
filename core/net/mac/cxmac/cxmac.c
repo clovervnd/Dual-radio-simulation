@@ -180,7 +180,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -437,8 +437,6 @@ cpowercycle(void *ptr)
 #if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
 		// JOOONKI is working on this	
-		lr_count = 0;
-		sr_count = 0;/* Only wait for some cycles to pass for someone to start sending */
 
 
 #else /* DUAL_ROUTING_CONVERGE */

@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include "net/rpl/rpl-icmp6.h"
 #include "contiki.h"
-#include "lanada/param.h"
+#include "../lanada/param.h"
+
 
 #define RADIO(...) printf(__VA_ARGS__)
 #else
