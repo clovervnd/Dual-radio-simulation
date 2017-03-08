@@ -161,7 +161,7 @@ struct cxmac_config cxmac_config = {
 #include <stdio.h>
 
 static struct pt pt;
-#if STROBE_CNT_MODE
+#if DUAL_RADIO
 PROCESS(strobe_wait, "strobe wait");
 static volatile unsigned char strobe_target;
 #endif
@@ -329,7 +329,7 @@ powercycle_turn_radio_on(void)
   }
 }
 #endif
-#if STROBE_CNT_MODE
+#if DUAL_RADIO
 PROCESS_THREAD(strobe_wait, ev, data)
 {
 	static struct etimer et;

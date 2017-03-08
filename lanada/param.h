@@ -19,7 +19,7 @@
 #define SINK_INFINITE_ENERGY	1
 
 /* Using strobe cnt, reducing idle listening while Tx preamble */
-#define STROBE_CNT_MODE		1
+#define STROBE_CNT_MODE		0
 
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0

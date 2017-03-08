@@ -372,15 +372,23 @@ radio_send(const void *payload, unsigned short payload_len)
   }
 #endif /* WITH_TURNAROUND */
 
-  if(!simRadioHWOn) {
+#if DUAL_RADIO
+  if (sending_in_LR() == LONG_RADIO){
+		if(!simRadioHWOnLR)
+ 	 {
+		/* Turn on radio temporarily */
+		simRadioHWOnLR = 1;
+ 	 }
+	}	else if (sending_in_LR() == SHORT_RADIO) {
+		if(!simRadioHWOn) {
+    	/* Turn on radio temporarily */
+    	simRadioHWOn = 1;
+  	}
+	}
+#else
+ 	if(!simRadioHWOn) {
     /* Turn on radio temporarily */
     simRadioHWOn = 1;
-  }
-#if DUAL_RADIO
-  if(!simRadioHWOnLR)
-  {
-	/* Turn on radio temporarily */
-	simRadioHWOnLR = 1;
   }
 #endif
   if(payload_len > COOJA_RADIO_BUFSIZE) {
