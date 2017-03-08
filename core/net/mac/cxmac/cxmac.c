@@ -163,10 +163,8 @@ struct cxmac_config cxmac_config = {
 #include <stdio.h>
 
 static struct pt pt;
-#if DUAL_RADIO
 PROCESS(strobe_wait, "strobe wait");
 static volatile unsigned char strobe_target;
-#endif
 
 static volatile uint8_t cxmac_is_on = 0;
 
@@ -246,11 +244,7 @@ static linkaddr_t is_streaming_to, is_streaming_to_too;
 static rtimer_clock_t stream_until;
 #define DEFAULT_STREAM_TIME (RTIMER_ARCH_SECOND)
 
-#if DUAL_RADIO
-#if DUAL_BROADCAST
 static uint8_t is_short_waiting = 0;
-#endif
-#endif
 
 /* remaining energy JJH */
 #if RPL_ENERGY_MODE
@@ -331,7 +325,6 @@ powercycle_turn_radio_on(void)
   }
 }
 #endif
-#if DUAL_RADIO
 PROCESS_THREAD(strobe_wait, ev, data)
 {
 	static struct etimer et;
@@ -367,15 +360,16 @@ PROCESS_THREAD(strobe_wait, ev, data)
 #endif
 		waiting_for_packet = 1;
 	}
+#if DUAL_RADIO
 	else
 	{
 		dual_radio_off(SHORT_RADIO);
 		waiting_for_packet = 0;
 	}
+#endif
 	is_short_waiting = 0;
 	PROCESS_END();
 }
-#endif
 
 /*---------------------------------------------------------------------------*/
 #if DUAL_RADIO

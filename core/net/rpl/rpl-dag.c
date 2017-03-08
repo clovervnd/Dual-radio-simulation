@@ -1243,7 +1243,11 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
     return;
   }
   p->dtsn = dio->dtsn;
+#if DUAL_RADIO
   p->parent_weight = long_ip_from_lladdr_map(from) == 1 ? LONG_WEIGHT_RATIO : 1;
+#else /* DUAL_RADIO */
+  p->parent_weight = 1;
+#endif /* DUAL_RADIO */
   PRINTF("succeeded\n");
 
   /* Autoconfigure an address if this node does not already have an address
@@ -1704,7 +1708,11 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
 #if RPL_LIFETIME_MAX_MODE
   if(p->parent_weight == 0)
   {
+#if DUAL_RADIO
       p->parent_weight = long_ip_from_lladdr_map(from) == 1 ? LONG_WEIGHT_RATIO : 1;
+#else
+      p->parent_weight = 1;
+#endif
   }
 //  printf("rpl-dag ip: %d, p_weight: %d %c\n",from->u8[15],p->parent_weight,from->u8[8]==0x82?'L':'S');
   rpl_parent_t *p_temp;
