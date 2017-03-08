@@ -49,3 +49,8 @@ uint8_t my_parent_number;
 #define LONG_TX_COST 9
 #define LONG_RX_COST 6
 #endif
+
+#if DUAL_ROUTING_CONVERGE
+uint8_t long_duty_on;
+uint8_t short_duty_on;
+#endif
