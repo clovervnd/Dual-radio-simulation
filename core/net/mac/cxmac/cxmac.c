@@ -163,6 +163,7 @@ struct cxmac_config cxmac_config = {
 static struct pt pt;
 #if STROBE_CNT_MODE
 PROCESS(strobe_wait, "strobe wait");
+static volatile unsigned char strobe_target;
 #endif
 
 static volatile uint8_t cxmac_is_on = 0;
@@ -179,7 +180,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -343,9 +344,9 @@ PROCESS_THREAD(strobe_wait, ev, data)
 #endif
 	etimer_set(&et, time);
 	PROCESS_WAIT_UNTIL(etimer_expired(&et));
-	printf("after time expired\n");
+//	printf("after time expired\n");
 #if DUAL_RADIO
-	dual_radio_on(LONG_RADIO);
+	dual_radio_on(strobe_target);
 #else
 	on();
 #endif
@@ -1194,7 +1195,7 @@ input_packet(void)
 #if STROBE_CNT_MODE
     	  uint8_t cnt = hdr->strobe_cnt;
 #if DUAL_RADIO
-    	  target = radio_received_is_longrange();
+    	  strobe_target = radio_received_is_longrange();
     	  dual_radio_off(BOTH_RADIO);
     	  /* Wait based on strobe count, to Rx data */
     	  process_start(&strobe_wait, &cnt);

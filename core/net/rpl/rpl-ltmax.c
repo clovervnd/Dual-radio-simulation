@@ -128,7 +128,7 @@ calculate_path_metric(rpl_parent_t *p)
 //	  PRINTF("weight: %d rank_rate: %d\n",p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, rank_rate);
 //	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR + ALPHA * rank_rate;
 
-	  ret_metric = p->rank + p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
+	  ret_metric = p->rank + (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;
 #else
 	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
 #endif
@@ -344,38 +344,18 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
 #if RPL_LIFETIME_MAX_MODE
-/*  if(p1 == dag->preferred_parent)
-  {
-	  if(p1_metric - p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR < 0)
-	  {
-		  p1_metric = 0;
-	  }
-	  else
-	  {
-		  p1_metric -= p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
-	  }
-  }
-  else if(p2 == dag->preferred_parent)
-  {
-	  if(p2_metric - p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR < 0)
-	  {
-		  p2_metric = 0;
-	  }
-	  else
-	  {
-		  p2_metric -= p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
-	  }
-  }*/
 #if DUAL_RADIO
-  if(p1 != dag->preferred_parent)
+  if(p1 == dag->preferred_parent)
   {
-	  is_longrange1 = nbr1->ipaddr.u8[8]==0x82;
-	  p1_metric += (is_longrange1 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
+//	  is_longrange1 = nbr1->ipaddr.u8[8]==0x82;
+//	  p1_metric += (is_longrange1 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
+	  p1_metric -= p1->parent_weight;
   }
   if(p2 != dag->preferred_parent)
   {
-	  is_longrange2 = nbr2->ipaddr.u8[8]==0x82;
-	  p2_metric += (is_longrange2 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
+//	  is_longrange2 = nbr2->ipaddr.u8[8]==0x82;
+//	  p2_metric += (is_longrange2 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
+	  p2_metric -= p2->parent_weight;
   }
 #else	/* DUAL_RADIO */
   if(p1 != dag->preferred_parent)
