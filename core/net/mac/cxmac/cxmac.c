@@ -244,6 +244,12 @@ static linkaddr_t is_streaming_to, is_streaming_to_too;
 static rtimer_clock_t stream_until;
 #define DEFAULT_STREAM_TIME (RTIMER_ARCH_SECOND)
 
+#if DUAL_RADIO
+#if DUAL_BROADCAST
+static uint8_t is_short_waiting = 0;
+#endif
+#endif
+
 /* remaining energy JJH */
 #if RPL_ENERGY_MODE
 extern uint8_t remaining_energy;
@@ -327,25 +333,42 @@ powercycle_turn_radio_on(void)
 PROCESS_THREAD(strobe_wait, ev, data)
 {
 	static struct etimer et;
-	uint8_t* cnt = (uint8_t *)data;
+	rtimer_clock_t t;
 	PROCESS_BEGIN();
-	rtimer_clock_t t_wait = (cxmac_config.strobe_time) - (*cnt + 1)*(cxmac_config.on_time + 1);
-	t_wait >= cxmac_config.strobe_time ? t_wait = 1 : t_wait;
-	clock_time_t time = (1ul * CLOCK_SECOND * (t_wait)) / RTIMER_ARCH_SECOND;
+	if(!is_short_waiting)
+	{
+		uint8_t *cnt = (uint8_t *)data;
+		t = (cxmac_config.strobe_time) - (*cnt + 1)*(cxmac_config.on_time + 1);
+		t >= cxmac_config.strobe_time ? t = 1 : t;
 #if DUAL_RADIO
-	dual_radio_off(BOTH_RADIO);
+		dual_radio_off(BOTH_RADIO);
 #else
-	off();
+		off();
 #endif
-	etimer_set(&et, time);
+	}
+	else
+	{
+		t = SHORT_SLOT_LEN;
+	}
+	clock_time_t t_wait = (1ul * CLOCK_SECOND * (t)) / RTIMER_ARCH_SECOND;
+	etimer_set(&et, t_wait);
 	PROCESS_WAIT_UNTIL(etimer_expired(&et));
-//	printf("after time expired\n");
+	printf("after time expired\n");
+	if(!is_short_waiting)
+	{
 #if DUAL_RADIO
-	dual_radio_on(strobe_target);
+		dual_radio_on(strobe_target);
 #else
-	on();
+		on();
 #endif
-	waiting_for_packet = 1;
+		waiting_for_packet = 1;
+	}
+	else
+	{
+		dual_radio_off(SHORT_RADIO);
+		waiting_for_packet = 0;
+	}
+	is_short_waiting = 0;
 	PROCESS_END();
 }
 #endif
@@ -1067,9 +1090,15 @@ input_packet(void)
 					dual_radio_off(LONG_RADIO);
 					dual_radio_on(SHORT_RADIO);
 					waiting_for_packet = 1;
-				}	else {
-				dual_radio_off(BOTH_RADIO);
-    			waiting_for_packet = 0;
+					is_short_waiting = 1;
+					process_start(&strobe_wait, NULL);
+				}	else if(radio_received_is_longrange()==SHORT_RADIO){
+					dual_radio_off(BOTH_RADIO);
+					waiting_for_packet = 0;
+				}
+				else{
+					dual_radio_off(BOTH_RADIO);
+					waiting_for_packet = 0;
 				}
 #else		/* DUAL_BROADCAST */
 				dual_radio_off(BOTH_RADIO);

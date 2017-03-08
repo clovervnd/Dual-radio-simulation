@@ -19,7 +19,7 @@
 #define SINK_INFINITE_ENERGY	1
 
 /* Using strobe cnt, reducing idle listening while Tx preamble */
-#define STROBE_CNT_MODE		0
+#define STROBE_CNT_MODE		1
 
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
@@ -31,7 +31,7 @@
 #define DUAL_ROUTING_CONVERGE 	1
 
 /* Preamble free short broadcast after long broadcast */
-#define DUAL_BROADCAST	0
+#define DUAL_BROADCAST	1
 
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;
@@ -54,4 +54,8 @@ uint8_t my_parent_number;
 uint8_t long_duty_on;
 uint8_t short_duty_on;
 #define CONVERGE_TIME	(3600ul * CLOCK_SECOND) // Convergence time in second
+#endif
+
+#if DUAL_BROADCAST
+#define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 2) // Short on time slot length in rtimer
 #endif
