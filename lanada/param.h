@@ -19,19 +19,19 @@
 #define SINK_INFINITE_ENERGY	1
 
 /* Using strobe cnt, reducing idle listening while Tx preamble */
-#define STROBE_CNT_MODE		0
+#define STROBE_CNT_MODE		1
 
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
 /* Data aggregation shceme enabled or not */
-#define DATA_AGGREGATION 1
+// #define DATA_AGGREGATION 1
 
 /* Dual routing converge */
 #define DUAL_ROUTING_CONVERGE 	0
 
 /* Preamble free short broadcast after long broadcast */
-#define DUAL_BROADCAST	0
+#define DUAL_BROADCAST	1
 
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;
