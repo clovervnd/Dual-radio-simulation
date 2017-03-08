@@ -1,0 +1,90 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0xb76e210f, pid=23532, tid=2971822912
+#
+# JRE version: OpenJDK Runtime Environment (7.0_79-b14) (build 1.7.0_79-b14)
+# Java VM: OpenJDK Client VM (24.79-b02 mixed mode, sharing linux-x86 )
+# Derivative: IcedTea 2.5.6
+# Distribution: Ubuntu 14.04 LTS, package 7u79-2.5.6-0ubuntu1.14.04.1
+# Problematic frame:
+# C  [libc.so.6+0x14210f]
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please include
+# instructions on how to reproduce the bug and visit:
+#   http://icedtea.classpath.org/bugzilla
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x085e6c00):  JavaThread "Thread-130" [_thread_in_native, id=29973, stack(0xb11d6000,0xb1227000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x00000000
+
+Registers:
+EAX=0xb0c767aa, EBX=0xb76e210c, ECX=0x06000680, EDX=0x00000008
+ESP=0xb0c70f14, EBP=0xb0c70f34, ESI=0x00000000, EDI=0x00000000
+EIP=0xb76e210f, EFLAGS=0x00010287, CR2=0x00000000
+
+Top of Stack: (sp=0xb0c70f14)
+0xb0c70f14:   00000000 b0c63961 b0c767a2 00000000
+0xb0c70f24:   00000008 b0c73200 b0c6f1a4 00000000
+0xb0c70f34:   b0c70f64 b0c639f2 b0c767a2 00000000
+0xb0c70f44:   b0c74540 b0c5ce41 b0c6f1b8 00c74794
+0xb0c70f54:   00000000 00000000 00000000 00000000
+0xb0c70f64:   b0c70fa4 b0c5bdd5 00000000 00000000
+0xb0c70f74:   b0c70fa4 b0c5ce54 b0c70fd8 b0c76b1e
+0xb0c70f84:   020000d0 00000000 b0c73248 b0c74540 
+
+Instructions: (pc=0xb76e210f)
+0xb76e20ef:   00 8b 48 f0 8b 5a f0 39 d9 0f 85 f2 09 00 00 8b
+0xb76e20ff:   48 f4 8b 5a f4 39 d9 0f 85 e4 09 00 00 8b 48 f8
+0xb76e210f:   8b 5a f8 39 d9 0f 85 d6 09 00 00 8b 48 fc 8b 5a
+0xb76e211f:   fc 39 d9 b8 00 00 00 00 0f 85 c3 09 00 00 5b c3 
+
+Register to memory mapping:
+
+EAX=0xb0c767aa: ds6_lr_addrmap+0xa in /home/user/Desktop/Dual-radio-simulation/lanada/obj_cooja/mtype175.cooja at 0xb0c40000
+EBX=0xb76e210c: <offset 0x14210c> in /lib/i386-linux-gnu/libc.so.6 at 0xb75a0000
+ECX=0x06000680 is an unknown value
+EDX=0x00000008 is an unknown value
+ESP=0xb0c70f14: <offset 0x30f14> in /home/user/Desktop/Dual-radio-simulation/lanada/obj_cooja/mtype175.cooja at 0xb0c40000
+EBP=0xb0c70f34: <offset 0x30f34> in /home/user/Desktop/Dual-radio-simulation/lanada/obj_cooja/mtype175.cooja at 0xb0c40000
+ESI=0x00000000 is an unknown value
+EDI=0x00000000 is an unknown value
+
+
+Stack: [0xb11d6000,0xb1227000],  sp=0xb0c70f14,  free space=4188779k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libc.so.6+0x14210f]
+C  [mtype175.cooja+0x239f2]  long_ip_from_lladdr_map+0x51
+C  [mtype175.cooja+0x1bdd5]  rpl_lr_in_neighbor_tree+0xee
+C  [mtype175.cooja+0x1fcc0]  dio_input+0x85e
+C  [mtype175.cooja+0x24d9b]  uip_icmp6_input+0x4f
+C  [mtype175.cooja+0x197b5]  uip_process+0x9a2
+C  [mtype175.cooja+0x1ae20]  packet_input+0x23
+C  [mtype175.cooja+0x1b245]  eventhandler+0x1db
+C  [mtype175.cooja+0x1b89f]  process_thread_tcpip_process+0xa2
+C  [mtype175.cooja+0x13364]  call_process+0x57
+C  [mtype175.cooja+0x136b2]  process_post_synch+0x2e
+C  [mtype175.cooja+0x1b26e]  tcpip_input+0x22
+C  [mtype175.cooja+0x16478]  input+0x43e
+C  [mtype175.cooja+0x249ce]  input+0xd
+C  [mtype175.cooja+0x228ad]  packet_input+0xd
+C  [mtype175.cooja+0x23655]  input_packet+0xcd
+C  [mtype175.cooja+0x12195]  process_thread_cooja_radio_process+0x7d
+C  [mtype175.cooja+0x13364]  call_process+0x57
+C  [mtype175.cooja+0x13437]  do_poll+0x4b
+C  [mtype175.cooja+0x135a0]  process_run+0x16
+C  [mtype175.cooja+0x10cf5]  process_run_thread_loop+0x1f
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 3440  org.contikios.cooja.corecomm.Lib30.tick()V (0 bytes) @ 0xb4da3b50 [0xb4da3b10+0x40]
+
+[error occurred during error reporting (printing Java stack), id 0xb]
+
+

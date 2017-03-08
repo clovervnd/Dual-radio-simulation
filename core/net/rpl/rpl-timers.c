@@ -110,14 +110,19 @@ convergence_radio_off(void)
 			printf("Converge: LONG RADIO\n");
 			long_duty_on = 1;
 			short_duty_on = 0;
+			break;
 		case 2:
 			printf("Converge: SHORT RADIO\n");
 			long_duty_on = 0;
 			short_duty_on = 1;
+			break;
 		case 3:
 			printf("Converge: BOTH RADIO\n");
 			long_duty_on = 1;
-			short_duty_on = 0;
+			short_duty_on = 1;
+			break;
+		default:
+			printf("Converge: Something wrong\n");
 	}
 }
 #endif
