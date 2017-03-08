@@ -239,11 +239,6 @@ LIST(encounter_list);
 MEMB(encounter_memb, struct encounter, MAX_ENCOUNTERS);
 #endif /* WITH_ENCOUNTER_OPTIMIZATION */
 
-#if DUAL_ROUTING_CONVERGE
-int lr_count;
-int sr_count;
-#endif
-
 static uint8_t is_streaming;
 static linkaddr_t is_streaming_to, is_streaming_to_too;
 static rtimer_clock_t stream_until;
@@ -1289,19 +1284,13 @@ void
 cxmac_init(void)
 {
 #if DUAL_ROUTING_CONVERGE
-	lr_count = 0;
-	sr_count = 0;
+	long_duty_on = 1;
+	short_duty_on = 1;
 #endif
-
   radio_is_on = 0;
   waiting_for_packet = 0;
 #if DUAL_RADIO
   dual_duty_cycle_count = 0;
-#if DUAL_ROUTING_CONVERGE
-	long_duty_cycle_count = 0;
-	short_duty_cycle_count = 0;
-
-#endif	/* DUAL_ROUTING_CONVERGE */
 #endif
   PT_INIT(&pt);
   /*  rtimer_set(&rt, RTIMER_NOW() + cxmac_config.off_time, 1,

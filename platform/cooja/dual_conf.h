@@ -17,17 +17,6 @@
 #define DUAL_DUTY_RATIO 1
 #endif
 
-#if DUAL_ROUTING_CONVERGE
-
-#ifndef LONG_DUTY_RATIO
-#define LONG_DUTY_RADIO		1
-#endif
-
-#ifndef SHORT_DUTY_RATIO
-#define SHORT_DUTY_RATIO	1
-#endif
-#endif /* DUAL_ROUTING_CONVERGE */
-
 /* Functions */
 int dual_radio_switch(int radio);
 int dual_radio_change(void);
@@ -48,12 +37,6 @@ int dio_ack_broadcast(rpl_instance_t* instance);
 int long_range_radio;
 int radio_received;
 char dual_duty_cycle_count;
-
-
-#if DUAL_ROUTING_CONVERGE
-char long_duty_cycle_count;
-char short_duty_cycle_count;
-#endif /* DUAL_ROUTING_CONVERGE */
 
 /* Global variable for Cooja simulation */
 extern int LongRangeTransmit;

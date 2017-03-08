@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "net/rpl/rpl-icmp6.h"
 #include "contiki.h"
+#include "lanada/param.h"
 
 #define RADIO(...) printf(__VA_ARGS__)
 #else
@@ -110,34 +111,61 @@ int dual_radio_turn_off(char targetRadio)
 PROCESS_THREAD(dual_dio_broadcast, ev, data)
 {
 	static struct etimer et;
+	static uint8_t long_duty_on_local = 1;
+	static uint8_t short_duty_on_local = 1;
+
+#if DUAL_ROUTING_CONVERGE
+	long_duty_on_local = long_duty_on;
+	short_duty_on_local = short_duty_on;
+#endif
+
 	PROCESS_BEGIN();
 //	dual_radio_switch(SHORT_RADIO);
 	dual_radio_switch(LONG_RADIO);
-	dio_output(temp_instance, NULL);
+	if (long_duty_on_local == 1) {
+		dio_output(temp_instance, NULL);
+	}
 	etimer_set(&et, 1);
 
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 	RADIO("############################################### DIO_BROADCAST: Process stopped for a while ####################\n");
 //	dual_radio_switch(LONG_RADIO);
-	dual_radio_switch(SHORT_RADIO);
-	dio_output(temp_instance, NULL);
+		dual_radio_switch(SHORT_RADIO);
+	if (short_duty_on_local == 1) {
+		dio_output(temp_instance, NULL);
+	}
 	PROCESS_END();
 }
 
 PROCESS_THREAD(dual_dis_broadcast, ev, data)
 {
 	static struct etimer et;
+
+	static uint8_t long_duty_on_local = 1;
+	static uint8_t short_duty_on_local = 1;
+
+#if DUAL_ROUTING_CONVERGE
+	long_duty_on_local = long_duty_on;
+	short_duty_on_local = short_duty_on;
+#endif
+
 	PROCESS_BEGIN();
 //	dual_radio_switch(SHORT_RADIO);
 	dual_radio_switch(LONG_RADIO);
-	dis_output(NULL);
+	
+	if (long_duty_on_local == 1) {
+		dis_output(NULL);
+	}
 	etimer_set(&et, 1);
 	
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 	RADIO("##############################################  DIS_BROADCAST: Process stopped for a while ####################\n");
 //	dual_radio_switch(LONG_RADIO);
 	dual_radio_switch(SHORT_RADIO);
-	dis_output(NULL);
+	
+	if (short_duty_on_local == 1) {
+		dis_output(NULL);
+	}
 	
 	PROCESS_END();
 }
@@ -146,15 +174,29 @@ PROCESS_THREAD(dual_dis_broadcast, ev, data)
 PROCESS_THREAD(dual_dio_ack_broadcast, ev, data)
 {
 	static struct etimer et;
+	static uint8_t long_duty_on_local = 1;
+	static uint8_t short_duty_on_local = 1;
+
+#if DUAL_ROUTING_CONVERGE
+	long_duty_on_local = long_duty_on;
+	short_duty_on_local = short_duty_on;
+#endif
+
 	PROCESS_BEGIN();
 	dual_radio_switch(LONG_RADIO);
-	dio_ack_output(temp_instance, NULL);
+
+	if (long_duty_on_local == 1) {
+		dio_ack_output(temp_instance, NULL);
+	}
 	etimer_set(&et, 1);
 
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 	RADIO("############################################### DIO_ACK_BROADCAST: Process stopped for a while ####################\n");
 	dual_radio_switch(SHORT_RADIO);
-	dio_ack_output(temp_instance, NULL);
+
+	if (short_duty_on_local == 1) {
+		dio_ack_output(temp_instance, NULL);
+	}
 	PROCESS_END();
 }
 #endif

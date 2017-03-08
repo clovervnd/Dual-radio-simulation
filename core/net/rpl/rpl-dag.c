@@ -104,6 +104,7 @@ char
 rpl_lr_in_neighbor_tree(void)
 {
 	char parent_long = 0;
+	uint8_t lr_count, sr_count;
 
 	lr_count = 0;
 	sr_count = 0;

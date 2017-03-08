@@ -59,9 +59,5 @@ struct cxmac_config {
 
 extern const struct rdc_driver cxmac_driver;
 
-#if DUAL_ROUTING_CONVERGE
-extern int lr_count;
-extern int sr_count;
-#endif /* DUAL_ROUTING_CONVERGE */
 
 #endif /* CXMAC_H_ */
