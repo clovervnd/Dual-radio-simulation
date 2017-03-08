@@ -259,7 +259,7 @@ static int
 // radio_read(void *buf, unsigned short bufsize)
 radio_read(void *buf, unsigned short bufsize)
 {
-  printf("radio read %d %d\n",simInSize, simInSizeLR);
+  // printf("radio read %d %d\n",simInSize, simInSizeLR);
   int tmp = simInSize;
 
 #if DUAL_RADIO

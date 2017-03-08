@@ -1,9 +1,9 @@
 /* This header is for debugging and analysis */
 
 #define DEBUG_RPL	0
-#define DEBUG_RPL_DAG	1
+#define DEBUG_RPL_DAG	0
 #define DEBUG_RPL_DAG_ROOT	0
-#define DEBUG_RPL_ICMP6	1
+#define DEBUG_RPL_ICMP6	0
 #define DEBUG_RPL_MRHOF	0
 #define DEBUG_RPL_JKOF	0
 #define DEBUG_RPL_LTMAX_OF	0

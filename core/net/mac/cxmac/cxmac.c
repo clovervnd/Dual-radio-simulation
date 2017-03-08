@@ -176,7 +176,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -403,14 +403,19 @@ cpowercycle(void *ptr)
   PT_BEGIN(&pt);
 
   while(1) {
-    	lr_count = 0;
-			sr_count = 0;/* Only wait for some cycles to pass for someone to start sending */
     if(someone_is_sending > 0) {
       someone_is_sending--;
     }
 
     /* If there were a strobe in the air, turn radio on */
 #if DUAL_RADIO
+#if DUAL_ROUTING_CONVERGE
+		// JOOONKI is working on this	
+		lr_count = 0;
+		sr_count = 0;/* Only wait for some cycles to pass for someone to start sending */
+
+
+#else /* DUAL_ROUTING_CONVERGE */
     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
     {
     	dual_duty_cycle_count++;
@@ -421,9 +426,13 @@ cpowercycle(void *ptr)
     	dual_duty_cycle_count = 0;
         powercycle_dual_turn_radio_on(BOTH_RADIO);
     }
-#else
+#endif /* DUAL_ROUTING_CONVERGE */
+#else	/* DUAL_RADIO */
     powercycle_turn_radio_on();
-#endif
+#endif /* DUAL_RADIO */
+
+
+
     // printf("cpowerycle on\n");
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
     PT_YIELD(&pt);
@@ -738,9 +747,11 @@ send_packet(void)
 			/* JOONKI
 			 * short range broadcast skip sending strobed preambles */
 #if DUAL_RADIO
+#if DUAL_BROADCAST
 			if (is_broadcast && sending_in_LR() == SHORT_RADIO){
 				break;
 			}
+#endif /* DUAL_BROADCAST */ 
 #endif
 		  while(got_strobe_ack == 0 &&
 				  RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
@@ -1007,6 +1018,7 @@ input_packet(void)
 #endif
 
 #if DUAL_RADIO
+#if DUAL_BROADCAST
 				/* JOONKI
 				 * waiting for incoming short broadcast */
 				if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) && 
@@ -1016,8 +1028,13 @@ input_packet(void)
 					waiting_for_packet = 1;
 				}	else {
     	  	dual_radio_off(BOTH_RADIO);
-    		waiting_for_packet = 0;
+    			waiting_for_packet = 0;
 				}
+#else		/* DUAL_BROADCAST */
+				dual_radio_off(BOTH_RADIO);
+    		waiting_for_packet = 0;
+#endif /* DUAL_BROADCAST */
+
 #else
     	  off();
     	  waiting_for_packet = 0;
@@ -1256,6 +1273,11 @@ cxmac_init(void)
   waiting_for_packet = 0;
 #if DUAL_RADIO
   dual_duty_cycle_count = 0;
+#if DUAL_ROUTING_CONVERGE
+	long_duty_cycle_count = 0;
+	short_duty_cycle_count = 0;
+
+#endif	/* DUAL_ROUTING_CONVERGE */
 #endif
   PT_INIT(&pt);
   /*  rtimer_set(&rt, RTIMER_NOW() + cxmac_config.off_time, 1,

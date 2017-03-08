@@ -710,7 +710,7 @@ tcpip_ipv6_output(void)
 
         // printf("#L %u 1; red\n", nexthop->u8[sizeof(uip_ipaddr_t) - 1]);
 				if (last_LR == 1){
-	        printf("#L %u 1; black\n", nexthop->u8[sizeof(uip_ipaddr_t) - 1]);
+	      	printf("#L %u 1; black\n", nexthop->u8[sizeof(uip_ipaddr_t) - 1]);
 				} else {
 	        printf("#L %u 1; red\n", nexthop->u8[sizeof(uip_ipaddr_t) - 1]);
 				}
