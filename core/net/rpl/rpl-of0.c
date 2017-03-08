@@ -43,8 +43,8 @@
 
 #include "net/rpl/rpl-private.h"
 
-// #define DEBUG DEBUG_NONE
-#define DEBUG DEBUG_PRINT
+#define DEBUG DEBUG_NONE
+// #define DEBUG DEBUG_PRINT
 #include "net/ip/uip-debug.h"
 #include "net/nbr-table.h"
 

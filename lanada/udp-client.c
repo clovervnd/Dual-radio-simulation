@@ -60,7 +60,7 @@
 #define START_INTERVAL		(15 * CLOCK_SECOND)
 #define SEND_INTERVAL		(PERIOD * CLOCK_SECOND)
 #define SEND_TIME		(random_rand() % (SEND_INTERVAL))
-#define MAX_PAYLOAD_LEN		30
+#define MAX_PAYLOAD_LEN		50
 
 #include "param.h"
 
@@ -153,7 +153,8 @@ send_packet(void *ptr)
   PRINTF("app: DATA id:%03d from:%03d\n",
          seq_id,myaddr);
   sprintf(buf,"DATA id:%03d from:%03dX",seq_id,myaddr);
-  uip_udp_packet_sendto(client_conn, buf, strlen(buf),
+//  uip_udp_packet_sendto(client_conn, buf, strlen(buf),
+  uip_udp_packet_sendto(client_conn, buf, 50,
                         &server_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
 	// PRINTF("Residual Energy = %d\n", get_residual_energy());
 }
