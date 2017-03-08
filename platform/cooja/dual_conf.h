@@ -26,7 +26,6 @@
 #ifndef SHORT_DUTY_RATIO
 #define SHORT_DUTY_RATIO	1
 #endif
-
 #endif /* DUAL_ROUTING_CONVERGE */
 
 /* Functions */
