@@ -107,28 +107,31 @@ rpl_lr_in_neighbor_tree(void)
 
 	// Count child
 	if(default_instance != NULL && default_instance->current_dag != NULL &&
-      default_instance->of != NULL && default_instance->of->calculate_rank != NULL) {
-  	rpl_child_t *c = nbr_table_head(rpl_children);
+			default_instance->of != NULL && default_instance->of->calculate_rank != NULL) {
+		rpl_child_t *c = nbr_table_head(rpl_children);
 		while(c != NULL) {
-    	uip_ds6_nbr_t *nbr = rpl_get_nbr_child(c);
+			uip_ds6_nbr_t *nbr = rpl_get_nbr_child(c);
 			if (long_ip_from_lladdr_map(&nbr->ipaddr))	{
 				lr_count ++;
 			}	else	{
 				sr_count ++;
 			}
-      PRINTF("RPL_child: nbr %3u\n", nbr_table_get_lladdr(rpl_children, c)->u8[7]);
-      c = nbr_table_next(rpl_children, c);
-    }
+			PRINTF("RPL_child: nbr %3u\n", nbr_table_get_lladdr(rpl_children, c)->u8[7]);
+			c = nbr_table_next(rpl_children, c);
+		}
 
 		// Count parent
 		rpl_parent_t *p = nbr_table_head(rpl_parents);
-		if (p!=NULL) {
+		if (p != NULL) {
 			rpl_parent_t *preferred_parent = p->dag->preferred_parent;
-    	uip_ds6_nbr_t *nbr = rpl_get_nbr(preferred_parent);
-			parent_long = long_ip_from_lladdr_map(&nbr->ipaddr);
+			if(preferred_parent != NULL)
+			{
+				uip_ds6_nbr_t *nbr = rpl_get_nbr(preferred_parent);
+				parent_long = long_ip_from_lladdr_map(&nbr->ipaddr);
+			}
 		}
-		
-    if(linkaddr_node_addr.u8[7] != 0x1) {
+
+		if(linkaddr_node_addr.u8[7] != 0x1) {
 			PRINTF("Neighbors: Long range child: %d, Short range child: %d, Parent is %s\n"
 					,lr_count, sr_count, parent_long?"Long":"Short");
 			if(parent_long == 1){
@@ -141,7 +144,7 @@ rpl_lr_in_neighbor_tree(void)
 					,lr_count, sr_count);
 		}
 	}
-	
+
 	if (lr_count > 0 && sr_count > 0){
 		return 3;
 	} else if (lr_count == 0 && sr_count > 0){
@@ -792,9 +795,6 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
 #if RPL_DAG_MC != RPL_DAG_MC_NONE
       memcpy(&p->mc, &dio->mc, sizeof(p->mc));
 #endif /* RPL_DAG_MC != RPL_DAG_MC_NONE */
-#if RPL_LIFETIME_MAX_MODE
-      p->parent_weight = dio->parent_weight;
- #endif
     }
   }
   return p;
@@ -1243,6 +1243,7 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
     return;
   }
   p->dtsn = dio->dtsn;
+  p->parent_weight = long_ip_from_lladdr_map(from) == 1 ? LONG_WEIGHT_RATIO : 1;
   PRINTF("succeeded\n");
 
   /* Autoconfigure an address if this node does not already have an address
@@ -1701,6 +1702,11 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   }
   p->rank = dio->rank;
 #if RPL_LIFETIME_MAX_MODE
+  if(p->parent_weight == 0)
+  {
+      p->parent_weight = long_ip_from_lladdr_map(from) == 1 ? LONG_WEIGHT_RATIO : 1;
+  }
+//  printf("rpl-dag ip: %d, p_weight: %d %c\n",from->u8[15],p->parent_weight,from->u8[8]==0x82?'L':'S');
   rpl_parent_t *p_temp;
   uip_ipaddr_t *ip_temp;
   p->parent_sum_weight = dio->dio_weight;

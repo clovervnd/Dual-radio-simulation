@@ -110,9 +110,11 @@ struct announcement_msg {
 struct cxmac_hdr {
   uint8_t dispatch;
   uint8_t type;
+/*
 #if STROBE_CNT_MODE
   uint8_t strobe_cnt; // For strobe cnt mode
 #endif
+*/
 };
 
 #define MAX_STROBE_SIZE 50
@@ -334,6 +336,7 @@ PROCESS_THREAD(strobe_wait, ev, data)
 {
 	static struct etimer et;
 	rtimer_clock_t t;
+//	printf("before process begin\n");
 	PROCESS_BEGIN();
 	if(!is_short_waiting)
 	{
@@ -350,10 +353,11 @@ PROCESS_THREAD(strobe_wait, ev, data)
 	{
 		t = SHORT_SLOT_LEN;
 	}
+//	printf("before timer set\n");
 	clock_time_t t_wait = (1ul * CLOCK_SECOND * (t)) / RTIMER_ARCH_SECOND;
 	etimer_set(&et, t_wait);
 	PROCESS_WAIT_UNTIL(etimer_expired(&et));
-	printf("after time expired\n");
+//	printf("after time expired\n");
 	if(!is_short_waiting)
 	{
 #if DUAL_RADIO
@@ -697,12 +701,19 @@ send_packet(void)
     return MAC_TX_ERR_FATAL;
   }
   memcpy(strobe, packetbuf_hdrptr(), len);
+#if STROBE_CNT_MODE
+  strobe[len] = DISPATCH | (strobe_cnt << 2); /* dispatch */
+  cnt_pos = len;
+#else
   strobe[len] = DISPATCH; /* dispatch */
+#endif
   strobe[len + 1] = TYPE_STROBE; /* type */
+/*
 #if STROBE_CNT_MODE
   strobe[len + 2] = strobe_cnt;
   cnt_pos = len + 2;
 #endif
+*/
 
   packetbuf_compact();
   packet = queuebuf_new_from_packetbuf();
@@ -828,7 +839,12 @@ send_packet(void)
 					if(NETSTACK_FRAMER.parse() >= 0) {
 						//					  printf("packet parsed\n");
 						hdr = packetbuf_dataptr();
+#if STROBE_CNT_MODE
+						char dispatch_ext = hdr->dispatch << 6;
+						is_dispatch = dispatch_ext == DISPATCH;
+#else
 						is_dispatch = hdr->dispatch == DISPATCH;
+#endif
 						is_strobe_ack = hdr->type == TYPE_STROBE_ACK;
 						if(is_dispatch && is_strobe_ack) {
 							//						  	    	printf("ACK recognized\n");
@@ -865,7 +881,7 @@ send_packet(void)
 #if WITH_STROBE_BROADCAST
 						NETSTACK_RADIO.send(strobe, strobe_len);
 #if STROBE_CNT_MODE
-						strobe[cnt_pos] = strobe_cnt++;
+						strobe[cnt_pos] += (1 << 2);
 						//	  printf("cxmac tx strobe_cnt %d t: %d\n",strobe_cnt,RTIMER_NOW());
 #endif
 #else
@@ -1060,7 +1076,13 @@ input_packet(void)
     original_datalen = packetbuf_totlen();
     original_dataptr = packetbuf_hdrptr();
 #endif
+#if STROBE_CNT_MODE
+    char dispatch_ext = hdr->dispatch << 6;
+//    printf("packet input dispatch %d\n",dispatch_ext);
+    if(dispatch_ext != DISPATCH) {
+#else
     if(hdr->dispatch != DISPATCH) {
+#endif
       someone_is_sending = 0;
 #if DUAL_RADIO
       if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
@@ -1229,10 +1251,10 @@ input_packet(void)
 	   prepare for an incoming broadcast packet. If this is the
 	   case, we turn on the radio and wait for the incoming
 	   broadcast packet. */
-//    	  printf("cxmac strobe_cnt %d %d\n",hdr->strobe_cnt,RTIMER_NOW());
+//    	  printf("cxmac strobe_cnt %d\n",hdr->dispatch >> 2);
     	  waiting_for_packet = 1;
 #if STROBE_CNT_MODE
-    	  uint8_t cnt = hdr->strobe_cnt;
+    	  uint8_t cnt = hdr->dispatch >> 2;
 #if DUAL_RADIO
     	  strobe_target = radio_received_is_longrange();
     	  dual_radio_off(BOTH_RADIO);

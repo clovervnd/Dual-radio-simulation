@@ -1125,11 +1125,13 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	rpl_dag_t *dag = instance->current_dag;
 	rpl_parent_t *p = dag->preferred_parent;
 
+	dio_ack_count ++;
+#if RPL_ICMP_ENERGY_LOG
 	char *log_buf = (char*) malloc(sizeof(char)*100);
 	sprintf(log_buf,"DIO_ACK_OUTPUT, Energy: %d\n",(int) get_residual_energy());
-	dio_ack_count ++;
 	LOG_MESSAGE(log_buf);
 	free(log_buf);
+#endif
 
 	pos = 0;
 

@@ -137,6 +137,7 @@ send_packet(void *ptr)
 		LOG_MESSAGE("[PS] Transmission: %d, Collision: %d\n", transmission_count, collision_count);
 		LOG_MESSAGE("[PS] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, dio_count+dao_count+dis_count+dio_ack_count);
 		LOG_MESSAGE("[PS] Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count);
+		LOG_MESSAGE("[PS] Remaining energy: %d", (int) get_residual_energy());
 	}
 
 	if (lifetime > 0) {

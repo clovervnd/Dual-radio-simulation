@@ -13,13 +13,13 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 3
+#define LONG_WEIGHT_RATIO 2
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
 
 /* Using strobe cnt, reducing idle listening while Tx preamble */
-#define STROBE_CNT_MODE		0
+#define STROBE_CNT_MODE		1
 
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
@@ -53,7 +53,7 @@ uint8_t my_parent_number;
 #if DUAL_ROUTING_CONVERGE
 uint8_t long_duty_on;
 uint8_t short_duty_on;
-#define CONVERGE_TIME	(3600ul * CLOCK_SECOND) // Convergence time in second
+#define CONVERGE_TIME	(900ul * CLOCK_SECOND) // Convergence time in second
 #endif
 
 #if DUAL_BROADCAST
