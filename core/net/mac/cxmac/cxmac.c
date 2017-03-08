@@ -436,10 +436,6 @@ cpowercycle(void *ptr)
     /* If there were a strobe in the air, turn radio on */
 #if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
-		// JOOONKI is working on this	
-		lr_count = 0;
-		sr_count = 0;/* Only wait for some cycles to pass for someone to start sending */
-
 
 #else /* DUAL_ROUTING_CONVERGE */
     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)

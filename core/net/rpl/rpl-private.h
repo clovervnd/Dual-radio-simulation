@@ -364,6 +364,12 @@ void rpl_cancel_dio_ack(rpl_instance_t *instance);
 #endif
 void rpl_schedule_probing(rpl_instance_t *instance);
 
+#if DUAL_ROUTING_CONVERGE
+void rpl_convergence_timer(void);
+void rpl_reset_convergence_timer(void);
+#endif
+
+
 void rpl_reset_dio_timer(rpl_instance_t *);
 void rpl_reset_periodic_timer(void);
 

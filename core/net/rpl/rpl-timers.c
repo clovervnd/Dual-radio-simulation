@@ -75,11 +75,33 @@ static void handle_periodic_timer(void *ptr);
 static void new_dio_interval(rpl_instance_t *instance);
 static void handle_dio_timer(void *ptr);
 
+#if DUAL_ROUTING_CONVERGE
+static void convergence_radio_off(void);
+#endif
+
 static uint16_t next_dis;
 
 /* dio_send_ok is true if the node is ready to send DIOs */
 static uint8_t dio_send_ok;
 
+#if DUAL_ROUTING_CONVERGE
+/*---------------------------------------------------------------------------*/
+static struct ctimer timer_conv;
+void
+rpl_convergence_timer(void)
+{
+	ctimer_set(&timer_conv, CONVERGE_TIME, &convergence_radio_off,NULL);
+}
+rpl_reset_convergence_timer(void)
+{
+	ctimer_reset(&timer_conv);
+}
+static void
+convergence_radio_off(void)
+{
+	printf("convergence_radio_off\n");
+}
+#endif
 /*---------------------------------------------------------------------------*/
 static void
 handle_periodic_timer(void *ptr)

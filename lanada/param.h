@@ -28,7 +28,7 @@
 // #define DATA_AGGREGATION 1
 
 /* Dual routing converge */
-#define DUAL_ROUTING_CONVERGE 	0
+#define DUAL_ROUTING_CONVERGE 	1
 
 /* Preamble free short broadcast after long broadcast */
 #define DUAL_BROADCAST	0
@@ -53,4 +53,5 @@ uint8_t my_parent_number;
 #if DUAL_ROUTING_CONVERGE
 uint8_t long_duty_on;
 uint8_t short_duty_on;
+#define CONVERGE_TIME	(3600ul * CLOCK_SECOND) // Convergence time in second
 #endif

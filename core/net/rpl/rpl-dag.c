@@ -61,10 +61,6 @@
 #define DEBUG DEBUG_RPL_DAG
 #include "net/ip/uip-debug.h"
 
-#if DUAL_ROUTING_CONVERGE
-#include "net/mac/cxmac/cxmac.h"
-#endif	/* DUAL_ROUTING_CONVERGE */
-
 //extern FILE *debugfp;
 
 /* A configurable function called after every RPL parent switch */
@@ -98,7 +94,7 @@ rpl_instance_t *default_instance;
 
 /*---------------------------------------------------------------------------*/
 
-
+#if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
 char
 rpl_lr_in_neighbor_tree(void)
@@ -157,7 +153,7 @@ rpl_lr_in_neighbor_tree(void)
 	}
 }
 #endif /* DUAL_ROUTING_CONVERGE */
-
+#endif /* DUAL_RADIO */
 /*---------------------------------------------------------------------------*/
 void
 rpl_print_neighbor_list(void)
