@@ -43,8 +43,8 @@
 
 #include "net/rpl/rpl-private.h"
 
-//#define DEBUG DEBUG_NONE
- #define DEBUG DEBUG_PRINT
+#define DEBUG DEBUG_NONE
+// #define DEBUG DEBUG_PRINT
 #include "net/ip/uip-debug.h"
 #include "net/nbr-table.h"
 
@@ -152,12 +152,12 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
         nbr2->link_metric* (long_ip_from_lladdr_map(&nbr2->ipaddr)? LONG_WEIGHT_RATIO : 1), p2->rank);
 
   r1 = DAG_RANK(p1->rank, p1->dag->instance) * RPL_MIN_HOPRANKINC  +
-//    nbr1->link_metric * (long_ip_from_lladdr_map(&nbr1->ipaddr)? LONG_WEIGHT_RATIO : 1);
-  nbr1->link_metric;
+    nbr1->link_metric * (long_ip_from_lladdr_map(&nbr1->ipaddr)? LONG_WEIGHT_RATIO : 1);
+//  nbr1->link_metric;
 
   r2 = DAG_RANK(p2->rank, p1->dag->instance) * RPL_MIN_HOPRANKINC  +
-//    nbr2->link_metric * (long_ip_from_lladdr_map(&nbr2->ipaddr)? LONG_WEIGHT_RATIO : 1);
-  nbr2->link_metric;
+    nbr2->link_metric * (long_ip_from_lladdr_map(&nbr2->ipaddr)? LONG_WEIGHT_RATIO : 1);
+//  nbr2->link_metric;
 #else
  	PRINTF(" (confidence %d, rank %d) with parent ",
         nbr1->link_metric, p1->rank);
