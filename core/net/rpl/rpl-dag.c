@@ -93,7 +93,7 @@ rpl_instance_t instance_table[RPL_MAX_INSTANCES];
 rpl_instance_t *default_instance;
 
 /*---------------------------------------------------------------------------*/
-
+#if RPL_LIFETIME_MAX_MODE
 #if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
 char
@@ -157,6 +157,7 @@ rpl_lr_in_neighbor_tree(void)
 }
 #endif /* DUAL_ROUTING_CONVERGE */
 #endif /* DUAL_RADIO */
+#endif
 /*---------------------------------------------------------------------------*/
 void
 rpl_print_neighbor_list(void)
@@ -1243,11 +1244,13 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
     return;
   }
   p->dtsn = dio->dtsn;
+#if RPL_LIFETIME_MAX_MODE
 #if DUAL_RADIO
   p->parent_weight = long_ip_from_lladdr_map(from) == 1 ? LONG_WEIGHT_RATIO : 1;
 #else /* DUAL_RADIO */
   p->parent_weight = 1;
 #endif /* DUAL_RADIO */
+#endif
   PRINTF("succeeded\n");
 
   /* Autoconfigure an address if this node does not already have an address

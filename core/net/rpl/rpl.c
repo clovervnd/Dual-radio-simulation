@@ -345,9 +345,11 @@ rpl_init(void)
   rpl_reset_periodic_timer();
   rpl_icmp6_register_handlers();
 
+#if RPL_LIFETIME_MAX_MODE
 #if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
 	rpl_convergence_timer();
+#endif
 #endif
 #endif
 

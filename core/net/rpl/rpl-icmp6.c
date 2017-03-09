@@ -689,9 +689,11 @@ dio_input(void)
   PRINTF("DIO INPUT my_weight %d\n",my_weight);
 #endif
 
+#if RPL_LIFETIME_MAX_MODE
 #if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
 	rpl_lr_in_neighbor_tree();
+#endif
 #endif
 #endif
 

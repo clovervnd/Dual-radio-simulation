@@ -86,6 +86,7 @@ static uint16_t next_dis;
 /* dio_send_ok is true if the node is ready to send DIOs */
 static uint8_t dio_send_ok;
 
+#if RPL_LIFETIME_MAX_MODE
 #if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
 /*---------------------------------------------------------------------------*/
@@ -125,6 +126,7 @@ convergence_radio_off(void)
 			printf("Converge: Something wrong\n");
 	}
 }
+#endif
 #endif
 #endif
 /*---------------------------------------------------------------------------*/
