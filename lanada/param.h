@@ -1,6 +1,6 @@
 /* RPL MODES */
 #define RPL_ENERGY_MODE 0
-#define RPL_LIFETIME_MAX_MODE 1
+#define RPL_LIFETIME_MAX_MODE 0
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
