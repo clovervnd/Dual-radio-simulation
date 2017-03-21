@@ -1,6 +1,7 @@
+#include "contiki-conf.h"
+
 #if DUAL_RADIO
 
-#include "platform-conf.h"
 #include "cc1200.h"
 #include "cc2420.h"
 #include "net/rpl/rpl-private.h"
@@ -51,5 +52,4 @@ int dio_ack_broadcast(rpl_instance_t * instance);
 int long_range_radio;
 int radio_received;
 char dual_duty_cycle_count;
-
-#endif	/* DUAL_RADIO */
+#endif

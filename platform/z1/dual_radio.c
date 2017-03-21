@@ -1,6 +1,7 @@
+#include "dual_radio.h"
+#include "contiki-conf.h"
 #if DUAL_RADIO
 
-#include "dual_radio.h"
 #define DEBUG_DUAL	0
 
 #include "net/rpl/rpl-icmp6.h"

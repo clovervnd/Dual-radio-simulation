@@ -102,13 +102,13 @@ typedef unsigned long off_t;
 // #define NETSTACK_CONF_RADIO   cc2420_driver
 
 /* In case of using dual radio driver */
-#define NETSTACK_DUAL_RADIO			1
+/* #define NETSTACK_DUAL_RADIO			1
 
-#if DUAL_RADIO
+#if NETSTACK_DUAL_RADIO
 struct radio_driver NETSTACK_CONF_RADIO;
 struct radio_driver NETSTACK_RADIO;
 #endif
-
+*/
 
 /*
  * Definitions below are dictated by the hardware and not really
