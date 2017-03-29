@@ -13,7 +13,7 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 2
+#define LONG_WEIGHT_RATIO 10
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1

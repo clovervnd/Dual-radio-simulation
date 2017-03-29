@@ -806,7 +806,7 @@ send_packet(void)
 
   /* Send a train of strobes until the receiver answers with an ACK. */
 
-  /* Turn on the radio to listen for the strobe ACK. */
+	/* Always use long preamble in LRSR_ASYNC mode */
 #if DUAL_RADIO
 #if LRSR_ASYNC
 		if (sending_in_LR() == SHORT_RADIO){
@@ -820,6 +820,7 @@ send_packet(void)
 #endif
 
 
+  /* Turn on the radio to listen for the strobe ACK. */
 #if DUAL_RADIO
   dual_radio_on(target);
 #else
@@ -940,14 +941,6 @@ send_packet(void)
 					}
 				}
 			}
-#if DUAL_RADIO
-#if LRSR_ASYNC
-			if (was_short == 1)	{
- 				dual_radio_switch(SHORT_RADIO);
-				target = SHORT_RADIO;
-			}
-#endif
-#endif
 	  }
 
 #if WITH_ACK_OPTIMIZATION
@@ -986,6 +979,16 @@ send_packet(void)
 #endif
 
 #endif /* WITH_ACK_OPTIMIZATION */
+
+	/* Switch the radio back to the original one */
+#if DUAL_RADIO
+#if LRSR_ASYNC
+			if (was_short == 1)	{
+ 				dual_radio_switch(SHORT_RADIO);
+				target = SHORT_RADIO;
+			}
+#endif
+#endif
 
   /* restore the packet to send */
   queuebuf_to_packetbuf(packet);
@@ -1089,6 +1092,7 @@ qsend_list(mac_callback_t sent, void *ptr, struct rdc_buf_list *buf_list)
   if(buf_list != NULL) {
     queuebuf_to_packetbuf(buf_list->buf);
     qsend_packet(sent, ptr);
+		/* Switch the radio back to the original one */
   }
 }
 /*---------------------------------------------------------------------------*/
@@ -1253,7 +1257,7 @@ input_packet(void)
 #if LRSR_ASYNC
 				if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&linkaddr_node_addr) == 1){
 					for_short = 1;
-				} else {
+				} else if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&long_linkaddr_node_addr) == 1) {
 					for_short = 0;
 				}
 #endif
@@ -1268,13 +1272,6 @@ input_packet(void)
 	packetbuf_set_addr(PACKETBUF_ADDR_RECEIVER,
 			   packetbuf_addr(PACKETBUF_ADDR_SENDER));
 #if DUAL_RADIO
-#if LRSR_ASYNC
-	if (for_short == 1) {
-		target = SHORT_RADIO;
-	} else if (for_short == 0) {
-		target = LONG_RADIO;
-	}
-#else /* LRSR_ASYNC */
 	if(sending_in_LR() == LONG_RADIO){
 		target = LONG_RADIO;
 		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
@@ -1282,7 +1279,6 @@ input_packet(void)
 		target = SHORT_RADIO;
 		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 	}
-#endif /* LRSR_ASYNC */
 #else
   	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 #endif
@@ -1292,6 +1288,17 @@ input_packet(void)
 	     packet. */
 	  someone_is_sending = 1;
 	  waiting_for_packet = 1;
+
+#if DUAL_RADIO
+#if LRSR_ASYNC
+		dual_radio_off(BOTH_RADIO);
+		if (for_short == 1) {
+			target = SHORT_RADIO;
+		} else if (for_short == 0) {
+			target = LONG_RADIO;
+		}
+#endif
+#endif
 
 #if DUAL_RADIO
 	  dual_radio_on(target);
