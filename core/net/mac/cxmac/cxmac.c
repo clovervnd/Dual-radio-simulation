@@ -186,12 +186,14 @@ static volatile unsigned char radio_is_on = 0;
 #define PRINTF(...) printf(__VA_ARGS__)
 #define PRINTDEBUG(...) printf(__VA_ARGS__)
 #else
+/* enable LEDS when DEBUG == 0 
 #undef LEDS_ON
 #undef LEDS_OFF
 #undef LEDS_TOGGLE
 #define LEDS_ON(x)
 #define LEDS_OFF(x)
 #define LEDS_TOGGLE(x)
+*/ 
 #define PRINTF(...)
 #define PRINTDEBUG(...)
 #endif
@@ -478,6 +480,9 @@ cpowercycle(void *ptr)
     }
 
 #else /* DUAL_ROUTING_CONVERGE */
+#if LRSR_ASYNC
+		powercycle_dual_turn_radio_on(LONG_RADIO);
+#else
     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
     {
     	dual_duty_cycle_count++;
@@ -488,6 +493,7 @@ cpowercycle(void *ptr)
     	dual_duty_cycle_count = 0;
       powercycle_dual_turn_radio_on(BOTH_RADIO);
     }
+#endif /* LRSR_ASYNC */
 #endif /* DUAL_ROUTING_CONVERGE */
 #else	/* DUAL_RADIO */
     powercycle_turn_radio_on();
@@ -647,6 +653,12 @@ send_packet(void)
   uint8_t strobe_cnt = 1;
   int cnt_pos;
 #endif
+#if DUAL_RADIO
+#if LRSR_ASYNC
+	uint8_t was_short;
+#endif
+#endif
+
   /* Create the X-MAC header for the data packet. */
 #if !NETSTACK_CONF_BRIDGE_MODE
   /* If NETSTACK_CONF_BRIDGE_MODE is set, assume PACKETBUF_ADDR_SENDER is already set. */
@@ -796,15 +808,30 @@ send_packet(void)
 
   /* Turn on the radio to listen for the strobe ACK. */
 #if DUAL_RADIO
+#if LRSR_ASYNC
+		if (sending_in_LR() == SHORT_RADIO){
+			was_short = 1;
+			dual_radio_switch(LONG_RADIO);
+			target = LONG_RADIO;
+		}	else	{
+			was_short = 0;
+		}
+#endif /* LRSR_ASYNC */
+#endif
+
+
+#if DUAL_RADIO
   dual_radio_on(target);
 #else
   on();
 #endif
+
   collisions = 0;
   if(!is_already_streaming) {
 	  watchdog_stop();
 	  got_strobe_ack = 0;
 	  t = RTIMER_NOW();
+
 	  for(strobes = 0, collisions = 0;
 			  got_strobe_ack == 0 && collisions == 0 &&
 #if DUAL_RADIO
@@ -816,11 +843,11 @@ send_packet(void)
 			/* JOONKI
 			 * short range broadcast skip sending strobed preambles */
 #if DUAL_RADIO
-#if DUAL_BROADCAST
-			if (is_broadcast && sending_in_LR() == SHORT_RADIO){
+#if LRSR_ASYNC
+			if (is_broadcast && was_short == 1){
 				break;
-			}
-#endif /* DUAL_BROADCAST */ 
+			} 
+#endif /* LRSR_ASYNC */ 
 #endif
 			while(got_strobe_ack == 0 &&
 					RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
@@ -846,11 +873,12 @@ send_packet(void)
 							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
 									&linkaddr_node_addr) ||
 									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-											&long_linkaddr_node_addr)) {
+											&long_linkaddr_node_addr)) 
 #else
 								if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-										&linkaddr_node_addr)) {
+										&linkaddr_node_addr)) 
 #endif
+								{
 									/* We got an ACK from the receiver, so we can immediately send
 		   the packet. */
 									//								  printf("got strobe_ack\n");
@@ -877,12 +905,14 @@ send_packet(void)
 #if STROBE_CNT_MODE
 						strobe[cnt_pos] += (1 << 2);
 						//	  printf("cxmac tx strobe_cnt %d t: %d\n",strobe_cnt,RTIMER_NOW());
-#endif
-#else
+#endif	/* STROBE_CNT_MODE */
+#else		/* WITH_STROBE_BROADCAST */
+
 						/* restore the packet to send */
 						queuebuf_to_packetbuf(packet);
 						NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
-#endif
+#endif	/* WITH_STROBE_BROADCAST */
+
 #if DUAL_RADIO
 						dual_radio_off(target);
 #else
@@ -910,7 +940,16 @@ send_packet(void)
 					}
 				}
 			}
+#if DUAL_RADIO
+#if LRSR_ASYNC
+			if (was_short == 1)	{
+ 				dual_radio_switch(SHORT_RADIO);
+				target = SHORT_RADIO;
+			}
+#endif
+#endif
 	  }
+
 #if WITH_ACK_OPTIMIZATION
   /* If we have received the strobe ACK, and we are sending a packet
      that will need an upper layer ACK (as signified by the
@@ -939,11 +978,13 @@ send_packet(void)
 #endif
   }
 #else /* WITH_ACK_OPTIMIZATION */
+
 #if DUAL_RADIO
   dual_radio_off(target);
 #else
   off();
 #endif
+
 #endif /* WITH_ACK_OPTIMIZATION */
 
   /* restore the packet to send */
@@ -1063,6 +1104,9 @@ input_packet(void)
   int original_datalen;
   uint8_t *original_dataptr;
 #endif
+#if LRSR_ASYNC
+	uint8_t for_short;
+#endif 
 
   if(NETSTACK_FRAMER.parse() >= 0) {
     hdr = packetbuf_dataptr();
@@ -1073,10 +1117,11 @@ input_packet(void)
 #if STROBE_CNT_MODE
     char dispatch_ext = hdr->dispatch << 6;
 //    printf("packet input dispatch %d\n",dispatch_ext);
-    if(dispatch_ext != DISPATCH) {
+    if(dispatch_ext != DISPATCH) 
 #else
-    if(hdr->dispatch != DISPATCH) {
+    if(hdr->dispatch != DISPATCH) 
 #endif
+		{		// The packet is for data
       someone_is_sending = 0;
 #if DUAL_RADIO
       if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
@@ -1084,21 +1129,22 @@ input_packet(void)
       	 linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
       			 	 	 	 	 	 	   &linkaddr_null) ||
 		linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-		     					     &long_linkaddr_node_addr)) {
+		     					     &long_linkaddr_node_addr)) 
 #else
       if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
                                      &linkaddr_node_addr) ||
 	 linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-                      &linkaddr_null)) {
+                      &linkaddr_null)) 
 	/* This is a regular packet that is destined to us or to the
 	   broadcast address. */
 
 	/* We have received the final packet, so we can go back to being
 	   asleep. */
 #endif
+				{
 
 #if DUAL_RADIO
-#if DUAL_BROADCAST
+#if LRSR_ASYNC
 				/* JOONKI
 				 * waiting for incoming short broadcast */
 				if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) && 
@@ -1116,10 +1162,10 @@ input_packet(void)
 					dual_radio_off(BOTH_RADIO);
 					waiting_for_packet = 0;
 				}
-#else		/* DUAL_BROADCAST */
+#else		/* LRSR_ASYNC */
 				dual_radio_off(BOTH_RADIO);
 				waiting_for_packet = 0;
-#endif /* DUAL_BROADCAST */
+#endif /* LRSR_ASYNC */
 #else
     	  off();
     	  waiting_for_packet = 0;
@@ -1176,7 +1222,7 @@ input_packet(void)
 				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
 #endif
 	}
-#endif
+#endif /* RPL_ENERGY_MODE */
         PRINTDEBUG("cxmac: data(%u)\n", packetbuf_datalen());
         NETSTACK_MAC.input();
         return;
@@ -1197,12 +1243,21 @@ input_packet(void)
       if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
                       &linkaddr_node_addr) ||
     	 linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-    		  		     &long_linkaddr_node_addr)) {
+    		  		     &long_linkaddr_node_addr)) 
 #else
       if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-                      &linkaddr_node_addr)) {
+                      &linkaddr_node_addr)) 
 #endif
-     //}
+			{	
+#if DUAL_RADIO
+#if LRSR_ASYNC
+				if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&linkaddr_node_addr) == 1){
+					for_short = 1;
+				} else {
+					for_short = 0;
+				}
+#endif
+#endif
 	/* This is a strobe packet for us. */
 
 	/* If the sender address is someone else, we should
@@ -1213,6 +1268,13 @@ input_packet(void)
 	packetbuf_set_addr(PACKETBUF_ADDR_RECEIVER,
 			   packetbuf_addr(PACKETBUF_ADDR_SENDER));
 #if DUAL_RADIO
+#if LRSR_ASYNC
+	if (for_short == 1) {
+		target = SHORT_RADIO;
+	} else if (for_short == 0) {
+		target = LONG_RADIO;
+	}
+#else /* LRSR_ASYNC */
 	if(sending_in_LR() == LONG_RADIO){
 		target = LONG_RADIO;
 		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
@@ -1220,6 +1282,7 @@ input_packet(void)
 		target = SHORT_RADIO;
 		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 	}
+#endif /* LRSR_ASYNC */
 #else
   	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 #endif
@@ -1229,6 +1292,7 @@ input_packet(void)
 	     packet. */
 	  someone_is_sending = 1;
 	  waiting_for_packet = 1;
+
 #if DUAL_RADIO
 	  dual_radio_on(target);
 #else
@@ -1258,7 +1322,7 @@ input_packet(void)
     	  off();
     	  process_start(&strobe_wait, &cnt);
 #endif
-#endif
+#endif	/* STROBE_CNT_MODE */
 
 
       } else {

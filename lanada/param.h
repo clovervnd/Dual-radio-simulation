@@ -1,6 +1,6 @@
 /* RPL MODES */
 #define RPL_ENERGY_MODE 0
-#define RPL_LIFETIME_MAX_MODE 0
+#define RPL_LIFETIME_MAX_MODE 1
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
@@ -25,13 +25,15 @@
 #define RPL_ICMP_ENERGY_LOG		0
 
 /* Data aggregation shceme enabled or not */
-// #define DATA_AGGREGATION 1
+#define DATA_AGGREGATION 1	// not implemented yet
 
 /* Dual routing converge */
-#define DUAL_ROUTING_CONVERGE 	1
+#define DUAL_ROUTING_CONVERGE 	0
 
-/* Preamble free short broadcast after long broadcast */
-#define DUAL_BROADCAST	1
+/* LR/SR async MAC, implemeted on cxmac
+ * Preamble free short broadcast after long broadcast, dual broadcast is included in LRSR_ASYNC 
+ * Only long duty cylce, long preamble */
+#define LRSR_ASYNC	1
 
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;
@@ -56,6 +58,6 @@ uint8_t short_duty_on;
 #define CONVERGE_TIME	(900ul * CLOCK_SECOND) // Convergence time in second
 #endif
 
-#if DUAL_BROADCAST
+#if LRSR_ASYNC
 #define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 2) // Short on time slot length in rtimer
 #endif

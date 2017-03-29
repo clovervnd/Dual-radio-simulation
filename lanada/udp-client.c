@@ -122,7 +122,6 @@ send_packet(void *ptr)
   }
 #endif /* SERVER_REPLY */
 
-  seq_id++;
   data_message_count = seq_id;
 
 #if RPL_ICMP_ENERGY_LOG
@@ -131,21 +130,22 @@ send_packet(void *ptr)
 	LOG_MESSAGE(log_buf); 
 	free(log_buf);
 #endif
+	seq_id++;
 
 	if (data_message_count%100 == 0) {
 		LOG_MESSAGE("[PS] Periodic status review:\n");
 		LOG_MESSAGE("[PS] Transmission: %d, Collision: %d\n", transmission_count, collision_count);
 		LOG_MESSAGE("[PS] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, dio_count+dao_count+dis_count+dio_ack_count);
 		LOG_MESSAGE("[PS] Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count);
-		LOG_MESSAGE("[PS] Remaining energy: %d", (int) get_residual_energy());
+		LOG_MESSAGE("[PS] Remaining energy: %d\n", (int) get_residual_energy());
 	}
 
 	if (lifetime > 0) {
 		if (get_residual_energy() == 0) {
 			LOG_MESSAGE("Lifetime of this node ended here!!!\n");
-			LOG_MESSAGE("Transmission: %d, Collision: %d\n", transmission_count, collision_count); 
-			LOG_MESSAGE("DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, dio_count+dao_count+dis_count+dio_ack_count);
-			LOG_MESSAGE("Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count); 
+			LOG_MESSAGE("[LT] Transmission: %d, Collision: %d\n", transmission_count, collision_count); 
+			LOG_MESSAGE("[LT] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, dio_count+dao_count+dis_count+dio_ack_count);
+			LOG_MESSAGE("[LT] Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count); 
 		}
 	}
 	lifetime = get_residual_energy();
