@@ -34,7 +34,7 @@ static const energy_t DISSIPATION_RATE[] = {
     10,  // radioOn
     0,  // radioTx
     0,  // radioRx
-    14,  // radioOnLong
+    11,  // radioOnLong
     0,  // radioTxLong
     0,  // radioRxLong
     1,  // duration

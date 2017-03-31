@@ -1,6 +1,6 @@
 #ifndef RESIDUAL_H__
 #define RESIDUAL_H__
-#define RESIDUAL_ENERGY_MAX 100000
+#define RESIDUAL_ENERGY_MAX 250000
 
 #include <stdint.h>
 #include "contiki-conf.h"
