@@ -480,7 +480,7 @@ cpowercycle(void *ptr)
     }
 
 #else /* DUAL_ROUTING_CONVERGE */
-#if LRSR_ASYNC
+#if LSA_MAC
 		powercycle_dual_turn_radio_on(LONG_RADIO);
 #else
     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
@@ -493,7 +493,7 @@ cpowercycle(void *ptr)
     	dual_duty_cycle_count = 0;
       powercycle_dual_turn_radio_on(BOTH_RADIO);
     }
-#endif /* LRSR_ASYNC */
+#endif /* LSA_MAC */
 #endif /* DUAL_ROUTING_CONVERGE */
 #else	/* DUAL_RADIO */
     powercycle_turn_radio_on();
@@ -654,7 +654,7 @@ send_packet(void)
   int cnt_pos;
 #endif
 #if DUAL_RADIO
-#if LRSR_ASYNC
+#if LSA_MAC
 	uint8_t was_short;
 #endif
 #endif
@@ -806,9 +806,9 @@ send_packet(void)
 
   /* Send a train of strobes until the receiver answers with an ACK. */
 
-	/* Always use long preamble in LRSR_ASYNC mode */
+	/* Always use long preamble in LSA_MAC mode */
 #if DUAL_RADIO
-#if LRSR_ASYNC
+#if LSA_MAC
 		if (sending_in_LR() == SHORT_RADIO){
 			was_short = 1;
 			dual_radio_switch(LONG_RADIO);
@@ -816,7 +816,7 @@ send_packet(void)
 		}	else	{
 			was_short = 0;
 		}
-#endif /* LRSR_ASYNC */
+#endif /* LSA_MAC */
 #endif
 
 
@@ -844,11 +844,11 @@ send_packet(void)
 			/* JOONKI
 			 * short range broadcast skip sending strobed preambles */
 #if DUAL_RADIO
-#if LRSR_ASYNC
+#if LSA_MAC
 			if (is_broadcast && was_short == 1){
 				break;
 			} 
-#endif /* LRSR_ASYNC */ 
+#endif /* LSA_MAC */ 
 #endif
 			while(got_strobe_ack == 0 &&
 					RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
@@ -982,7 +982,7 @@ send_packet(void)
 
 	/* Switch the radio back to the original one */
 #if DUAL_RADIO
-#if LRSR_ASYNC
+#if LSA_MAC
 			if (was_short == 1)	{
  				dual_radio_switch(SHORT_RADIO);
 				target = SHORT_RADIO;
@@ -1108,7 +1108,7 @@ input_packet(void)
   int original_datalen;
   uint8_t *original_dataptr;
 #endif
-#if LRSR_ASYNC
+#if LSA_MAC
 	uint8_t for_short;
 #endif 
 
@@ -1148,7 +1148,7 @@ input_packet(void)
 				{
 
 #if DUAL_RADIO
-#if LRSR_ASYNC
+#if LSA_MAC
 				/* JOONKI
 				 * waiting for incoming short broadcast */
 				if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) && 
@@ -1166,10 +1166,10 @@ input_packet(void)
 					dual_radio_off(BOTH_RADIO);
 					waiting_for_packet = 0;
 				}
-#else		/* LRSR_ASYNC */
+#else		/* LSA_MAC */
 				dual_radio_off(BOTH_RADIO);
 				waiting_for_packet = 0;
-#endif /* LRSR_ASYNC */
+#endif /* LSA_MAC */
 #else
     	  off();
     	  waiting_for_packet = 0;
@@ -1254,7 +1254,7 @@ input_packet(void)
 #endif
 			{	
 #if DUAL_RADIO
-#if LRSR_ASYNC
+#if LSA_MAC
 				if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&linkaddr_node_addr) == 1){
 					for_short = 1;
 				} else if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&long_linkaddr_node_addr) == 1) {
@@ -1290,7 +1290,7 @@ input_packet(void)
 	  waiting_for_packet = 1;
 
 #if DUAL_RADIO
-#if LRSR_ASYNC
+#if LSA_MAC
 		dual_radio_off(BOTH_RADIO);
 		if (for_short == 1) {
 			target = SHORT_RADIO;

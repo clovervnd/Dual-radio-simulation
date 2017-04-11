@@ -30,10 +30,11 @@
 /* Dual routing converge */
 #define DUAL_ROUTING_CONVERGE 	0
 
-/* LR/SR async MAC, implemeted on cxmac
- * Preamble free short broadcast after long broadcast, dual broadcast is included in LRSR_ASYNC 
+/* LSA-MAC, implemeted on cxmac
+ * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA-MAC
  * Only long duty cylce, long preamble */
-#define LRSR_ASYNC	1
+#define LSA_MAC	1
+#define LSA_RI	0
 
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;
@@ -58,6 +59,6 @@ uint8_t short_duty_on;
 #define CONVERGE_TIME	(900ul * CLOCK_SECOND) // Convergence time in second
 #endif
 
-#if LRSR_ASYNC
+#if LSA_MAC
 #define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 2) // Short on time slot length in rtimer
 #endif
