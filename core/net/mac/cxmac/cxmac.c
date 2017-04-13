@@ -184,7 +184,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -1430,6 +1430,7 @@ cxmac_init(void)
 #endif
 #if LSA_RI
 	LSA_converge = 0;
+	LSA_SR_preamble = 0;
 #endif
 
 #endif

@@ -18,10 +18,14 @@ PROCESS(dual_dis_broadcast, "dis_broadcast");
 #if RPL_LIFETIME_MAX_MODE_DIO_ACK
 PROCESS(dual_dio_ack_broadcast, "dio_ack_broadcast");
 #endif
+#if LSA_RI
+PROCESS(dual_LSA_converge_broadcast, "LSA_converge_broadcast");
+#endif
 
 int long_range_radio = 0;
 int radio_received = SHORT_RADIO;
 static rpl_instance_t *temp_instance;
+static uint8_t temp_lr_child;
 
 int dual_radio_switch(int radio)
 {
@@ -201,6 +205,39 @@ PROCESS_THREAD(dual_dio_ack_broadcast, ev, data)
 }
 #endif
 
+#if LSA_RI
+PROCESS_THREAD(dual_LSA_converge_broadcast, ev, data)
+{
+	static struct etimer et;
+	static uint8_t long_duty_on_local = 1;
+	static uint8_t short_duty_on_local = 1;
+
+#if DUAL_ROUTING_CONVERGE
+	long_duty_on_local = long_duty_on;
+	short_duty_on_local = short_duty_on;
+#endif
+
+	PROCESS_BEGIN();
+	dual_radio_switch(LONG_RADIO);
+
+	if (long_duty_on_local == 1) {
+		LSA_converge_output(temp_lr_child);
+	}
+	etimer_set(&et, 1);
+
+	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+	RADIO("############################################### LSA_converge_BROADCAST: Process stopped for a while ####################\n");
+	dual_radio_switch(SHORT_RADIO);
+
+	if (short_duty_on_local == 1) {
+		LSA_converge_output(temp_lr_child);
+	}
+	PROCESS_END();
+}
+#endif
+
+
+
 int dio_broadcast(rpl_instance_t * instance)
 {
 	temp_instance = instance;
@@ -219,6 +256,16 @@ int dio_ack_broadcast(rpl_instance_t * instance)
 {
 	temp_instance = instance;
 	process_start(&dual_dio_ack_broadcast, NULL);
+	return 1;
+}
+#endif
+
+
+#if LSA_RI
+int LSA_converge_broadcast(uint8_t lr_child)
+{
+	temp_lr_child = lr_child;
+	process_start(&dual_LSA_converge_broadcast, NULL);
 	return 1;
 }
 #endif

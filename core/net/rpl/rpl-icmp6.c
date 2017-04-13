@@ -1214,16 +1214,62 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 void
 LSA_converge_input(void)
 {
+	uip_ipaddr_t from;
+	int pos;
+	unsigned char * buffer;
+	uint8_t buffer_length;
+	uint8_t LSA_lr_child;
+	rpl_parent_t * preferred_parent;
+	uip_ds6_nbr_t *nbr;
 
+	uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
+	PRINTF("LSA: Received a LSA RI from ");
+	PRINT6ADDR(&from);
+	PRINTF("\n");
+	
+	buffer_length = uip_len - uip_l3_icmp_hdr_len;
+
+	pos = 0;
+	buffer = UIP_ICMP_PAYLOAD;
+
+	LSA_lr_child = buffer[pos++];
+	
+
+
+	rpl_parent_t *p = nbr_table_head(rpl_parents);
+	if (p != NULL) {
+		preferred_parent = p->dag->preferred_parent;
+		if(preferred_parent != NULL)
+		{
+			nbr = rpl_get_nbr(preferred_parent);
+		}
+	}
+
+	if (uip_ip6addr_cmp(&from, &nbr->ipaddr)) {
+		rpl_LSA_convergence_timer();
+		LSA_SR_preamble = !LSA_lr_child;
+		printf("LSA: LSA_SR_preamble is %d\n",LSA_SR_preamble);
+	}
 }
 /*---------------------------------------------------------------------------*/
 void
-LSA_converge_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
+LSA_converge_output(uint8_t lr_child)
 {
+  unsigned char *buffer;
+  int pos;
+	uip_ipaddr_t addr;
 
+	/* LSA routing information */
+  pos = 0;
+  buffer = UIP_ICMP_PAYLOAD;
+	buffer[pos++] = lr_child;
+	
+	PRINTF("LSA: Sending a LSA routing information\n");
+  uip_create_linklocal_rplnodes_mcast(&addr);
+  uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_DIO, pos);
 }
-#endif /* LSA_RI */
 
+#endif /* LSA_RI */
 /*---------------------------------------------------------------------------*/
 static void
 dao_input(void)

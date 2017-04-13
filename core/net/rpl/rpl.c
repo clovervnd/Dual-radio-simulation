@@ -351,7 +351,8 @@ rpl_init(void)
 	rpl_convergence_timer();
 #endif
 #if LSA_RI
-	if (linkaddr_node_addr.u8[0] = SERVER_NODE) {
+// 	printf ("LSA_RI: %d\n",linkaddr_node_addr.u8[1]);
+	if (linkaddr_node_addr.u8[1] == SERVER_NODE) {
 		rpl_LSA_convergence_timer();
 	}
 #endif

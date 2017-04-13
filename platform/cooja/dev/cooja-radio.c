@@ -45,7 +45,7 @@
 
 /* JOONKI */
 
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
@@ -406,7 +406,7 @@ radio_send(const void *payload, unsigned short payload_len)
 	    return RADIO_TX_ERR;
 	  }
 		PRINTF("$$$$$$$$$$$$$$$ Sending in LR ------------------------>\n");
-		PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit); 
+		// PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit); 
   	/* Transmit on CCA */
 #if WITH_SEND_CCA
 		simRadioTarget = LONG_RADIO;
@@ -423,7 +423,7 @@ radio_send(const void *payload, unsigned short payload_len)
 	  simRadioTarget = SHORT_RADIO;
 #endif /* DUAL_RADIO */
 		PRINTF("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
-		PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit);
+		// PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit);
 	  if(simOutSize > 0) {
 	    return RADIO_TX_ERR;
 	  }

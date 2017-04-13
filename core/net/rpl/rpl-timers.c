@@ -152,6 +152,7 @@ LSA_convergence_radio_broadcast(void)
 	lr_child = rpl_lr_in_child();
 	printf("LR_CHILD :%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",lr_child);
 
+	LSA_converge_broadcast(lr_child);
 
 	LSA_converge = 1;
 }
