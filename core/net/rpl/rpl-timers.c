@@ -79,6 +79,10 @@ static void handle_dio_timer(void *ptr);
 #if DUAL_ROUTING_CONVERGE
 static void convergence_radio_off(void);
 #endif
+#if LSA_RI
+static void LSA_convergence_radio_broadcast(void);
+#endif
+
 #endif
 
 static uint16_t next_dis;
@@ -126,9 +130,35 @@ convergence_radio_off(void)
 			printf("Converge: Something wrong\n");
 	}
 }
-#endif
-#endif
-#endif
+#endif	/* DUAL_ROUTING_CONVERGE */
+
+#if LSA_RI
+static struct ctimer timer_LSA_conv;
+void
+rpl_LSA_convergence_timer(void)
+{
+	ctimer_set(&timer_LSA_conv, LSA_CONVERGE_TIME, &LSA_convergence_radio_broadcast, NULL);
+}
+rpl_reset_LSA_convergence_timer(void)
+{
+	ctimer_reset(&timer_LSA_conv);
+}
+static void
+LSA_convergence_radio_broadcast(void)
+{
+	uint8_t lr_child;
+	printf("LSA_convergence_radio_broadcast!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+	
+	lr_child = rpl_lr_in_child();
+	printf("LR_CHILD :%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",lr_child);
+
+
+	LSA_converge = 1;
+}
+#endif /* LSA_RI */
+
+#endif	/* DUAL_RADIO */
+#endif	/* RPL_LIFETIME_MAX_MODE */
 /*---------------------------------------------------------------------------*/
 static void
 handle_periodic_timer(void *ptr)

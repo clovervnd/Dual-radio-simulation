@@ -350,8 +350,14 @@ rpl_init(void)
 #if DUAL_ROUTING_CONVERGE
 	rpl_convergence_timer();
 #endif
+#if LSA_RI
+	if (linkaddr_node_addr.u8[0] = SERVER_NODE) {
+		rpl_LSA_convergence_timer();
+	}
 #endif
-#endif
+
+#endif /* DUAL_RADIO */
+#endif /* RPL_LIFETIME_MAX_MODE */
 
   /* add rpl multicast address */
   uip_create_linklocal_rplnodes_mcast(&rplmaddr);
@@ -364,5 +370,3 @@ rpl_init(void)
   RPL_OF.reset(NULL);
 }
 /*---------------------------------------------------------------------------*/
-
-/** @}*/

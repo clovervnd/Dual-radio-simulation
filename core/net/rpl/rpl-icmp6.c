@@ -100,6 +100,9 @@ static void dao_ack_input(void);
 #if RPL_LIFETIME_MAX_MODE_DIO_ACK
 static void dio_ack_input(void);
 #endif
+#if LSA_RI
+static void LSA_converge_input(void);
+#endif
 
 static void dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
 				  uint8_t lifetime, uint8_t seq_no);
@@ -128,6 +131,9 @@ UIP_ICMP6_HANDLER(dao_handler, ICMP6_RPL, RPL_CODE_DAO, dao_input);
 UIP_ICMP6_HANDLER(dao_ack_handler, ICMP6_RPL, RPL_CODE_DAO_ACK, dao_ack_input);
 #if RPL_LIFETIME_MAX_MODE_DIO_ACK
 UIP_ICMP6_HANDLER(dio_ack_handler, ICMP6_RPL, RPL_CODE_DIO_ACK, dio_ack_input);
+#endif
+#if LSA_RI
+UIP_ICMP6_HANDLER(LSA_converge_handler, ICMP6_RPL, RPL_CODE_LSA, LSA_converge_input);
 #endif
 /*---------------------------------------------------------------------------*/
 
@@ -689,14 +695,6 @@ dio_input(void)
   PRINTF("DIO INPUT my_weight %d\n",my_weight);
 #endif
 
-#if RPL_LIFETIME_MAX_MODE
-#if DUAL_RADIO
-#if DUAL_ROUTING_CONVERGE
-	rpl_lr_in_neighbor_tree();
-#endif
-#endif
-#endif
-
  discard:
   uip_clear_buf();
 }
@@ -1211,6 +1209,20 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	}
 }
 #endif
+
+#if LSA_RI
+void
+LSA_converge_input(void)
+{
+
+}
+/*---------------------------------------------------------------------------*/
+void
+LSA_converge_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
+{
+
+}
+#endif /* LSA_RI */
 
 /*---------------------------------------------------------------------------*/
 static void
@@ -2039,6 +2051,9 @@ rpl_icmp6_register_handlers()
   uip_icmp6_register_input_handler(&dao_ack_handler);
 #if RPL_LIFETIME_MAX_MODE_DIO_ACK
   uip_icmp6_register_input_handler(&dio_ack_handler);
+#endif
+#if LSA_RI
+  uip_icmp6_register_input_handler(&LSA_converge_handler);
 #endif
 }
 /*---------------------------------------------------------------------------*/

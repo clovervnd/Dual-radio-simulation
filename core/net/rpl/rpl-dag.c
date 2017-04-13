@@ -156,6 +156,44 @@ rpl_lr_in_neighbor_tree(void)
 	}
 }
 #endif /* DUAL_ROUTING_CONVERGE */
+#if LSA_RI
+char
+rpl_lr_in_child(void)
+{
+	uint8_t lr_count, sr_count;
+
+	lr_count = 0;
+	sr_count = 0;
+
+	// Count child
+	if(default_instance != NULL && default_instance->current_dag != NULL &&
+			default_instance->of != NULL && default_instance->of->calculate_rank != NULL) {
+		rpl_child_t *c = nbr_table_head(rpl_children);
+		while(c != NULL) {
+			uip_ds6_nbr_t *nbr = rpl_get_nbr_child(c);
+			if (long_ip_from_lladdr_map(&nbr->ipaddr))	{
+				lr_count ++;
+			}	else	{
+				sr_count ++;
+			}
+			PRINTF("RPL_child: nbr %3u\n", nbr_table_get_lladdr(rpl_children, c)->u8[7]);
+			c = nbr_table_next(rpl_children, c);
+		}
+
+		PRINTF("Neighbors: Long range child: %d, Short range child: %d\n"
+				,lr_count, sr_count);
+	}
+	
+	if (lr_count>0) {
+		return 1;
+	} else {
+		return 0;
+	}
+	
+}
+
+#endif /* LSA_RI */
+
 #endif /* DUAL_RADIO */
 #endif
 /*---------------------------------------------------------------------------*/

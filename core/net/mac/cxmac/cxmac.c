@@ -163,7 +163,11 @@ struct cxmac_config cxmac_config = {
 #include <stdio.h>
 
 static struct pt pt;
+#if DUAL_RADIO
+#if LSA_MAC
 PROCESS(strobe_wait, "strobe wait");
+#endif
+#endif
 static volatile unsigned char strobe_target;
 
 static volatile uint8_t cxmac_is_on = 0;
@@ -327,6 +331,8 @@ powercycle_turn_radio_on(void)
   }
 }
 #endif
+#if DUAL_RADIO
+#if LSA_MAC
 PROCESS_THREAD(strobe_wait, ev, data)
 {
 	static struct etimer et;
@@ -372,6 +378,8 @@ PROCESS_THREAD(strobe_wait, ev, data)
 	is_short_waiting = 0;
 	PROCESS_END();
 }
+#endif
+#endif
 
 /*---------------------------------------------------------------------------*/
 #if DUAL_RADIO
@@ -1414,15 +1422,19 @@ cxmac_set_announcement_radio_txpower(int txpower)
 void
 cxmac_init(void)
 {
+#if DUAL_RADIO
+  dual_duty_cycle_count = 0;
 #if DUAL_ROUTING_CONVERGE
 	long_duty_on = 1;
 	short_duty_on = 1;
 #endif
+#if LSA_RI
+	LSA_converge = 0;
+#endif
+
+#endif
   radio_is_on = 0;
   waiting_for_packet = 0;
-#if DUAL_RADIO
-  dual_duty_cycle_count = 0;
-#endif
   PT_INIT(&pt);
   /*  rtimer_set(&rt, RTIMER_NOW() + cxmac_config.off_time, 1,
       (void (*)(struct rtimer *, void *))powercycle, NULL);*/

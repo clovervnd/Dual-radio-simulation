@@ -441,9 +441,9 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
                  if (element.getName().equals("bitrate")) {
                          RADIO_TRANSMISSION_RATE_kbps = Double.parseDouble(element.getText());
 												 /* JOONKI */	
-												 if(this instanceof LongRangeInterface){
+												 /* if(this instanceof LongRangeInterface){
 												   RADIO_TRANSMISSION_RATE_kbps = 50;
-												 }
+												 } */ 
                          logger.info("Radio bitrate reconfigured to (kbps): " + RADIO_TRANSMISSION_RATE_kbps);
                  }
          }

@@ -1,6 +1,6 @@
 /* RPL MODES */
 #define RPL_ENERGY_MODE 0
-#define RPL_LIFETIME_MAX_MODE 1
+#define RPL_LIFETIME_MAX_MODE 1	// Child information is saved in each node
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
@@ -34,7 +34,8 @@
  * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA-MAC
  * Only long duty cylce, long preamble */
 #define LSA_MAC	1
-#define LSA_RI	0
+#define LSA_RI	1
+#define SERVER_NODE 1
 
 #if RPL_ENERGY_MODE
 uint8_t remaining_energy;
@@ -56,7 +57,12 @@ uint8_t my_parent_number;
 #if DUAL_ROUTING_CONVERGE
 uint8_t long_duty_on;
 uint8_t short_duty_on;
-#define CONVERGE_TIME	(900ul * CLOCK_SECOND) // Convergence time in second
+#define CONVERGE_TIME	(100ul * CLOCK_SECOND) // Convergence time in second
+#endif
+
+#if LSA_RI
+uint8_t LSA_converge;
+#define LSA_CONVERGE_TIME	(600ul * CLOCK_SECOND) // Convergence time in second
 #endif
 
 #if LSA_MAC
