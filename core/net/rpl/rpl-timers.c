@@ -146,13 +146,12 @@ rpl_reset_LSA_convergence_timer(void)
 static void
 LSA_convergence_radio_broadcast(void)
 {
-	uint8_t lr_child;
 	printf("LSA_convergence_radio_broadcast!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 	
-	lr_child = rpl_lr_in_child();
-	printf("LR_CHILD :%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",lr_child);
+	LSA_lr_child = rpl_lr_in_child();
+	printf("LR_CHILD :%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",LSA_lr_child);
 
-	LSA_converge_broadcast(lr_child);
+	LSA_converge_broadcast(LSA_lr_child);
 
 	LSA_converge = 1;
 }

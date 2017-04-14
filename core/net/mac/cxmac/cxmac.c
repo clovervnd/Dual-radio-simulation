@@ -492,7 +492,20 @@ cpowercycle(void *ptr)
 
 #else /* DUAL_ROUTING_CONVERGE */
 #if LSA_MAC
+#if LSA_RI
+		if (LSA_converge == 1)
+		{
+			if (LSA_lr_child == 1) {
+				powercycle_dual_turn_radio_on(LONG_RADIO);
+			} else {
+				powercycle_dual_turn_radio_on(SHORT_RADIO);
+			}
+		} else {
+			powercycle_dual_turn_radio_on(LONG_RADIO);
+		}
+#else /* LSA_RI */ 
 		powercycle_dual_turn_radio_on(LONG_RADIO);
+#endif /* LSA_RI */
 #else
     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
     {
@@ -820,6 +833,8 @@ send_packet(void)
 	/* Always use long preamble in LSA_MAC mode */
 #if DUAL_RADIO
 #if LSA_MAC
+#if LSA_RI
+	if (LSA_SR_preamble == 0) {  
 		if (sending_in_LR() == SHORT_RADIO){
 			was_short = 1;
 			dual_radio_switch(LONG_RADIO);
@@ -827,11 +842,20 @@ send_packet(void)
 		}	else	{
 			was_short = 0;
 		}
+	}
+#else
+	if (sending_in_LR() == SHORT_RADIO){
+		was_short = 1;
+		dual_radio_switch(LONG_RADIO);
+		target = LONG_RADIO;
+	}	else	{
+		was_short = 0;
+	}
+#endif /* LSA_RI */
 #endif /* LSA_MAC */
 #endif
 
-
-  /* Turn on the radio to listen for the strobe ACK. */
+	  /* Turn on the radio to listen for the strobe ACK. */
 #if DUAL_RADIO
   dual_radio_on(target);
 #else
@@ -994,10 +1018,19 @@ send_packet(void)
 	/* Switch the radio back to the original one */
 #if DUAL_RADIO
 #if LSA_MAC
+#if LSA_RI
+	if (LSA_SR_preamble == 0) {  
+		if (was_short == 1)	{
+ 				dual_radio_switch(SHORT_RADIO);
+				target = SHORT_RADIO;
+			}
+	}
+#else
 			if (was_short == 1)	{
  				dual_radio_switch(SHORT_RADIO);
 				target = SHORT_RADIO;
 			}
+#endif
 #endif
 #endif
 
@@ -1067,6 +1100,7 @@ send_packet(void)
   we_are_sending = 0;
 
   LEDS_OFF(LEDS_BLUE);
+
   if(collisions == 0) {
     if(!is_broadcast && !got_strobe_ack) {
       return MAC_TX_NOACK;

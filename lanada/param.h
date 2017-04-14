@@ -63,6 +63,7 @@ uint8_t short_duty_on;
 #if LSA_RI
 uint8_t LSA_converge;
 uint8_t LSA_SR_preamble;
+uint8_t LSA_lr_child;
 #define LSA_CONVERGE_TIME	(600ul * CLOCK_SECOND) // Convergence time in second
 #endif
 

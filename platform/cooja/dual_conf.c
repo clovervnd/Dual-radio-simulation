@@ -211,6 +211,7 @@ PROCESS_THREAD(dual_LSA_converge_broadcast, ev, data)
 	static struct etimer et;
 	static uint8_t long_duty_on_local = 1;
 	static uint8_t short_duty_on_local = 1;
+	uint8_t temp_LSA_SR_preamble;
 
 #if DUAL_ROUTING_CONVERGE
 	long_duty_on_local = long_duty_on;
@@ -218,6 +219,10 @@ PROCESS_THREAD(dual_LSA_converge_broadcast, ev, data)
 #endif
 
 	PROCESS_BEGIN();
+	/* Always use LR preamble for LSA converge output */	
+	temp_LSA_SR_preamble = LSA_SR_preamble;
+	LSA_SR_preamble = 0;
+
 	dual_radio_switch(LONG_RADIO);
 
 	if (long_duty_on_local == 1) {
@@ -232,6 +237,8 @@ PROCESS_THREAD(dual_LSA_converge_broadcast, ev, data)
 	if (short_duty_on_local == 1) {
 		LSA_converge_output(temp_lr_child);
 	}
+
+	LSA_SR_preamble = temp_LSA_SR_preamble;
 	PROCESS_END();
 }
 #endif
