@@ -45,7 +45,7 @@
 
 /* JOONKI */
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
@@ -397,7 +397,7 @@ radio_send(const void *payload, unsigned short payload_len)
   if(payload_len == 0) {
     return RADIO_TX_ERR;
   }
-	PRINTF("COOJA RADIO: Sending packet in cooja driver\n");
+	// PRINTF("COOJA RADIO: Sending packet in cooja driver\n");
 
 #if DUAL_RADIO
 /* IN CASE OF LONG RADIO */

@@ -156,7 +156,10 @@ struct cxmac_hdr {
 struct cxmac_config cxmac_config = {
   DEFAULT_ON_TIME,
   DEFAULT_OFF_TIME,
-  4 * DEFAULT_ON_TIME + DEFAULT_OFF_TIME,
+/*  Original setting */
+//  4 * DEFAULT_ON_TIME + DEFAULT_OFF_TIME,
+/*  Customized setting */
+  5 * DEFAULT_ON_TIME + DEFAULT_OFF_TIME,
   DEFAULT_STROBE_WAIT_TIME
 };
 

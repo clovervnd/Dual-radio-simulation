@@ -1222,6 +1222,7 @@ LSA_converge_input(void)
 	rpl_parent_t * preferred_parent;
 	uip_ds6_nbr_t *nbr;
 
+	PRINTF("LSA_converge_input\n");
 	uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
 	PRINTF("LSA: Received a LSA RI from ");
 	PRINT6ADDR(&from);
@@ -1250,6 +1251,8 @@ LSA_converge_input(void)
 		LSA_SR_preamble = !LSA_lr_child;
 		printf("LSA: LSA_SR_preamble is %d\n",LSA_SR_preamble);
 	}
+
+	uip_clear_buf();
 }
 /*---------------------------------------------------------------------------*/
 void
@@ -1266,7 +1269,7 @@ LSA_converge_output(uint8_t lr_child)
 	
 	PRINTF("LSA: Sending a LSA routing information\n");
   uip_create_linklocal_rplnodes_mcast(&addr);
-  uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_DIO, pos);
+  uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_LSA, pos);
 }
 
 #endif /* LSA_RI */
