@@ -136,6 +136,11 @@ struct rpl_child {
 typedef struct rpl_child rpl_child_t;
 #endif
 /*---------------------------------------------------------------------------*/
+#if DETERMINED_ROUTING_TREE
+uint8_t determined_parent[MAX_NODE_NUMBER];
+uint8_t determined_radio[MAX_NODE_NUMBER];
+#endif
+/*---------------------------------------------------------------------------*/
 /* RPL DIO prefix suboption */
 struct rpl_prefix {
   uip_ipaddr_t prefix;

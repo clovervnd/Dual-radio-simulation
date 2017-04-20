@@ -75,8 +75,8 @@
 #define RPL_CODE_DIO_ACK               0x04   /* DIO acknowledgment */
 #endif
 
-#if LSA_RI
-#define RPL_CODE_LSA                   0x05 	/* LSA_RI converge message */
+#if LSA_R
+#define RPL_CODE_LSA                   0x05 	/* LSA_R converge message */
 #endif
 
 #define RPL_CODE_SEC_DIS               0x80   /* Secure DIS */
@@ -312,7 +312,7 @@ void dao_ack_output(rpl_instance_t *, uip_ipaddr_t *, uint8_t, uint8_t);
 void dio_ack_output(rpl_instance_t *, uip_ipaddr_t *uc_addr);
 #endif
 
-#if LSA_RI
+#if LSA_R
 void LSA_converge_output(uint8_t lr_child);
 #endif
 
@@ -374,11 +374,15 @@ void rpl_cancel_dio_ack(rpl_instance_t *instance);
 #endif
 void rpl_schedule_probing(rpl_instance_t *instance);
 
-#if DUAL_ROUTING_CONVERGE | LSA_RI
+#if DUAL_ROUTING_CONVERGE
 void rpl_convergence_timer(void);
 void rpl_reset_convergence_timer(void);
 #endif
 
+#if LSA_R
+void rpl_LSA_convergence_timer(uint8_t);
+void rpl_reset_LSA_convergence_timer(void);
+#endif
 
 void rpl_reset_dio_timer(rpl_instance_t *);
 void rpl_reset_periodic_timer(void);

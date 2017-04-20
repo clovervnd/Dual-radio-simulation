@@ -122,7 +122,7 @@ struct cxmac_hdr {
 #ifdef CXMAC_CONF_ON_TIME
 #define DEFAULT_ON_TIME (CXMAC_CONF_ON_TIME)
 #else
-#define DEFAULT_ON_TIME (RTIMER_ARCH_SECOND / 160)
+#define DEFAULT_ON_TIME (RTIMER_ARCH_SECOND / 80)
 #endif
 
 #ifdef CXMAC_CONF_OFF_TIME
@@ -151,7 +151,7 @@ struct cxmac_hdr {
    cycle. */
 #define ANNOUNCEMENT_TIME (random_rand() % (ANNOUNCEMENT_PERIOD))
 
-#define DEFAULT_STROBE_WAIT_TIME (7 * DEFAULT_ON_TIME / 8)
+#define DEFAULT_STROBE_WAIT_TIME (7 * DEFAULT_ON_TIME / 16)
 
 struct cxmac_config cxmac_config = {
   DEFAULT_ON_TIME,
@@ -193,7 +193,8 @@ static volatile unsigned char radio_is_on = 0;
 #define PRINTF(...) printf(__VA_ARGS__)
 #define PRINTDEBUG(...) printf(__VA_ARGS__)
 #else
-/* enable LEDS when DEBUG == 0 
+/* JOONI
+ * Enable LEDS when DEBUG == 0 
 #undef LEDS_ON
 #undef LEDS_OFF
 #undef LEDS_TOGGLE
@@ -492,7 +493,7 @@ cpowercycle(void *ptr)
 
 #else /* DUAL_ROUTING_CONVERGE */
 #if LSA_MAC
-#if LSA_RI
+#if LSA_R
 		if (LSA_converge == 1)
 		{
 			if (LSA_lr_child == 1) {
@@ -503,9 +504,9 @@ cpowercycle(void *ptr)
 		} else {
 			powercycle_dual_turn_radio_on(LONG_RADIO);
 		}
-#else /* LSA_RI */ 
+#else /* LSA_R */ 
 		powercycle_dual_turn_radio_on(LONG_RADIO);
-#endif /* LSA_RI */
+#endif /* LSA_R */
 #else
     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
     {
@@ -826,14 +827,15 @@ send_packet(void)
   t0 = RTIMER_NOW();
   strobes = 0;
 
-  LEDS_ON(LEDS_BLUE);
+ //  LEDS_ON(LEDS_BLUE);
 
   /* Send a train of strobes until the receiver answers with an ACK. */
 
 	/* Always use long preamble in LSA_MAC mode */
 #if DUAL_RADIO
 #if LSA_MAC
-#if LSA_RI
+#if LSA_R
+	printf(" R debug: SR_preamble = %d\n",LSA_SR_preamble);  
 	if (LSA_SR_preamble == 0) {  
 		if (sending_in_LR() == SHORT_RADIO){
 			was_short = 1;
@@ -851,7 +853,7 @@ send_packet(void)
 	}	else	{
 		was_short = 0;
 	}
-#endif /* LSA_RI */
+#endif /* LSA_R */
 #endif /* LSA_MAC */
 #endif
 
@@ -1018,7 +1020,7 @@ send_packet(void)
 	/* Switch the radio back to the original one */
 #if DUAL_RADIO
 #if LSA_MAC
-#if LSA_RI
+#if LSA_R
 	if (LSA_SR_preamble == 0) {  
 		if (was_short == 1)	{
  				dual_radio_switch(SHORT_RADIO);
@@ -1122,6 +1124,7 @@ qsend_packet(mac_callback_t sent, void *ptr)
     PRINTF("cxmac: should queue packet, now just dropping %d %d %d %d.\n",
 	   waiting_for_packet, someone_is_sending, we_are_sending, radio_is_on);
     RIMESTATS_ADD(sendingdrop);
+		collision_count ++;
     ret = MAC_TX_COLLISION;
   } else {
     PRINTF("cxmac: send immediately.\n");
@@ -1465,9 +1468,10 @@ cxmac_init(void)
 	long_duty_on = 1;
 	short_duty_on = 1;
 #endif
-#if LSA_RI
+#if LSA_R
 	LSA_converge = 0;
 	LSA_SR_preamble = 0;
+	LSA_message_input = 0;
 #endif
 
 #endif

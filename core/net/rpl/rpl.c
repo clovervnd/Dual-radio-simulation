@@ -62,6 +62,21 @@ rpl_stats_t rpl_stats;
 
 static enum rpl_mode mode = RPL_MODE_MESH;
 /*---------------------------------------------------------------------------*/
+#if DETERMINED_ROUTING_TREE
+uint8_t determined_parent[MAX_NODE_NUMBER] = {0, 1, 2, 3, 4,
+												5, 6, 7, 8, 9,
+												10, 11, 12, 13, 14,
+												15, 16, 17, 18, 19,
+												20, 21, 22, 23, 24,
+												25, 26, 27, 28, 29};
+/* 1 for Long radio, 0 for Short radio */
+uint8_t determined_radio[MAX_NODE_NUMBER] = {0, 0, 0, 0, 0,						
+											0, 0, 0, 0, 0,
+											1, 1, 1, 1, 1,
+											1, 1, 1, 1, 1,
+											1, 1, 1, 1, 1};
+#endif /* DETERMINED_ROUTING_TREE */
+/*---------------------------------------------------------------------------*/
 enum rpl_mode
 rpl_get_mode(void)
 {
@@ -350,10 +365,10 @@ rpl_init(void)
 #if DUAL_ROUTING_CONVERGE
 	rpl_convergence_timer();
 #endif
-#if LSA_RI
-// 	printf ("LSA_RI: %d\n",linkaddr_node_addr.u8[1]);
+#if LSA_R
+// 	printf ("LSA_R: %d\n",linkaddr_node_addr.u8[1]);
 	if (linkaddr_node_addr.u8[1] == SERVER_NODE) {
-		rpl_LSA_convergence_timer();
+		rpl_LSA_convergence_timer(1);
 	}
 #endif
 

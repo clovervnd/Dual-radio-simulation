@@ -117,7 +117,6 @@ uip_icmp6_input(uint8_t type, uint8_t icode)
   }
 
   handler->handler();
-	printf("JOONKI: uip_len %d\n\n\n\n",uip_len);
   return UIP_ICMP6_INPUT_SUCCESS;
 }
 /*---------------------------------------------------------------------------*/

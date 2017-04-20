@@ -100,7 +100,7 @@ static void dao_ack_input(void);
 #if RPL_LIFETIME_MAX_MODE_DIO_ACK
 static void dio_ack_input(void);
 #endif
-#if LSA_RI
+#if LSA_R
 static void LSA_converge_input(void);
 #endif
 
@@ -132,7 +132,7 @@ UIP_ICMP6_HANDLER(dao_ack_handler, ICMP6_RPL, RPL_CODE_DAO_ACK, dao_ack_input);
 #if RPL_LIFETIME_MAX_MODE_DIO_ACK
 UIP_ICMP6_HANDLER(dio_ack_handler, ICMP6_RPL, RPL_CODE_DIO_ACK, dio_ack_input);
 #endif
-#if LSA_RI
+#if LSA_R
 UIP_ICMP6_HANDLER(LSA_converge_handler, ICMP6_RPL, RPL_CODE_LSA, LSA_converge_input);
 #endif
 /*---------------------------------------------------------------------------*/
@@ -1210,7 +1210,7 @@ dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 }
 #endif
 
-#if LSA_RI
+#if LSA_R
 void
 LSA_converge_input(void)
 {
@@ -1247,8 +1247,9 @@ LSA_converge_input(void)
 	}
 
 	if (uip_ip6addr_cmp(&from, &nbr->ipaddr)) {
-		rpl_LSA_convergence_timer();
+		rpl_LSA_convergence_timer(2);
 		LSA_SR_preamble = !LSA_lr_child;
+		LSA_message_input = 1;
 		printf("LSA: LSA_SR_preamble is %d\n",LSA_SR_preamble);
 	}
 
@@ -1272,7 +1273,7 @@ LSA_converge_output(uint8_t lr_child)
   uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_LSA, pos);
 }
 
-#endif /* LSA_RI */
+#endif /* LSA_R */
 /*---------------------------------------------------------------------------*/
 static void
 dao_input(void)
@@ -2101,7 +2102,7 @@ rpl_icmp6_register_handlers()
 #if RPL_LIFETIME_MAX_MODE_DIO_ACK
   uip_icmp6_register_input_handler(&dio_ack_handler);
 #endif
-#if LSA_RI
+#if LSA_R
   uip_icmp6_register_input_handler(&LSA_converge_handler);
 #endif
 }

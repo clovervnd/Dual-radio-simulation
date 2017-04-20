@@ -43,6 +43,9 @@
 #include "dev/radio.h"
 #include "dev/cooja-radio.h"
 
+
+
+#include "dev/leds.h" // For debug
 /* JOONKI */
 
 #define DEBUG 0
@@ -385,6 +388,7 @@ radio_send(const void *payload, unsigned short payload_len)
     	simRadioHWOn = 1;
   	}
 	}
+	leds_on(LEDS_BLUE);	// For debug
 #else
  	if(!simRadioHWOn) {
     /* Turn on radio temporarily */
@@ -456,6 +460,8 @@ radio_send(const void *payload, unsigned short payload_len)
 #if DUAL_RADIO
   simRadioHWOnLR = radiostateLR;
   simRadioTarget = tmp;
+	
+	leds_off(LEDS_BLUE); // For debug
 #endif
   return RADIO_TX_OK;
 }

@@ -13,7 +13,7 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 2
+#define LONG_WEIGHT_RATIO 5
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -33,8 +33,14 @@
 /* LSA-MAC, implemeted on cxmac
  * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA-MAC
  * Only long duty cylce, long preamble */
+#if DUAL_RADIO
 #define LSA_MAC	1
-#define LSA_RI	1
+#define LSA_R	1
+#else	/* DUAL_RADIO */
+#define LSA_MAC 0
+#define LSA_R 0
+#endif /* DUAL_RADIO */
+
 #define SERVER_NODE 1
 
 #if RPL_ENERGY_MODE
@@ -60,13 +66,23 @@ uint8_t short_duty_on;
 #define CONVERGE_TIME	(100ul * CLOCK_SECOND) // Convergence time in second
 #endif
 
-#if LSA_RI
+#if LSA_R
 uint8_t LSA_converge;
 uint8_t LSA_SR_preamble;
 uint8_t LSA_lr_child;
-#define LSA_CONVERGE_TIME	(600ul * CLOCK_SECOND) // Convergence time in second
+uint8_t LSA_message_input;
+#define LSA_CONVERGE_TIME	(900ul * CLOCK_SECOND) // Convergence time in second
+#define LSA_MESSAGE_TIME	(100ul * CLOCK_SECOND) // Convergence time in second
 #endif
 
 #if LSA_MAC
 #define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 2) // Short on time slot length in rtimer
 #endif
+
+/*-----------------------------------------------------------------------------------------------*/
+#define DETERMINED_ROUTING_TREE	0
+
+#if DETERMINED_ROUTING_TREE
+#define MAX_NODE_NUMBER 30
+
+#endif /* ROUTING_TREE */

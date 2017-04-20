@@ -156,7 +156,7 @@ rpl_lr_in_neighbor_tree(void)
 	}
 }
 #endif /* DUAL_ROUTING_CONVERGE */
-#if LSA_RI
+#if LSA_R
 char
 rpl_lr_in_child(void)
 {
@@ -192,7 +192,7 @@ rpl_lr_in_child(void)
 	
 }
 
-#endif /* LSA_RI */
+#endif /* LSA_R */
 
 #endif /* DUAL_RADIO */
 #endif
@@ -206,7 +206,6 @@ rpl_print_neighbor_list(void)
     int curr_rank = default_instance->current_dag->rank;
     rpl_parent_t *p = nbr_table_head(rpl_parents);
     clock_time_t now = clock_time();
-
     PRINTF("RPL: rank %u dioint %u, %u nbr(s)\n", curr_rank, curr_dio_interval, uip_ds6_nbr_num());
     while(p != NULL) {
       uip_ds6_nbr_t *nbr = rpl_get_nbr(p);
@@ -1056,14 +1055,35 @@ best_parent(rpl_dag_t *dag)
   rpl_parent_t *p, *best, *prev;
 
   best = NULL;
-//  uip_ds6_nbr_t *nbr;
+#if DETERMINED_ROUTING_TREE
+  uip_ds6_nbr_t *nbr;
+#endif
+
   p = nbr_table_head(rpl_parents);
   prev = dag->preferred_parent;
+#if LSA_R
+	/* Don't change parent after LSA converge message input */
+	if (LSA_message_input == 1){
+		return prev;
+	}
+#endif
+
 #if RPL_LIFETIME_MAX_MODE
   dag->base_rank = p->rank;
 #endif
   while(p != NULL) {
-//	  nbr = rpl_get_nbr(p);
+#if DETERMINED_ROUTING_TREE
+	  nbr = rpl_get_nbr(p);
+		if (long_ip_from_lladdr_map(&nbr->ipaddr) == determined_radio[linkaddr_node_addr.u8[1]-1])
+		{
+			if (determined_parent[linkaddr_node_addr.u8[1]-1] == nbr->ipaddr.u8[15])
+			{
+				// printf("DETERMINED_ROUTING_TREE: %d\n", nbr->ipaddr.u8[15]);
+				return p;
+			}
+		}
+
+#endif
 #if RPL_LIFETIME_MAX_MODE
 	  if(p->rank < dag->base_rank)
 	  {
@@ -1089,6 +1109,7 @@ best_parent(rpl_dag_t *dag)
 	  }
   }
 #endif
+
   return best;
 
 }

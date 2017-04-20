@@ -32,7 +32,7 @@ int dis_broadcast(void);
 #if RPL_LIFETIME_MAX_MODE
 int dio_ack_broadcast(rpl_instance_t* instance);
 #endif
-#if LSA_RI
+#if LSA_R
 int LSA_converge_broadcast(uint8_t lr_child);
 #endif
 

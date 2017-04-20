@@ -3,7 +3,7 @@
 
 #include "dual_conf.h"
 #include "../lanada/param.h"
-#define DEBUG_DUAL	0
+#define DEBUG_DUAL	1
 #if DEBUG_DUAL
 #include <stdio.h>
 #include "net/rpl/rpl-icmp6.h"
@@ -18,7 +18,7 @@ PROCESS(dual_dis_broadcast, "dis_broadcast");
 #if RPL_LIFETIME_MAX_MODE_DIO_ACK
 PROCESS(dual_dio_ack_broadcast, "dio_ack_broadcast");
 #endif
-#if LSA_RI
+#if LSA_R
 PROCESS(dual_LSA_converge_broadcast, "LSA_converge_broadcast");
 #endif
 
@@ -205,13 +205,13 @@ PROCESS_THREAD(dual_dio_ack_broadcast, ev, data)
 }
 #endif
 
-#if LSA_RI
+#if LSA_R
 PROCESS_THREAD(dual_LSA_converge_broadcast, ev, data)
 {
 	static struct etimer et;
 	static uint8_t long_duty_on_local = 1;
 	static uint8_t short_duty_on_local = 1;
-	uint8_t temp_LSA_SR_preamble;
+	static uint8_t temp_LSA_SR_preamble;
 
 #if DUAL_ROUTING_CONVERGE
 	long_duty_on_local = long_duty_on;
@@ -268,7 +268,7 @@ int dio_ack_broadcast(rpl_instance_t * instance)
 #endif
 
 
-#if LSA_RI
+#if LSA_R
 int LSA_converge_broadcast(uint8_t lr_child)
 {
 	temp_lr_child = lr_child;
