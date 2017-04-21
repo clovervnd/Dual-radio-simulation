@@ -187,7 +187,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -835,7 +835,6 @@ send_packet(void)
 #if DUAL_RADIO
 #if LSA_MAC
 #if LSA_R
-	printf(" R debug: SR_preamble = %d\n",LSA_SR_preamble);  
 	if (LSA_SR_preamble == 0) {  
 		if (sending_in_LR() == SHORT_RADIO){
 			was_short = 1;

@@ -63,14 +63,14 @@ rpl_stats_t rpl_stats;
 static enum rpl_mode mode = RPL_MODE_MESH;
 /*---------------------------------------------------------------------------*/
 #if DETERMINED_ROUTING_TREE
-uint8_t determined_parent[MAX_NODE_NUMBER] = {0, 1, 2, 3, 4,
-												5, 6, 7, 8, 9,
+uint8_t determined_parent[MAX_NODE_NUMBER] = {0, 1, 2, 2, 3,
+												3, 6, 7, 8, 9,
 												10, 11, 12, 13, 14,
 												15, 16, 17, 18, 19,
 												20, 21, 22, 23, 24,
 												25, 26, 27, 28, 29};
 /* 1 for Long radio, 0 for Short radio */
-uint8_t determined_radio[MAX_NODE_NUMBER] = {0, 0, 0, 0, 0,						
+uint8_t determined_radio[MAX_NODE_NUMBER] = {0, 0, 0, 1, 0,						
 											0, 0, 0, 0, 0,
 											1, 1, 1, 1, 1,
 											1, 1, 1, 1, 1,
