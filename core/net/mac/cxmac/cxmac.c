@@ -187,7 +187,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -832,6 +832,8 @@ send_packet(void)
   /* Send a train of strobes until the receiver answers with an ACK. */
 
 	/* Always use long preamble in LSA_MAC mode */
+	printf("JOONKI: SR_preamble = %d\n",LSA_SR_preamble);
+
 #if DUAL_RADIO
 #if LSA_MAC
 #if LSA_R
