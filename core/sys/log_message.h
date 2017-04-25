@@ -8,9 +8,13 @@ extern FILE *log_fp;
 extern int log_file;
 #endif	/* COOJA */
 
+
+/* This status log takes large size of memory, maybe we should remove this part for z1/firefly */
 int collision_count, transmission_count;
-int control_message_count, data_message_count, data_relay_count;
-int dio_count, dis_count, dao_count, dio_ack_count;
+int control_message_count, data_message_count, data_fwd_count;
+int dio_count, dis_count, dao_count, dao_fwd_count, dao_ack_count, dao_ack_fwd_count, dio_ack_count, LSA_count;
+int icmp_count, tcp_output_count;
+
 
 void log_initialization(void);
 void log_finisher(void);

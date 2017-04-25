@@ -56,6 +56,7 @@ obj_cooja/tcpip.o: ..//core/net/ip/tcpip.c ..//core/./contiki-net.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
+ ..//core/./sys/log_message.h ..//core/./cfs/cfs.h \
  ..//core/net/ip/ip_debug.h ..//core/./net/ip/uip-debug.h \
  ..//core/net/rpl/rpl.h
 ..//core/net/ip/tcpip.c ..//core/./contiki-net.h :
@@ -116,5 +117,6 @@ obj_cooja/tcpip.o: ..//core/net/ip/tcpip.c ..//core/./contiki-net.h \
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
+ ..//core/./sys/log_message.h ..//core/./cfs/cfs.h :
  ..//core/net/ip/ip_debug.h ..//core/./net/ip/uip-debug.h :
  ..//core/net/rpl/rpl.h :

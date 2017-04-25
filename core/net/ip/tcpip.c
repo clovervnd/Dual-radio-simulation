@@ -69,6 +69,7 @@ extern uip_ds6_lr_addrmap_t ds6_lr_addrmap[NBR_TABLE_MAX_NEIGHBORS];
 
 #include <string.h>
 
+#include "sys/log_message.h"
 #include "ip_debug.h"
 #define DEBUG DEBUG_TCPIP
 #include "net/ip/uip-debug.h"
@@ -144,6 +145,14 @@ uint8_t
 tcpip_output(const uip_lladdr_t *a)
 {
   int ret;
+	tcp_output_count ++;
+#if RPL_ICMP_ENERGY_LOG
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"TCP_OUTPUT, Energy: %d\n",(int)get_residual_energy()); 
+	LOG_MESSAGE(log_buf); 
+	free(log_buf);
+#endif
+
 	
 	PRINTF("TCPIP send to link local address:");
 	PRINTLLADDR(a);
@@ -387,8 +396,7 @@ tcpip_icmp6_call(uint8_t type)
   }
   return;
 }
-#endif /* UIP_CONF_ICMP6 */
-/*---------------------------------------------------------------------------*/
+#endif /* UIP_CONF_ICMP6 *TCP*---------------------------------------------------------------------------*/
 static void
 eventhandler(process_event_t ev, process_data_t data)
 {
@@ -558,6 +566,7 @@ tcpip_input(void)
 void
 tcpip_ipv6_output(void)
 {
+
   uip_ds6_nbr_t *nbr = NULL;
   uip_ipaddr_t *nexthop;
 	uip_ipaddr_t foraddr;

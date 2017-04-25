@@ -132,10 +132,16 @@ send_packet(void *ptr)
 #endif
 	seq_id++;
 
+	int total_count1, total_count2;
+	total_count1 = dio_count + dao_count + dis_count + dio_ack_count;
+	total_count2 = dao_ack_count + dao_fwd_count + dao_ack_fwd_count + LSA_count;
+
 	if (data_message_count%100 == 0) {
 		LOG_MESSAGE("[PS] Periodic status review:\n");
 		LOG_MESSAGE("[PS] Transmission: %d, Collision: %d\n", transmission_count, collision_count);
-		LOG_MESSAGE("[PS] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, dio_count+dao_count+dis_count+dio_ack_count);
+		LOG_MESSAGE("[PS] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, total_count1);
+		LOG_MESSAGE("[PS] DAO_ACK:%d, DAO_FWD: %d, DAO_ACK_FWD: %d, LSA: %d, Total: %d\n",dao_ack_count, dao_fwd_count,dao_ack_fwd_count, LSA_count, total_count2 );
+		LOG_MESSAGE("[PS] ICMP: %d, TCP_OUTPUT: %d\n",icmp_count, tcp_output_count);
 		LOG_MESSAGE("[PS] Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count);
 		LOG_MESSAGE("[PS] Remaining energy: %d\n", (int) get_residual_energy());
 	}

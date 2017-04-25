@@ -47,6 +47,7 @@
 #include "net/ipv6/uip-icmp6.h"
 #include "contiki-default-conf.h"
 
+#include "sys/log_message.h"
 #include "ipv6_debug.h"
 #define DEBUG DEBUG_UIP_ICMP6
 
@@ -307,6 +308,13 @@ uip_icmp6_error_output(uint8_t type, uint8_t code, uint32_t param) {
 void
 uip_icmp6_send(const uip_ipaddr_t *dest, int type, int code, int payload_len)
 {
+	icmp_count ++;
+#if RPL_ICMP_ENERGY_LOG
+	char *log_buf = (char*) malloc(sizeof(char)*100);
+	sprintf(log_buf,"ICMP_OUTPUT, Energy: %d\n",(int) get_residual_energy()); 
+	LOG_MESSAGE(log_buf); 
+	free(log_buf);
+#endif
 
   UIP_IP_BUF->vtc = 0x60;
   UIP_IP_BUF->tcflow = 0;

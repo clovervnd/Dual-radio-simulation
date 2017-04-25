@@ -47,7 +47,6 @@
 
 #include "net/ip/uip.h"
 
-
 /** \name ICMPv6 message types */
 /** @{ */
 #define ICMP6_DST_UNREACH                 1	/**< dest unreachable */
