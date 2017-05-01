@@ -138,21 +138,33 @@ send_packet(void *ptr)
 
 	if (data_message_count%100 == 0) {
 		LOG_MESSAGE("[PS] Periodic status review:\n");
-		LOG_MESSAGE("[PS] Transmission: %d, Collision: %d\n", transmission_count, collision_count);
-		LOG_MESSAGE("[PS] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, total_count1);
-		LOG_MESSAGE("[PS] DAO_ACK:%d, DAO_FWD: %d, DAO_ACK_FWD: %d, LSA: %d, Total: %d\n",dao_ack_count, dao_fwd_count,dao_ack_fwd_count, LSA_count, total_count2 );
-		LOG_MESSAGE("[PS] ICMP: %d, TCP_OUTPUT: %d\n",icmp_count, tcp_output_count);
-		LOG_MESSAGE("[PS] Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count);
+		LOG_MESSAGE("[PS] Control: %d, Data: %d, Data fwd: %d\n", 
+				tcp_output_count-data_message_count-data_fwd_count, data_message_count, data_fwd_count);
+		LOG_MESSAGE("[PS] ICMP: %d, TCP_OUTPUT: %d\n",
+				icmp_count, tcp_output_count);
+		LOG_MESSAGE("[PS] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", 
+				dio_count, dao_count, dis_count, dio_ack_count, total_count1);
+		LOG_MESSAGE("[PS] DAO_ACK:%d, DAO_FWD: %d, DAO_ACK_FWD: %d, LSA: %d, Total: %d\n",
+				dao_ack_count, dao_fwd_count,dao_ack_fwd_count, LSA_count, total_count2 );
+		LOG_MESSAGE("[PS] CSMA_Transmission: %d, CXMAC_Transmission: %d, CXMAC_Collision: %d\n", 
+				csma_transmission_count, cxmac_transmission_count, cxmac_collision_count);
 		LOG_MESSAGE("[PS] Remaining energy: %d\n", (int) get_residual_energy());
 	}
 
 	if (lifetime > 0) {
-		if (get_residual_energy() == 0) {
+		if (get_residual_energy() == 0) {		
+			LOG_MESSAGE("[LT] Control: %d, Data: %d, Data fwd: %d\n", 
+					tcp_output_count-data_message_count-data_fwd_count, data_message_count, data_fwd_count);
+			LOG_MESSAGE("[LT] ICMP: %d, TCP_OUTPUT: %d\n",
+					icmp_count, tcp_output_count);
+			LOG_MESSAGE("[LT] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", 
+					dio_count, dao_count, dis_count, dio_ack_count, total_count1);
+			LOG_MESSAGE("[LT] DAO_ACK:%d, DAO_FWD: %d, DAO_ACK_FWD: %d, LSA: %d, Total: %d\n",
+					dao_ack_count, dao_fwd_count,dao_ack_fwd_count, LSA_count, total_count2 );
+			LOG_MESSAGE("[LT] CSMA_Transmission: %d, CXMAC_Transmission: %d, CXMAC_Collision: %d\n", 
+					csma_transmission_count, cxmac_transmission_count, cxmac_collision_count);
 			LOG_MESSAGE("Lifetime of this node ended here!!!\n");
-			LOG_MESSAGE("[LT] Transmission: %d, Collision: %d\n", transmission_count, collision_count); 
-			LOG_MESSAGE("[LT] DIO:%d, DAO: %d, DIS: %d, DIO_ACK: %d, Total: %d\n", dio_count, dao_count, dis_count, dio_ack_count, dio_count+dao_count+dis_count+dio_ack_count);
-			LOG_MESSAGE("[LT] Control: %d, Data: %d\n", transmission_count-data_message_count, data_message_count); 
-		}
+					}
 	}
 	lifetime = get_residual_energy();
 

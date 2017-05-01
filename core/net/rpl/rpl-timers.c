@@ -140,7 +140,9 @@ rpl_LSA_convergence_timer(uint8_t mode)
 	if (mode == 1){
 		ctimer_set(&timer_LSA_conv, LSA_CONVERGE_TIME + rand()%(LSA_CONVERGE_TIME/5) , &LSA_convergence_radio_broadcast, NULL);
 	} else if (mode == 2) {
-		ctimer_set(&timer_LSA_conv, LSA_MESSAGE_TIME + rand()%(LSA_MESSAGE_TIME/5) , &LSA_convergence_radio_broadcast, NULL);
+		ctimer_set(&timer_LSA_conv, LSA_MESSAGE_TIME + rand()%(LSA_MESSAGE_TIME/2) , &LSA_convergence_radio_broadcast, NULL);
+	} else if (mode == 3) {
+		ctimer_set(&timer_LSA_conv, LSA_BROADCAST_TIME + rand()%(LSA_BROADCAST_TIME/2) , &LSA_convergence_radio_broadcast, NULL);
 	}
 }
 rpl_reset_LSA_convergence_timer(void)
@@ -150,18 +152,22 @@ rpl_reset_LSA_convergence_timer(void)
 static void
 LSA_convergence_radio_broadcast(void)
 {
-	printf("LSA_convergence_radio_broadcast!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+	printf("LSA_convergence_radio_broadcast: %d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",LSA_broadcast_count);
 	
 	LSA_lr_child = rpl_lr_in_child();
 	printf("LR_CHILD :%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",LSA_lr_child);
-	
-	if (linkaddr_node_addr.u8[1] == SERVER_NODE) {	
+
+	if (linkaddr_node_addr.u8[1] == SERVER_NODE) {
 		LSA_converge_broadcast(0);
 	} else {
 		LSA_converge_broadcast(LSA_lr_child);
 	}
 
+	LSA_broadcast_count ++;
 	LSA_converge = 1;
+	if (LSA_broadcast_count < MAX_LSA_RETRANSMISSION) {
+		rpl_LSA_convergence_timer(3);
+	}
 }
 #endif /* LSA_R */
 

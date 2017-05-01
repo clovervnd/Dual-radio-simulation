@@ -55,7 +55,19 @@
 
 #include <stdio.h>
 
-#define DEBUG 1
+
+#if DUAL_RADIO
+#ifdef ZOLERTIA_Z1
+#include	"../platform/z1/dual_radio.h"
+#elif COOJA /* ZOLERTIA_Z1 */
+#include	"../platform/cooja/dual_conf.h"
+#else /* ZOLERTIA_Z1 */
+#include "../platform/zoul/dual_radio.h"
+#endif /* ZOLERTIA_Z1 */
+#endif /* DUAL_RADIO */
+#include "sys/log_message.h"
+
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -175,6 +187,13 @@ transmit_packet_list(void *ptr)
       /* Send packets in the neighbor's list */
       // JJH
       // printf("csma send_list %x\n",packet_sent);
+#if DUAL_RADIO
+			if (q->radio == SHORT_RADIO) {
+				dual_radio_switch(SHORT_RADIO);
+			} else if (q->radio == LONG_RADIO) {
+				dual_radio_switch(LONG_RADIO);
+			}
+#endif
       NETSTACK_RDC.send_list(packet_sent, n, q);
     }
   }
@@ -393,6 +412,7 @@ send_packet(mac_callback_t sent, void *ptr)
       linkaddr_copy(&n->addr, addr);
       n->transmissions = 0;
       n->collisions = CSMA_MIN_BE;
+
       /* Init packet list for this neighbor */
       LIST_STRUCT_INIT(n, queued_packet_list);
       /* Add neighbor to the list */
@@ -420,6 +440,11 @@ send_packet(mac_callback_t sent, void *ptr)
             }
             metadata->sent = sent;
             metadata->cptr = ptr;
+
+#if DUAL_RADIO
+						q->radio = sending_in_LR();
+#endif
+
 #if PACKETBUF_WITH_PACKET_TYPE
             if(packetbuf_attr(PACKETBUF_ATTR_PACKET_TYPE) ==
                PACKETBUF_ATTR_PACKET_TYPE_ACK) {
@@ -434,6 +459,7 @@ send_packet(mac_callback_t sent, void *ptr)
                    list_length(n->queued_packet_list), memb_numfree(&packet_memb));
             /* If q is the first packet in the neighbor's queue, send asap */
             if(list_head(n->queued_packet_list) == q) {
+							csma_transmission_count ++;
               schedule_transmission(n);
             }
             return;

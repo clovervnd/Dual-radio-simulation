@@ -60,6 +60,9 @@ struct rdc_buf_list {
   struct rdc_buf_list *next;
   struct queuebuf *buf;
   void *ptr;
+#if DUAL_RADIO
+	uint8_t radio;
+#endif
 };
 
 /**

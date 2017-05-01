@@ -10,8 +10,9 @@ int log_file;
 
 
 void log_initialization(void){
-	collision_count = 0;
-	transmission_count = 0;
+	cxmac_collision_count = 0;
+	cxmac_transmission_count = 0;
+	csma_transmission_count = 0;
 	control_message_count = 0;
 	data_message_count = 0;
 	data_fwd_count = 0;

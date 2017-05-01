@@ -187,7 +187,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -216,7 +216,7 @@ static volatile unsigned char radio_is_on = 0;
 #endif /* ZOLERTIA_Z1 */
 #endif /* DUAL_RADIO */
 #include "sys/log_message.h"
-extern int collision_count, transmission_count;
+// extern int cxmac_collision_count, cxmac_transmission_count;
 
 #if CXMAC_CONF_ANNOUNCEMENTS
 /* Timers for keeping track of when to send announcements. */
@@ -665,7 +665,7 @@ send_packet(void)
   int is_already_streaming = 0;
   uint8_t collisions;
 
-  transmission_count++;
+  cxmac_transmission_count++;
 #if DUAL_RADIO
   char target = SHORT_RADIO;
   rtimer_clock_t strobe_time;
@@ -831,10 +831,7 @@ send_packet(void)
  //  LEDS_ON(LEDS_BLUE);
 
   /* Send a train of strobes until the receiver answers with an ACK. */
-
 	/* Always use long preamble in LSA_MAC mode */
-	printf("JOONKI: SR_preamble = %d\n",LSA_SR_preamble);
-
 #if DUAL_RADIO
 #if LSA_MAC
 #if LSA_R
@@ -1113,7 +1110,7 @@ send_packet(void)
     }
   } else {
     someone_is_sending++;
-    collision_count++;
+    cxmac_collision_count++;
     return MAC_TX_COLLISION;
   }
 }
@@ -1126,7 +1123,7 @@ qsend_packet(mac_callback_t sent, void *ptr)
     PRINTF("cxmac: should queue packet, now just dropping %d %d %d %d.\n",
 	   waiting_for_packet, someone_is_sending, we_are_sending, radio_is_on);
     RIMESTATS_ADD(sendingdrop);
-		collision_count ++;
+		cxmac_collision_count ++;
     ret = MAC_TX_COLLISION;
   } else {
     PRINTF("cxmac: send immediately.\n");
@@ -1474,6 +1471,7 @@ cxmac_init(void)
 	LSA_converge = 0;
 	LSA_SR_preamble = 0;
 	LSA_message_input = 0;
+	LSA_broadcast_count = 1;
 #endif
 
 #endif

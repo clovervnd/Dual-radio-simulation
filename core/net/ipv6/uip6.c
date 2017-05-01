@@ -89,6 +89,7 @@
 #endif /* ZOLERTIA_Z1 */
 #endif /* DUAL_RADIO */
 
+#include "sys/log_message.h"
 
 #include <string.h>
 
@@ -1274,6 +1275,15 @@ uip_process(uint8_t flag)
       PRINTF("Forwarding packet to ");
       PRINT6ADDR(&UIP_IP_BUF->destipaddr);
       PRINTF("\n");
+
+			data_fwd_count ++;
+#if RPL_ICMP_ENERGY_LOG
+			char *log_buf = (char*) malloc(sizeof(char)*100);
+			sprintf(log_buf,"DATA_FWD_OUTPUT, Energy: %d\n",(int) get_residual_energy()); 
+			LOG_MESSAGE(log_buf); 
+			free(log_buf);
+#endif
+
       UIP_STAT(++uip_stat.ip.forwarded);
       goto send;
     } else {
