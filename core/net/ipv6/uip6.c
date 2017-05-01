@@ -1275,6 +1275,9 @@ uip_process(uint8_t flag)
       PRINTF("Forwarding packet to ");
       PRINT6ADDR(&UIP_IP_BUF->destipaddr);
       PRINTF("\n");
+#if DUAL_RADIO
+			packet_forwarding = 1;
+#endif
 
 			data_fwd_count ++;
 #if RPL_ICMP_ENERGY_LOG

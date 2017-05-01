@@ -807,8 +807,10 @@ compress_hdr_iphc(linkaddr_t *link_destaddr)
     PACKETBUF_IPHC_BUF[2] |= context->number << 4;
     /* compession compare with this nodes address (source) */
 
+		// printf("Inside: Header length %d\n", hc06_ptr - packetbuf_ptr);
     iphc1 |= compress_addr_64(SICSLOWPAN_IPHC_SAM_BIT,
                               &UIP_IP_BUF->srcipaddr, &uip_lladdr);
+		// printf("Inside: Header length %d\n", hc06_ptr - packetbuf_ptr);
     /* No context found for this address */
   } else if(uip_is_addr_linklocal(&UIP_IP_BUF->srcipaddr) &&
             UIP_IP_BUF->destipaddr.u16[1] == 0 &&
@@ -819,6 +821,7 @@ compress_hdr_iphc(linkaddr_t *link_destaddr)
   } else {
     /* send the full address => SAC = 0, SAM = 00 */
     iphc1 |= SICSLOWPAN_IPHC_SAM_00; /* 128-bits */
+
     memcpy(hc06_ptr, &UIP_IP_BUF->srcipaddr.u16[0], 16);
     hc06_ptr += 16;
   }
@@ -1334,6 +1337,10 @@ output(const uip_lladdr_t *localdest)
   } else {
     linkaddr_copy(&dest, (const linkaddr_t *)localdest);
   }
+
+	PRINTF("Sicslowpan: destination address: ");
+	PRINTLLADDR(&dest);
+	PRINTF("\n");
 
   PRINTFO("sicslowpan output: sending packet len %d\n", uip_len);
 
