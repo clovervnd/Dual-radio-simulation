@@ -1,6 +1,6 @@
 #include "residual.h"
 #ifdef ZOLERTIA_Z1
-static const energy_t ENERGEST_DISSIPATION_RATE[] = {
+const energy_t ENERGEST_DISSIPATION_RATE[] = {
   1, // ENERGEST_TYPE_CPU,
   0, //ENERGEST_TYPE_LPM,
   0, // ENERGEST_TYPE_IRQ,
@@ -30,7 +30,7 @@ extern energy_t COOJA_radioOnLong;
 extern energy_t COOJA_radioTxLong;
 extern energy_t COOJA_radioRxLong;
 extern energy_t COOJA_duration;
-static const energy_t DISSIPATION_RATE[] = {
+const energy_t DISSIPATION_RATE[] = {
     10,  // radioOn
     0,  // radioTx
     0,  // radioRx

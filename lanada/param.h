@@ -1,4 +1,4 @@
-/* RPL MODES */
+
 #define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 1	// Child information is saved in each node
 
@@ -74,7 +74,7 @@ uint8_t LSA_message_input;
 uint8_t LSA_message_flag;
 uint8_t LSA_broadcast_count;
 #define MAX_LSA_RETRANSMISSION 4
-#define LSA_CONVERGE_TIME	(300ul * CLOCK_SECOND) // Convergence time in second
+#define LSA_CONVERGE_TIME	(900ul * CLOCK_SECOND) // Convergence time in second
 #define LSA_MESSAGE_TIME	(100ul * CLOCK_SECOND) // Convergence time in second
 #define LSA_BROADCAST_TIME	(1ul * CLOCK_SECOND) // Convergence time in second
 #endif

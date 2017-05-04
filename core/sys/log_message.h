@@ -8,6 +8,10 @@ extern FILE *log_fp;
 extern int log_file;
 #endif	/* COOJA */
 
+#define SIMULATION_SETTING	1
+#if SIMULAITON_SETTING
+extern const energy_t DISSIPATION_RATE;
+#endif
 
 /* This status log takes large size of memory, maybe we should remove this part for z1/firefly */
 int cxmac_collision_count, cxmac_transmission_count, csma_transmission_count;

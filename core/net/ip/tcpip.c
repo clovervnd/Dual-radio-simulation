@@ -774,7 +774,7 @@ tcpip_ipv6_output(void)
 #endif	/* ADDR_MAP */
 		/* To adjust source address */
 		if (packet_forwarding != 1) {
-			printf("PACKET_FORWARDING: %d\n",packet_forwarding);
+//			printf("PACKET_FORWARDING: %d\n",packet_forwarding);
 			uip_ds6_select_src(&UIP_IP_BUF->srcipaddr, &UIP_IP_BUF->destipaddr);
 			packet_forwarding = 0;
 		}
