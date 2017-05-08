@@ -43,22 +43,7 @@
 
 #define SERVER_NODE 1
 
-#if RPL_ENERGY_MODE
-uint8_t remaining_energy;
-uint8_t alpha;
-#define LONG_ETX_PENALTY 5
 
-#elif RPL_LIFETIME_MAX_MODE
-#define RPL_ETX_WEIGHT 	0
-uint8_t my_weight;
-uint8_t my_sink_reachability;
-uint8_t my_parent_number;
-#define DATA_PKT_SIZE 10 // 'B' in theory
-#define SHORT_TX_COST 1
-#define SHORT_RX_COST 1
-#define LONG_TX_COST 9
-#define LONG_RX_COST 6
-#endif
 
 #if DUAL_ROUTING_CONVERGE
 uint8_t long_duty_on;
@@ -77,7 +62,31 @@ uint8_t LSA_broadcast_count;
 #define LSA_CONVERGE_TIME	(900ul * CLOCK_SECOND) // Convergence time in second
 #define LSA_MESSAGE_TIME	(100ul * CLOCK_SECOND) // Convergence time in second
 #define LSA_BROADCAST_TIME	(1ul * CLOCK_SECOND) // Convergence time in second
-#endif
+
+#ifdef RPL_LIFETIME_MAX_MODE
+#undef RPL_LIFETIME_MAX_MODE
+#endif /* RPL_LIFETIME_MAX_MODE */
+#define RPL_LIFETIME_MAX_MODE 1	// Child information is saved in each node
+
+#endif /* LSA_R */
+
+#if RPL_ENERGY_MODE
+uint8_t remaining_energy;
+uint8_t alpha;
+#define LONG_ETX_PENALTY 5
+
+#elif RPL_LIFETIME_MAX_MODE
+#define RPL_ETX_WEIGHT 	0
+uint8_t my_weight;
+uint8_t my_sink_reachability;
+uint8_t my_parent_number;
+#define DATA_PKT_SIZE 10 // 'B' in theory
+#define SHORT_TX_COST 1
+#define SHORT_RX_COST 1
+#define LONG_TX_COST 9
+#define LONG_RX_COST 6
+#endif /* RPL_ENERGY_MODE */
+
 
 #if LSA_MAC
 #define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 2) // Short on time slot length in rtimer

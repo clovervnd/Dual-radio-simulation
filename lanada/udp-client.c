@@ -54,7 +54,7 @@
 #include "net/ip/uip-debug.h"
 
 #ifndef PERIOD
-#define PERIOD 10
+#define PERIOD 5
 #endif
 
 #define START_INTERVAL		(15 * CLOCK_SECOND)
@@ -245,7 +245,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 
   set_global_address();
 
-  PRINTF("UDP client process started nbr:%d routes:%d\n period:%d\n",
+  PRINTF("UDP client process started nbr:%d routes:%d\ period:%d\n",
          NBR_TABLE_CONF_MAX_NEIGHBORS, UIP_CONF_MAX_ROUTES, PERIOD);
 
   print_local_addresses();
